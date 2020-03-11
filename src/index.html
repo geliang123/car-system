@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head lang="zh_cn">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="referrer" content="always" />
+    <meta name="language" content="zh_cn" />
+    <title>停车场后台</title>
+    <meta
+      name="description"
+      content="VPGAME（www.vpgame.com）业务涵盖了DOTA2、守望先锋、英雄联盟、CSGO等多款电竞游戏，并融合了DOTA2饰品交易、CSGO饰品交易，饰品竞猜，电竞赛事，电竞资讯等多项功能，是一个多元化的电竞服务平台。"
+    />
+    <meta
+      name="keywords"
+      content="VPGAME,VPGAME电竞平台,DOTA2赛事平台,VP电竞,DOTA2饰品,CSGO饰品,DOTA2饰品交易,CSGO饰品交易,CDEC战队,CDEC大师赛,DOTA2赛事,CSGO赛事,饰品交易"
+    />
+    <link
+      rel="icon"
+      type="text/icon"
+      href="https://static.vpgame.com/homepage/1.3.6/favicon.ico"
+    />
+    <link
+      rel="stylesheet"
+      href="https://at.alicdn.com/t/font_919186_etgr38bb1x.css"
+    />
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser-polyfill.js"></script>
+    <script type="text/javascript">
+      !(function(e, t, n, g, i) {
+        ;(e[i] =
+          e[i] ||
+          function() {
+            ;(e[i].q = e[i].q || []).push(arguments)
+          }),
+          (n = t.createElement('script')),
+          (tag = t.getElementsByTagName('script')[0]),
+          (n.async = 1),
+          (n.src =
+            ('https:' == document.location.protocol ? 'https://' : 'http://') +
+            g),
+          tag.parentNode.insertBefore(n, tag)
+      })(
+        window,
+        document,
+        'script',
+        'resource-sec.vpgame.com/gio/gio.min.js',
+        'gio'
+      )
+      gio('init', 'a6be89344aba2cd4', {})
+      gio('send')
+
+      function gioTrack(trackId, params) {
+        if (window.gio) {
+          var parms = {
+            VPSource: 'web',
+            VPLang: 'zh_CN',
+            Game_type: 'LOL',
+            League_Id: params.leagueId,
+            Platform_Id: params.platformId,
+          }
+          console.log(trackId,parms)
+          gio('track', trackId, parms)
+          gio('send')
+        }
+      }
+    </script>
+  </body>
+</html>
