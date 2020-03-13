@@ -7,7 +7,7 @@ class NoData extends Component {
   render() {
     return (
       <div className="noneData">
-        <img src={require('../../images/common/no-images.png')} />
+        {/* <img src={require('../../images/common/no-images.png')} /> */}
         <p>暂无比赛数据</p>
       </div>
     )

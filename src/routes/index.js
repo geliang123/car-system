@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch, withRouter } from 'react-router-dom'
 import routes from './router'
+import NavTop from './NavTop'
 import './index.less'
 
+@withRouter
 class App extends Component {
   constructor(props) {
     super(props)
@@ -18,6 +20,14 @@ class App extends Component {
     />
   )
 
+  isLogin = () => {
+    const { location } = this.props
+    if (location.pathname === '/' || location.pathname === '/Login') {
+      return true
+    }
+    return false
+  }
+
   componentDidCatch(error, info) {
     this.setState({
       hasError: true
@@ -29,12 +39,19 @@ class App extends Component {
   render() {
     if (this.state.hasError) {
       // 你可以自定义降级后的 UI 并渲染
-      return <h1>Sorry,Something went wrong.</h1>
+      return <h1>网页出错啦，请返回</h1>
     }
     return (
-      <Switch>
-        {routes.map((route, index) => this.routeWithSubRoutes(route, index))}
-      </Switch>
+      <div style={{ height: '100%' }}>
+        {!this.isLogin() ? <NavTop /> : null}
+        <div id="homeCar">
+          <div className="content">
+            <Switch>
+              {routes.map((route, index) => this.routeWithSubRoutes(route, index))}
+            </Switch>
+          </div>
+        </div>
+      </div>
     )
   }
 }

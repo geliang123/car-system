@@ -1,0 +1,85 @@
+#Login {
+    width: 100%;
+    height: 100%;
+    background: url(../../images/bg.png) no-repeat;
+    background-size: 100% 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .login-box {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        width: 406pt;
+        height: 349pt;
+        background-color: rgba(255, 255, 255, 0.25);
+        border-radius: 12pt;
+
+        .ant-input-affix-wrapper .ant-input:not(:first-child) {
+            padding-left: 48px;
+        }
+    }
+
+    .title {
+        margin-top: 42pt;
+        color: #FFFFFF;
+        font-size: 36pt;
+    }
+
+    .username,
+    .password {
+        color: #333333;
+        width: 361pt;
+        height: 45pt;
+        background-color: rgba(255, 255, 255, 0.51) !important;
+        border-radius: 4pt;
+        line-height: 45pt;
+
+        .anticon {
+            font-size: 24pt;
+        }
+
+        .ant-input {
+            font-size: 15pt;
+            background-color: transparent;
+            border: none;
+
+            &::placeholder {
+                color: #333;
+            }
+        }
+
+        .ant-input:focus {
+
+            border: rgba(255, 255, 255, 0.51) !important;
+            border-width: 0;
+        }
+
+        .ant-input-affix-wrapper:focus {
+            border: none;
+        }
+
+    }
+
+    .username {
+        margin-top: 41.5pt;
+    }
+
+    .password {
+        margin-top: 13.5pt;
+    }
+
+    .login-btn {
+        margin-top: 40pt;
+        background-color: #FF9640;
+        width: 361pt;
+        height: 45pt;
+        color: #fff;
+        font-size: 15pt;
+    }
+
+    .ant-btn {
+        border: none;
+    }
+}
