@@ -58,6 +58,7 @@ body {
   width: 100%;
   height: 100%;
   color: #626466;
+  background-color: #F5F6FC;
   font-family: 'PingFang SC', 'Microsoft YaHei', Arial, Helvetica, sans-serif !important;
   font-size: 12pt;
 }
@@ -79,6 +80,16 @@ a {
 
 .fr {
   float: right;
+}
+
+.panel {
+  background-color: #fff;
+  margin: 16pt;
+  border-radius: 8pt;
+}
+
+#app {
+  height: 100%;
 }
 
 pre {
@@ -133,6 +144,10 @@ pre {
   font-weight: 300;
 }
 
+.ant-btn:active {
+  border: none !important;
+}
+
 .ant-input:focus,
 .ant-input:active,
 .ant-input:hover {
@@ -140,6 +155,11 @@ pre {
   border: none
 }
 
+.ant-btn:focus,
+.ant-btn:active,
+.ant-btn:hover {
+  border: none !important;
+}
 
 .dialog-car {
   .ant-modal-confirm-content {
@@ -177,6 +197,10 @@ pre {
 .ant-modal-confirm .ant-modal-confirm-btns {
   margin: 0 !important;
   margin-bottom: 20pt !important;
+
+  .ant-btn:hover {
+    border: 1px solid #d9d9d9 !important
+  }
 }
 
 .ant-pagination-item-link {

@@ -1,0 +1,160 @@
+#LiveCallDeatail {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 16pt;
+    font-size: 12pt;
+
+    .wrap-content {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .left {
+        margin-top: 11.5pt;
+        flex: 5;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .left-item {
+        width: 48%;
+
+        margin: 0 9.5pt 9.5pt 0;
+
+        img {
+            min-height: 178pt;
+        }
+    }
+
+    .img-watch {
+        height: 20pt;
+        background-color: #9FCBFF;
+        color: #fff;
+        text-indent: 10pt;
+    }
+
+    .bottom-calling {
+        width: 98%;
+        height: 44pt;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        background-color: #EAF0FD;
+        border-radius: 3pt;
+        align-items: center;
+
+        .text {
+            margin-left: 23pt;
+            color: #333333;
+        }
+    }
+
+    //right
+    .right {
+        border-radius: 3pt;
+        background-color: #F7F8FC;
+        margin-top: 11.5pt;
+        flex: 3.6
+    }
+
+    .top-title {
+        height: 32pt;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: #fff;
+        background-color: #184376;
+        font-size: 12pt;
+    }
+
+    .wrap-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 80%;
+        margin: 0 auto
+    }
+
+    .info-item {
+        margin-right: 14.5pt;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+
+        .text {
+            margin-top: 29pt;
+            color: #999999;
+            font-size: 9pt;
+        }
+
+        .duration {
+            margin-top: 6.5pt;
+            color: #333333;
+            font-size: 15pt;
+        }
+
+        .op-btn {
+            margin-top: 25pt;
+            width: 91pt;
+            height: 32pt;
+            line-height: 32pt;
+            text-align: center;
+            border-radius: 3pt;
+            color: #fff;
+            cursor: pointer;
+
+            &.in {
+                background-color: #FF9640;
+            }
+
+            &.free {
+                background-color: #3CEA43;
+            }
+
+            &.operate {
+                background-color: #4098FF;
+            }
+        }
+    }
+
+    .wrap-bottom {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 80%;
+        margin: 0 auto
+    }
+
+    .drop-wrap {
+        width: 100%;
+        margin-top: 66pt;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: nowrap;
+
+        .label {
+            width: 15%;
+            min-width: 60pt;
+        }
+    }
+
+    .sumbit {
+        width: 100%;
+        background-color: #FF9640;
+        height: 32pt;
+        line-height: 32pt;
+        color: #fff;
+    }
+}
+
+@media screen and (min-width: 321px) and (max-width: 1190px) {
+    #LiveCallDeatail .left-item {
+        width: 98%;
+        margin: 0 9.5pt 9.5pt 0;
+    }
+}

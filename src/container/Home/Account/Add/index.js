@@ -69,17 +69,17 @@ class Add extends Component {
           <FormItem {...formItemLayout} label="用  户  名">
             {getFieldDecorator('username', {
               initialValue: data.username
-            })(<Input placeholder="请输入用户名" />)}
+            })(<Input placeholder="请输入用户名" allowClear />)}
           </FormItem>
           <FormItem {...formItemLayout} label="密码">
             {getFieldDecorator('password', {
               initialValue: data.password
-            })(<Input type="password" placeholder="请输入密码" />)}
+            })(<Input type="password" placeholder="请输入密码" allowClear />)}
           </FormItem>
           <FormItem {...formItemLayout} label="姓名">
             {getFieldDecorator('name', {
               initialValue: data.name
-            })(<Input placeholder="请输入姓名" />)}
+            })(<Input placeholder="请输入姓名" allowClear />)}
           </FormItem>
           <FormItem {...formItemLayout} label="手机">
             {getFieldDecorator('phone', {
@@ -90,7 +90,7 @@ class Add extends Component {
                   message: '格式不正确'
                 }
               ]
-            })(<Input placeholder="请输入手机号" />)}
+            })(<Input placeholder="请输入手机号" allowClear />)}
           </FormItem>
           <FormItem {...formItemLayout} label="邮箱">
             {getFieldDecorator('email', {
@@ -101,7 +101,7 @@ class Add extends Component {
                   message: '必填'
                 }
               ]
-            })(<Input placeholder="请输入邮箱" />)}
+            })(<Input placeholder="请输入邮箱" allowClear />)}
           </FormItem>
         </Form>
       </div>

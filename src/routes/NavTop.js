@@ -6,7 +6,14 @@ import './index.less'
 const { TabPane } = Tabs
 @withRouter
 class NavTop extends Component {
+  state = {
+    active: '1'
+  }
+
   handleChange = tab => {
+    this.setState({
+      active: tab
+    })
     switch (tab) {
       case '1':
         this.props.history.push('/liveCall')
@@ -23,10 +30,11 @@ class NavTop extends Component {
   }
 
   render() {
+    const { active } = this.state
     return (
       <div className="top">
         <img className="logo" src={require('../images/home/logo.png')} />
-        <Tabs defaultActiveKey="3" onChange={this.handleChange}>
+        <Tabs onChange={this.handleChange} activeKey={active}>
           <TabPane tab="实时呼叫" key="1" />
           <TabPane tab="账号管理" key="2" />
           <TabPane tab="事件记录" key="3" />

@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import { Icon, Input, Button } from 'antd'
+import { withRouter } from 'react-router-dom'
 import { hot } from 'react-hot-loader/root'
 import '../../less/normal.less'
 import './style.less'
 
 @hot
+@withRouter
 class Login extends Component {
   state = {
     username: '',
@@ -17,6 +19,10 @@ class Login extends Component {
     this.setState({
       [key]: e.target.value
     })
+  }
+
+  login = () => {
+    this.props.history.push('/account')
   }
 
   render() {
@@ -41,7 +47,9 @@ class Login extends Component {
             prefix={<Icon type="lock" style={{ color: '#333333' }} />}
             type="password"
           />
-          <Button className="login-btn">登录</Button>
+          <Button className="login-btn" onClick={this.login}>
+            登录
+          </Button>
         </div>
       </div>
     )

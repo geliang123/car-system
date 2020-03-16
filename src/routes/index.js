@@ -44,13 +44,9 @@ class App extends Component {
     return (
       <div style={{ height: '100%' }}>
         {!this.isLogin() ? <NavTop /> : null}
-        <div id="homeCar">
-          <div className="content">
-            <Switch>
-              {routes.map((route, index) => this.routeWithSubRoutes(route, index))}
-            </Switch>
-          </div>
-        </div>
+        <Switch>
+          {routes.map((route, index) => this.routeWithSubRoutes(route, index))}
+        </Switch>
       </div>
     )
   }

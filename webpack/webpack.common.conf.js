@@ -3,6 +3,7 @@ const merge = require('webpack-merge')
 const path = require('path')
 const Dotenv = require('dotenv')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 const DotenvWebpack = require('dotenv-webpack')
 const productionConfig = require('./webpack.prod.conf.js')
@@ -32,7 +33,7 @@ const nodeEnvDot = new DotenvWebpack({
 const webpackConfig = env => ({
   entry: {},
   output: {
-    publicPath: env === 'development' ? '/' : './',
+    publicPath: env === 'development' ? '/' : '/',
     path: path.resolve(__dirname, '..', 'dist'),
     filename: env === 'development' ? 'js/[name]-[hash:5].bundle.js' : 'js/[name].[chunkhash:8].js',
     chunkFilename: env === 'development' ? 'js/[name]-[hash:5].chunk.js' : 'js/[name].[chunkhash:8].js',
@@ -56,12 +57,7 @@ const webpackConfig = env => ({
       {
         test: /\.less$/,
         use: [
-          {
-            loader: env === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
-            options: env === 'development' ? {} : {
-              publicPath: '../../dist/',
-            }
-          },
+          env === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
           'css-loader',
           {
             loader: 'postcss-loader',
@@ -116,6 +112,14 @@ const webpackConfig = env => ({
   mode: env === 'development' ? 'development' : 'production',
   optimization: {},
   plugins: [
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: path.resolve(__dirname, '..', 'src/index.html'),
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+      },
+    }),
     new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /ru|zh-cn|en/),
     new ProgressBarPlugin(),
     commonDot,

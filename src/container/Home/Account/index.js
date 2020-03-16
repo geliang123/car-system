@@ -139,45 +139,47 @@ class Livecall extends Component {
     const { data, searchContent, current, visible, op } = this.state
     const title = op === 'edit' ? '编辑账号' : '新建账号'
     return (
-      <div id="Account">
-        <div className="search-wrap">
-          <Button className="add" onClick={this.add}>
-            新建账号
-          </Button>
-          <div className="search">
-            <Input
-              className="search-content"
-              placeholder="请输入账户关键词"
-              value={searchContent}
-              onChange={e => this.changeValue(e, 'username')}
-            />
-            <Button className="search-btn">搜索</Button>
+      <div className="panel">
+        <div id="Account">
+          <div className="search-wrap">
+            <Button className="add" onClick={this.add}>
+              新建账号
+            </Button>
+            <div className="search">
+              <Input
+                className="search-content"
+                placeholder="请输入账户关键词"
+                value={searchContent}
+                onChange={e => this.changeValue(e, 'username')}
+              />
+              <Button className="search-btn">搜索</Button>
+            </div>
           </div>
+          {/* 表格数据 */}
+          <Table
+            dataSource={data}
+            columns={this.headers}
+            scroll={{ x: true }}
+            rowKey={(record, index) => index}
+            pagination={{
+              current,
+              onChange: this.handlePageChange
+            }}
+          />
+          <div className="total">
+            共57条记录 <span className="page-num">每页10条</span>
+          </div>
+          {/* 弹框 */}
+          <Modal
+            title={title}
+            visible={visible}
+            onOk={this.handleOk}
+            okText="确认"
+            cancelText="关闭"
+            onCancel={this.handleCancel}
+            width={458}
+          />
         </div>
-        {/* 表格数据 */}
-        <Table
-          dataSource={data}
-          columns={this.headers}
-          scroll={{ x: true }}
-          rowKey={(record, index) => index}
-          pagination={{
-            current,
-            onChange: this.handlePageChange
-          }}
-        />
-        <div className="total">
-          共57条记录 <span className="page-num">每页10条</span>
-        </div>
-        {/* 弹框 */}
-        <Modal
-          title={title}
-          visible={visible}
-          onOk={this.handleOk}
-          okText="确认"
-          cancelText="关闭"
-          onCancel={this.handleCancel}
-          width={458}
-        />
       </div>
     )
   }
