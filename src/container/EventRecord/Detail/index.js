@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { hot } from 'react-hot-loader/root'
 import Title from '~/component/Title'
-import '../../../../less/normal.less'
+import '../../../less/normal.less'
 import './style.less'
 
 @hot
@@ -34,7 +34,7 @@ class Detail extends Component {
               </div>
               <p className="img-title">车辆图片</p>
               <img
-                src={require('../../../../images/bg.png')}
+                src={require('../../../images/bg.png')}
                 width="100%"
                 height="194px"
               />
@@ -71,7 +71,7 @@ class Detail extends Component {
               </div>
               <p className="img-title">车辆图片</p>
               <img
-                src={require('../../../../images/bg.png')}
+                src={require('../../../images/bg.png')}
                 width="100%"
                 height="194px"
               />

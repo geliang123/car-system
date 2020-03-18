@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Route, Switch, withRouter } from 'react-router-dom'
 import routes from './router'
+import '../less/antd.less'
 import NavTop from './NavTop'
 import './index.less'
 

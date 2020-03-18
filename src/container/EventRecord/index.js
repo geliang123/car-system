@@ -2,14 +2,14 @@
 import React, { Component } from 'react'
 import { Table, Button, Input, Modal } from 'antd'
 import { hot } from 'react-hot-loader/root'
-import { showConfirm } from '../../../utils/ViewUtils'
-import Add from './Add/index'
-import '../../../less/normal.less'
+import { withRouter } from 'react-router-dom'
+import '../../less/normal.less'
 import './style.less'
-import defaultData from './data.json'
+import defaultData from '../Account/data.json'
 
 @hot
-class Livecall extends Component {
+@withRouter
+class EventRecord extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -17,11 +17,11 @@ class Livecall extends Component {
       searchContent: '',
       current: 1, // 当前页
       visible: false,
-      op: 'del'
+      url: ''
     }
     this.headers = [
       {
-        title: '时间',
+        title: 'ID',
         dataIndex: 'id',
         key: 'ID'
       },
@@ -61,11 +61,14 @@ class Livecall extends Component {
         key: 'op',
         render: (text, record) => (
           <div>
-            <span className="del" onClick={() => this.delete(record)}>
-              删除
+            <span
+              className="watch-image"
+              onClick={() => this.watchImage(record)}
+            >
+              车辆图片
             </span>
-            <span className="edit" onClick={() => this.edit(record)}>
-              编辑
+            <span className="watch-info" onClick={() => this.watchInfo(record)}>
+              查看详情
             </span>
           </div>
         )
@@ -81,34 +84,16 @@ class Livecall extends Component {
     })
   }
 
-  // 删除
-  delete = item => {
-    // this.setState({
-    //   visible: true,
-    //   op: 'del'
-    // })
-    this.ref = showConfirm(
-      () => this.confirm(),
-      <div className="del-text">是否确认删除?</div>,
-      '删除',
-      440
-    )
+  // 查看图片
+  watchImage = item => {
+    this.setState({
+      visible: true
+    })
   }
 
-  // 编辑
-  edit = item => {
-    this.selectRecord = item
-    this.ref = showConfirm(
-      () => this.confirm(),
-      <Add data={item} />,
-      '新建账号',
-      458
-    )
-  }
-
-  // 新增
-  add = () => {
-    this.ref = showConfirm(() => this.confirm(), <Add />, '新建账号', 458)
+  // 查看信息
+  watchInfo = item => {
+    this.props.history.push('/detail')
   }
 
   // 确认
@@ -122,13 +107,6 @@ class Livecall extends Component {
   }
 
   // 取消弹框
-  handleOk = () => {
-    this.setState({
-      visible: false
-    })
-  }
-
-  // 取消弹框
   handleCancel = () => {
     this.setState({
       visible: false
@@ -136,11 +114,10 @@ class Livecall extends Component {
   }
 
   render() {
-    const { data, searchContent, current, visible, op } = this.state
-    const title = op === 'edit' ? '编辑账号' : '新建账号'
+    const { data, searchContent, current, visible } = this.state
     return (
       <div className="panel">
-        <div id="Account">
+        <div id="eventRecord">
           <div className="search-wrap">
             <Button className="add" onClick={this.add}>
               新建账号
@@ -171,18 +148,24 @@ class Livecall extends Component {
           </div>
           {/* 弹框 */}
           <Modal
-            title={title}
+            title="车辆图片"
             visible={visible}
-            onOk={this.handleOk}
+            className="watch-image-dialog"
             okText="确认"
             cancelText="关闭"
             onCancel={this.handleCancel}
-            width={458}
-          />
+            width={457}
+          >
+            <img
+              src={require('../../images/bg.png')}
+              width="457"
+              height="270"
+            />
+          </Modal>
         </div>
       </div>
     )
   }
 }
 
-export default Livecall
+export default EventRecord

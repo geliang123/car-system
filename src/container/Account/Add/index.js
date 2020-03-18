@@ -1,8 +1,9 @@
 /* eslint-disable array-callback-return */
 import React, { Component } from 'react'
-import { Form, Select, Input, message } from 'antd'
+import { Form, Select, Input } from 'antd'
 import { hot } from 'react-hot-loader/root'
-import '../../../../less/normal.less'
+import eventObject from '~/config/eventSignal'
+import '../../../less/normal.less'
 import './style.less'
 
 const FormItem = Form.Item
@@ -19,26 +20,33 @@ const accountArr = [
 ]
 @hot
 class Add extends Component {
-  // constructor(props) {
-  //   super(props)
-  // }
+  componentDidMount() {
+    this.props.form.resetFields()
+    eventObject.accountEvent.add(this.save)
+  }
+
+  componentWillUnmount() {
+    eventObject.accountEvent.remove(this.save)
+  }
+
   save = ref => {
     this.props.form.validateFields((err, values) => {
-      if (!err) {
-        this.props
-          .updateData(values)
-          .then(response => {
-            if (response.data.updateSimilarDaySetting.ok) {
-              message.success('保存成功')
-            } else {
-              message.error('保存失败')
-            }
-            ref.destroy()
-          })
-          .catch(e => {
-            console.error(e)
-          })
-      }
+      console.log(values)
+      // if (!err) {
+      //   this.props
+      //     .updateData(values)
+      //     .then(response => {
+      //       if (response.data.updateSimilarDaySetting.ok) {
+      //         message.success('保存成功')
+      //       } else {
+      //         message.error('保存失败')
+      //       }
+      //       ref.destroy()
+      //     })
+      //     .catch(e => {
+      //       console.error(e)
+      //     })
+      // }
     })
   }
 
@@ -49,6 +57,7 @@ class Add extends Component {
     }
     const { getFieldDecorator } = this.props.form
     let { data } = this.props
+    console.log(data)
     if (!data) data = {}
     return (
       <div id="Add">
@@ -73,7 +82,17 @@ class Add extends Component {
           </FormItem>
           <FormItem {...formItemLayout} label="密码">
             {getFieldDecorator('password', {
-              initialValue: data.password
+              initialValue: data.password,
+              rules: [
+                {
+                  min: 4,
+                  message: '密码不能少于4个字符'
+                },
+                {
+                  max: 18,
+                  message: '密码不能大于18个字符'
+                }
+              ]
             })(<Input type="password" placeholder="请输入密码" allowClear />)}
           </FormItem>
           <FormItem {...formItemLayout} label="姓名">

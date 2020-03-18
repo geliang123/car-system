@@ -1,34 +1,15 @@
 /* eslint-disable array-callback-return */
 import React, { Component } from 'react'
-import { Table, Button, Input, Modal } from 'antd'
+import { Table, Button, Input } from 'antd'
 import { hot } from 'react-hot-loader/root'
-import { withRouter } from 'react-router-dom'
-import '../../../less/normal.less'
+import { showConfirm } from '../../utils/ViewUtils'
+import eventObject from '~/config/eventSignal'
+import Add from './Add/index'
+import '../../less/normal.less'
 import './style.less'
-import defaultData from '../Account/data.json'
-import SelectMenu from '~/component/SelectMenu'
-
-const dropData = [
-  {
-    id: 'all',
-    displayName: '全部'
-  },
-  {
-    id: '1',
-    displayName: '停车场'
-  },
-  {
-    id: '2',
-    displayName: '出入场'
-  },
-  {
-    id: '3',
-    displayName: '等待时长'
-  }
-]
+import defaultData from './data.json'
 
 @hot
-@withRouter
 class Livecall extends Component {
   constructor(props) {
     super(props)
@@ -37,42 +18,41 @@ class Livecall extends Component {
       searchContent: '',
       current: 1, // 当前页
       visible: false,
-      url: '',
-      selected: 'all'
+      op: 'del'
     }
     this.headers = [
       {
-        title: 'ID',
+        title: '时间',
         dataIndex: 'id',
         key: 'ID'
       },
       {
-        title: '停车场',
+        title: '用户名',
         dataIndex: 'username',
         key: 'username'
       },
       {
-        title: '出入场',
+        title: '密码',
         dataIndex: 'password',
         key: 'password'
       },
       {
-        title: '车牌号',
+        title: '姓名',
         dataIndex: 'name',
         key: 'name'
       },
       {
-        title: '呼叫时间',
+        title: '角色',
         dataIndex: 'role',
         key: 'role'
       },
       {
-        title: '等待时长',
+        title: '手机号',
         dataIndex: 'phone',
         key: 'phone'
       },
       {
-        title: '事件处理',
+        title: '邮箱',
         dataIndex: 'email',
         key: 'email'
       },
@@ -82,17 +62,11 @@ class Livecall extends Component {
         key: 'op',
         render: (text, record) => (
           <div>
-            <span className="online" onClick={() => this.watchImage(record)}>
-              通话中
+            <span className="del" onClick={() => this.delete(record)}>
+              删除
             </span>
-            <span className="hang-up" onClick={() => this.watchInfo(record)}>
-              挂断
-            </span>
-            <span
-              className="not-operate"
-              onClick={() => this.watchInfo(record)}
-            >
-              暂不处理
+            <span className="edit" onClick={() => this.edit(record)}>
+              编辑
             </span>
           </div>
         )
@@ -108,25 +82,51 @@ class Livecall extends Component {
     })
   }
 
-  // 查看图片
-  watchImage = item => {
-    this.setState({
-      visible: true
-    })
+  // 删除
+  delete = item => {
+    this.ref = showConfirm(
+      () => this.confirm(),
+      <div className="del-text">确定删除“{item.name}”账号吗？?</div>,
+      '提示',
+      458
+    )
   }
 
-  // 查看信息
-  watchInfo = item => {
-    this.props.history.push('/livedetail')
+  // 编辑
+  edit = item => {
+    this.selectRecord = item
+    this.ref = showConfirm(
+      () => this.confirm(),
+      <Add data={item} />,
+      '新建账号',
+      458
+    )
+  }
+
+  // 新增
+  add = () => {
+    this.ref = showConfirm(() => this.confirm(), <Add />, '新建账号', 458)
   }
 
   // 确认
-  confirm = () => {}
+  confirm = () => {
+    eventObject.accountEvent.dispatch(this.ref)
+    return new Promise((resolve, reject) => {
+      reject
+    }).catch(() => console.log('Oops errors!'))
+  }
 
   // 分页
   handlePageChange = pageNumber => {
     this.setState({
       current: pageNumber
+    })
+  }
+
+  // 取消弹框
+  handleOk = () => {
+    this.setState({
+      visible: false
     })
   }
 
@@ -137,25 +137,14 @@ class Livecall extends Component {
     })
   }
 
-  dropChange = (e, key) => {
-    this.setState({
-      [key]: e
-    })
-  }
-
   render() {
-    const { data, searchContent, current, visible, selected } = this.state
+    const { data, searchContent, current } = this.state
     return (
       <div className="panel">
-        <div id="liveCall">
+        <div id="Account">
           <div className="search-wrap">
-            <SelectMenu
-              data={dropData}
-              change={e => this.dropChange(e, 'selected')}
-              defaultValue={selected}
-            />
-            <Button className="filter" onClick={this.filter}>
-              筛选
+            <Button className="add" onClick={this.add}>
+              新建账号
             </Button>
             <div className="search">
               <Input
@@ -181,22 +170,6 @@ class Livecall extends Component {
           <div className="total">
             共57条记录 <span className="page-num">每页10条</span>
           </div>
-          {/* 弹框 */}
-          <Modal
-            title="车辆图片"
-            visible={visible}
-            className="watch-image-dialog"
-            okText="确认"
-            cancelText="关闭"
-            onCancel={this.handleCancel}
-            width={457}
-          >
-            <img
-              src={require('../../../images/bg.png')}
-              width="457"
-              height="270"
-            />
-          </Modal>
         </div>
       </div>
     )

@@ -2,7 +2,7 @@ import { withRouter } from 'react-router-dom'
 import { hot } from 'react-hot-loader/root'
 import React, { Component } from 'react'
 import { Input, Button, message } from 'antd'
-import '../../../../less/normal.less'
+import '../../../less/normal.less'
 import './style.less'
 import Title from '~/component/Title'
 import SelectMenu from '~/component/SelectMenu'
@@ -74,22 +74,22 @@ class LivecallDeatil extends Component {
             <div className="left">
               <div className="left-item">
                 <div className="img-watch">入场车辆监控</div>
-                <img src={require('../../../../images/bg.png')} width="100%" />
+                <img src={require('../../../images/bg.png')} width="100%" />
               </div>
               <div className="left-item">
                 <div className="img-watch">出场车辆监控</div>
-                <img src={require('../../../../images/bg.png')} width="100%" />
+                <img src={require('../../../images/bg.png')} width="100%" />
               </div>
               <div className="left-item">
                 <div className="img-watch">入场车道监控</div>
-                <img src={require('../../../../images/bg.png')} width="100%" />
+                <img src={require('../../../images/bg.png')} width="100%" />
               </div>
               <div className="left-item">
                 <div className="img-watch">出场车道监控</div>
-                <img src={require('../../../../images/bg.png')} width="100%" />
+                <img src={require('../../../images/bg.png')} width="100%" />
               </div>
               <div className="bottom-calling">
-                <p className="text">通话中 10:33</p>
+                <span className="text">通话中 10:33</span>
               </div>
             </div>
             {/* 左边内容 */}
