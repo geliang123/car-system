@@ -5,55 +5,52 @@ import { hot } from 'react-hot-loader/root'
 import { withRouter } from 'react-router-dom'
 import '../../less/normal.less'
 import './style.less'
-import defaultData from '../Account/data.json'
+import fetch from '~/utils/fetch'
+import urlCng from '~/config/url'
 
+const pageSize = 2
 @hot
 @withRouter
 class EventRecord extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      data: defaultData.data,
+      data: [],
       searchContent: '',
       current: 1, // 当前页
       visible: false,
-      url: ''
+      total: 0,
     }
     this.headers = [
       {
-        title: 'ID',
+        title: '时间',
         dataIndex: 'id',
         key: 'ID'
       },
       {
-        title: '用户名',
-        dataIndex: 'username',
-        key: 'username'
+        title: '停车场',
+        dataIndex: 'parkName',
+        key: 'parkName'
       },
       {
-        title: '密码',
-        dataIndex: 'password',
-        key: 'password'
+        title: '车牌',
+        dataIndex: 'carNum',
+        key: 'carNum'
       },
       {
-        title: '姓名',
-        dataIndex: 'name',
-        key: 'name'
+        title: '入场时间',
+        dataIndex: 'inTimeStr',
+        key: 'inTimeStr'
       },
       {
-        title: '角色',
-        dataIndex: 'role',
-        key: 'role'
+        title: '出场时间',
+        dataIndex: 'outTimeStr',
+        key: 'outTimeStr'
       },
       {
-        title: '手机号',
-        dataIndex: 'phone',
-        key: 'phone'
-      },
-      {
-        title: '邮箱',
-        dataIndex: 'email',
-        key: 'email'
+        title: '支付费用',
+        dataIndex: 'payAmount',
+        key: 'payAmount'
       },
       {
         title: '操作',
@@ -61,12 +58,6 @@ class EventRecord extends Component {
         key: 'op',
         render: (text, record) => (
           <div>
-            <span
-              className="watch-image"
-              onClick={() => this.watchImage(record)}
-            >
-              车辆图片
-            </span>
             <span className="watch-info" onClick={() => this.watchInfo(record)}>
               查看详情
             </span>
@@ -76,7 +67,9 @@ class EventRecord extends Component {
     ]
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.getList()
+  }
 
   changeValue = e => {
     this.setState({
@@ -93,11 +86,29 @@ class EventRecord extends Component {
 
   // 查看信息
   watchInfo = item => {
-    this.props.history.push('/detail')
+    this.props.history.push('/detail', { data: item })
   }
 
   // 确认
   confirm = () => {}
+
+  getList = () => {
+    const { current, searchContent } = this.state
+    let url = `${urlCng.callList}?pageSize=${pageSize}&curPage=${current}&status=4`
+    if (searchContent) {
+      url += `&userName=${searchContent}`
+    }
+    fetch({
+      url
+    }).then(res => {
+      if (res.code === 1) {
+        this.setState({
+          data: res.result.data,
+          total: res.result.page.totalNum
+        })
+      }
+    })
+  }
 
   // 分页
   handlePageChange = pageNumber => {
@@ -114,7 +125,7 @@ class EventRecord extends Component {
   }
 
   render() {
-    const { data, searchContent, current, visible } = this.state
+    const { data, searchContent, current, visible, total } = this.state
     return (
       <div className="panel">
         <div id="eventRecord">
@@ -144,7 +155,7 @@ class EventRecord extends Component {
             }}
           />
           <div className="total">
-            共57条记录 <span className="page-num">每页10条</span>
+            共{total}条记录 <span className="page-num">每页{pageSize}条</span>
           </div>
           {/* 弹框 */}
           <Modal

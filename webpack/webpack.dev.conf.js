@@ -8,8 +8,8 @@ module.exports = {
     app: [
       '@babel/polyfill',
       'react-hot-loader/patch',
-      path.resolve(__dirname, '..', 'src/index.js'),
-    ],
+      path.resolve(__dirname, '..', 'src/index.js')
+    ]
   },
   devServer: {
     contentBase: path.join(__dirname, '../dist/'),
@@ -17,10 +17,17 @@ module.exports = {
     port: 8081,
     hot: true,
     overlay: true,
-    historyApiFallback: true,
+    historyApiFallback: true
+    // proxy: {
+    //   '/': {
+    //     target: 'http://47.104.198.34:8080/',
+    //     secure: true,
+    //     changeOrigin: true
+    //   }
+    // }
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NamedModulesPlugin(),
-  ],
+    new webpack.NamedModulesPlugin()
+  ]
 }

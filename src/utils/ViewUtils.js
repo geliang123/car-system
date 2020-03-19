@@ -12,7 +12,7 @@ export const showConfirm = (
     content: content || '',
     title: title || '',
     width: size || 824,
-    iconType: '',
+    // iconType: '',
     closable: true,
     maskClosable: false,
     onOk: confirmCallback,

@@ -5,9 +5,11 @@ import { hot } from 'react-hot-loader/root'
 import { withRouter } from 'react-router-dom'
 import '../../less/normal.less'
 import './style.less'
-import defaultData from '../Account/data.json'
+import fetch from '~/utils/fetch'
+import urlCng from '~/config/url'
 import SelectMenu from '~/component/SelectMenu'
 
+const pageSize = 2
 const dropData = [
   {
     id: 'all',
@@ -33,12 +35,12 @@ class Livecall extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      data: defaultData.data,
+      data: [],
       searchContent: '',
       current: 1, // 当前页
       visible: false,
-      url: '',
-      selected: 'all'
+      selected: 'all',
+      total: 0
     }
     this.headers = [
       {
@@ -48,18 +50,18 @@ class Livecall extends Component {
       },
       {
         title: '停车场',
-        dataIndex: 'username',
-        key: 'username'
+        dataIndex: 'parkName',
+        key: 'parkName'
       },
       {
         title: '出入场',
-        dataIndex: 'password',
-        key: 'password'
+        dataIndex: 'inOutStr',
+        key: 'inOutStr'
       },
       {
         title: '车牌号',
-        dataIndex: 'name',
-        key: 'name'
+        dataIndex: 'carNum',
+        key: 'carNum'
       },
       {
         title: '呼叫时间',
@@ -68,21 +70,16 @@ class Livecall extends Component {
       },
       {
         title: '等待时长',
-        dataIndex: 'phone',
-        key: 'phone'
+        dataIndex: 'waitCountTime',
+        key: 'waitCountTime'
       },
       {
         title: '事件处理',
-        dataIndex: 'email',
-        key: 'email'
-      },
-      {
-        title: '操作',
         dataIndex: 'op',
         key: 'op',
         render: (text, record) => (
           <div>
-            <span className="online" onClick={() => this.watchImage(record)}>
+            <span className="online" onClick={() => this.answer(record)}>
               通话中
             </span>
             <span className="hang-up" onClick={() => this.watchInfo(record)}>
@@ -100,7 +97,9 @@ class Livecall extends Component {
     ]
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.getList()
+  }
 
   changeValue = e => {
     this.setState({
@@ -108,26 +107,42 @@ class Livecall extends Component {
     })
   }
 
-  // 查看图片
-  watchImage = item => {
-    this.setState({
-      visible: true
-    })
+  // 进入详情
+  answer = item => {
+    this.props.history.push('/livedetail', { data: item })
   }
 
   // 查看信息
-  watchInfo = item => {
-    this.props.history.push('/livedetail')
-  }
+  watchInfo = item => {}
 
-  // 确认
-  confirm = () => {}
+  getList = () => {
+    const { current, searchContent } = this.state // &userName=${searchContent}
+    let url = `${urlCng.callList}?pageSize=${pageSize}&curPage=${current}`
+    if (searchContent) {
+      url += `&userName=${searchContent}`
+    }
+    fetch({
+      url
+    }).then(res => {
+      if (res.code === 1) {
+        this.setState({
+          data: res.result.data,
+          total: res.result.page.totalNum
+        })
+      }
+    })
+  }
 
   // 分页
   handlePageChange = pageNumber => {
-    this.setState({
-      current: pageNumber
-    })
+    this.setState(
+      {
+        current: pageNumber
+      },
+      () => {
+        this.getList()
+      }
+    )
   }
 
   // 取消弹框
@@ -144,7 +159,14 @@ class Livecall extends Component {
   }
 
   render() {
-    const { data, searchContent, current, visible, selected } = this.state
+    const {
+      data,
+      searchContent,
+      current,
+      visible,
+      selected,
+      total
+    } = this.state
     return (
       <div className="panel">
         <div id="liveCall">
@@ -162,7 +184,7 @@ class Livecall extends Component {
             <div className="search">
               <Input
                 className="search-content"
-                placeholder="请输入账户关键词"
+                placeholder="请输入车牌号关键词"
                 value={searchContent}
                 onChange={e => this.changeValue(e, 'username')}
               />
@@ -176,12 +198,14 @@ class Livecall extends Component {
             scroll={{ x: true }}
             rowKey={(record, index) => index}
             pagination={{
+              total,
+              pageSize,
               current,
               onChange: this.handlePageChange
             }}
           />
           <div className="total">
-            共57条记录 <span className="page-num">每页10条</span>
+            共{total}条记录 <span className="page-num">每页{pageSize}条</span>
           </div>
           {/* 弹框 */}
           <Modal

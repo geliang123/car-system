@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
-import { Menu, Tabs } from 'antd'
+import { Menu } from 'antd'
 import { Link, withRouter } from 'react-router-dom'
-
+import fetch from '~/utils/fetch'
+import { removeStore } from '~/utils/index'
+import urlCng from '~/config/url'
 import './index.less'
 
-const { TabPane } = Tabs
 @withRouter
 class NavTop extends Component {
   state = {
-    key: 'livecall'
+    key: 'account'
   }
 
   handleChange = tab => {
@@ -33,6 +34,18 @@ class NavTop extends Component {
   handleClick = e => {
     this.setState({
       key: e.key
+    })
+  }
+
+  logout = () => {
+    fetch({
+      url: urlCng.logout,
+      method: 'POST'
+    }).then(res => {
+      if (res.code === 1) {
+        removeStore('token')
+        this.props.history.push('/')
+      }
     })
   }
 
@@ -94,7 +107,9 @@ class NavTop extends Component {
             className="user-image"
           />
           <div>张三</div>
-          <div className="login-out">退出</div>
+          <div className="login-out" onClick={this.logout}>
+            退出
+          </div>
           <div className="status">
             <span className="circle sleep" />
             休息

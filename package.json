@@ -23,9 +23,12 @@
     "react-dom": "16.8.6",
     "react-free-scrollbar": "^0.3.4",
     "react-hot-loader": "^4.12.12",
+    "react-redux": "^7.2.0",
     "react-router": "5.0.0",
     "react-router-dom": "5.0.0",
     "react-slick": "^0.25.2",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
     "signals": "^1.0.0",
     "slick-carousel": "^1.8.1"
   },

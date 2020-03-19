@@ -1,9 +1,13 @@
 import React, { Component } from 'react'
-import { Icon, Input, Button } from 'antd'
+import { Icon, Input, Button, message } from 'antd'
 import { withRouter } from 'react-router-dom'
 import { hot } from 'react-hot-loader/root'
+import { setLocalStore } from '~/utils/index'
+import fetch from '~/utils/fetch'
 import '../../less/normal.less'
 import './style.less'
+import urlCng from '~/config/url'
+import md5 from 'md5'
 
 @hot
 @withRouter
@@ -22,7 +26,30 @@ class Login extends Component {
   }
 
   login = () => {
-    this.props.history.push('/account')
+    const { username, password } = this.state
+    if (!username) {
+      message.error('请填写用户名')
+      return
+    }
+    if (!password) {
+      message.error('请填写密码')
+      return
+    }
+    fetch({
+      url: urlCng.login,
+      method: 'POST',
+      data: {
+        username,
+        password // md5(password)
+      }
+    }).then(res => {
+      if (res.code === 1) {
+        setLocalStore('token', res.result)
+        this.props.history.push('/account')
+      } else {
+        message.error(res.msg)
+      }
+    })
   }
 
   render() {

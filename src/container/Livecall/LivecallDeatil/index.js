@@ -6,6 +6,9 @@ import '../../../less/normal.less'
 import './style.less'
 import Title from '~/component/Title'
 import SelectMenu from '~/component/SelectMenu'
+import urlCng from '~/config/url'
+import { getStore, setStore } from '~/utils'
+import fetch from '~/utils/fetch'
 
 const { TextArea } = Input
 const dropData = [
@@ -33,11 +36,21 @@ class LivecallDeatil extends Component {
     super(props)
     this.state = {
       questionSelected: '',
-      comments: ''
+      comments: '',
+      data: {}
     }
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    const { location } = this.props
+    const callDetailId =
+      (location.state.data && location.state.data.parkId) ||
+      getStore('callDetailId')
+    setStore('callDetailId', callDetailId)
+    if (callDetailId) {
+      this.getDetail(callDetailId)
+    }
+  }
 
   goback = () => {
     this.props.history.goBack()
@@ -61,6 +74,17 @@ class LivecallDeatil extends Component {
     if (comments.length < 4) {
       message.warning('问题描述需要大于4个文字')
     }
+  }
+
+  getDetail = id => {
+    const url = `${urlCng.callDetail}?id=${id}`
+    fetch({
+      url
+    }).then(res => {
+      console.log(res)
+      if (res.code === 1) {
+      }
+    })
   }
 
   render() {
@@ -90,13 +114,23 @@ class LivecallDeatil extends Component {
               </div>
               <div className="bottom-calling">
                 <span className="text">通话中 10:33</span>
+                <div>
+                  <div className="mute">
+                    <span className="icon" />
+                    <span>静音</span>
+                  </div>
+                  <div className="hangup">
+                    <span className="icon" />
+                    <span>挂断</span>
+                  </div>
+                </div>
               </div>
             </div>
             {/* 左边内容 */}
             <div className="right">
               <div className="top-title">
-                <span style={{ 'margin-left': '13.5pt' }}>红星大厦停车场</span>
-                <span style={{ 'margin-right': '13.5pt' }}>2020-03-03</span>
+                <span style={{ marginLeft: '13.5pt' }}>红星大厦停车场</span>
+                <span style={{ marginRight: '13.5pt' }}>2020-03-03</span>
               </div>
               {/* 操作按钮 */}
               <div className="wrap-info">

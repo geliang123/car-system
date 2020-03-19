@@ -1,35 +1,36 @@
 /* eslint-disable array-callback-return */
 import React, { Component } from 'react'
-import { Table, Button, Input } from 'antd'
+import { Table, Button, Input, message } from 'antd'
 import { hot } from 'react-hot-loader/root'
 import { showConfirm } from '../../utils/ViewUtils'
 import eventObject from '~/config/eventSignal'
 import Add from './Add/index'
+import fetch from '~/utils/fetch'
+import urlCng from '~/config/url'
 import '../../less/normal.less'
 import './style.less'
-import defaultData from './data.json'
 
+const pageSize = 2
 @hot
 class Livecall extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      data: defaultData.data,
+      data: [],
       searchContent: '',
       current: 1, // 当前页
-      visible: false,
-      op: 'del'
+      total: 0
     }
     this.headers = [
       {
-        title: '时间',
+        title: 'ID',
         dataIndex: 'id',
-        key: 'ID'
+        key: 'id'
       },
       {
         title: '用户名',
-        dataIndex: 'username',
-        key: 'username'
+        dataIndex: 'userName',
+        key: 'userName'
       },
       {
         title: '密码',
@@ -38,18 +39,18 @@ class Livecall extends Component {
       },
       {
         title: '姓名',
-        dataIndex: 'name',
-        key: 'name'
+        dataIndex: 'realName',
+        key: 'realName'
       },
       {
         title: '角色',
-        dataIndex: 'role',
-        key: 'role'
+        dataIndex: 'roleId',
+        key: 'roleId'
       },
       {
         title: '手机号',
-        dataIndex: 'phone',
-        key: 'phone'
+        dataIndex: 'tel',
+        key: 'tel'
       },
       {
         title: '邮箱',
@@ -74,7 +75,9 @@ class Livecall extends Component {
     ]
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.getList()
+  }
 
   changeValue = e => {
     this.setState({
@@ -82,14 +85,51 @@ class Livecall extends Component {
     })
   }
 
+  getList = () => {
+    const { current, searchContent } = this.state // &userName=${searchContent}
+    let url = `${urlCng.accountList}?pageSize=${pageSize}&curPage=${current}`
+    if (searchContent) {
+      url += `&userName=${searchContent}`
+    }
+    fetch({
+      url
+    }).then(res => {
+      if (res.code === 1) {
+        this.setState({
+          data: res.result.data,
+          total: res.result.page.totalNum
+        })
+      }
+    })
+  }
+
   // 删除
   delete = item => {
     this.ref = showConfirm(
-      () => this.confirm(),
-      <div className="del-text">确定删除“{item.name}”账号吗？?</div>,
+      () => this.deleteData(item),
+      <div className="del-text">确定删除“{item.userName}”账号吗？?</div>,
       '提示',
       458
     )
+  }
+
+  deleteData = item => {
+    fetch({
+      url: urlCng.accountDel,
+      method: 'POST',
+      data: { id: item.id }
+    }).then(res => {
+      if (res.code === 1) {
+        this.ref.destroy()
+        this.getList()
+        message.success('删除成功')
+      } else {
+        message.waring('删除失败')
+      }
+    })
+    return new Promise((resolve, reject) => {
+      reject
+    }).catch(() => console.log('Oops errors!'))
   }
 
   // 编辑
@@ -97,7 +137,7 @@ class Livecall extends Component {
     this.selectRecord = item
     this.ref = showConfirm(
       () => this.confirm(),
-      <Add data={item} />,
+      <Add data={item} op="edit" updateData={this.getList} />,
       '新建账号',
       458
     )
@@ -105,7 +145,12 @@ class Livecall extends Component {
 
   // 新增
   add = () => {
-    this.ref = showConfirm(() => this.confirm(), <Add />, '新建账号', 458)
+    this.ref = showConfirm(
+      () => this.confirm(),
+      <Add op="add" updateData={this.getList} />,
+      '新建账号',
+      458
+    )
   }
 
   // 确认
@@ -118,27 +163,25 @@ class Livecall extends Component {
 
   // 分页
   handlePageChange = pageNumber => {
-    this.setState({
-      current: pageNumber
-    })
+    this.setState(
+      {
+        current: pageNumber
+      },
+      () => {
+        this.getList()
+      }
+    )
   }
 
-  // 取消弹框
-  handleOk = () => {
-    this.setState({
-      visible: false
-    })
-  }
-
-  // 取消弹框
-  handleCancel = () => {
-    this.setState({
-      visible: false
+  // 搜索
+  search = () => {
+    this.setState({ current: 1 }, () => {
+      this.getList()
     })
   }
 
   render() {
-    const { data, searchContent, current } = this.state
+    const { data, searchContent, current, total } = this.state
     return (
       <div className="panel">
         <div id="Account">
@@ -153,7 +196,9 @@ class Livecall extends Component {
                 value={searchContent}
                 onChange={e => this.changeValue(e, 'username')}
               />
-              <Button className="search-btn">搜索</Button>
+              <Button className="search-btn" onClick={this.search}>
+                搜索
+              </Button>
             </div>
           </div>
           {/* 表格数据 */}
@@ -163,12 +208,14 @@ class Livecall extends Component {
             scroll={{ x: true }}
             rowKey={(record, index) => index}
             pagination={{
+              total,
+              pageSize,
               current,
               onChange: this.handlePageChange
             }}
           />
           <div className="total">
-            共57条记录 <span className="page-num">每页10条</span>
+            共{total}条记录 <span className="page-num">每页10条</span>
           </div>
         </div>
       </div>

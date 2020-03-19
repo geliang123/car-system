@@ -1,8 +1,10 @@
 /* eslint-disable array-callback-return */
 import React, { Component } from 'react'
-import { Form, Select, Input } from 'antd'
+import { Form, Select, Input, message } from 'antd'
 import { hot } from 'react-hot-loader/root'
 import eventObject from '~/config/eventSignal'
+import fetch from '~/utils/fetch'
+import urlCng from '~/config/url'
 import '../../../less/normal.less'
 import './style.less'
 
@@ -31,22 +33,26 @@ class Add extends Component {
 
   save = ref => {
     this.props.form.validateFields((err, values) => {
-      console.log(values)
-      // if (!err) {
-      //   this.props
-      //     .updateData(values)
-      //     .then(response => {
-      //       if (response.data.updateSimilarDaySetting.ok) {
-      //         message.success('保存成功')
-      //       } else {
-      //         message.error('保存失败')
-      //       }
-      //       ref.destroy()
-      //     })
-      //     .catch(e => {
-      //       console.error(e)
-      //     })
-      // }
+      const { op, data } = this.props
+      const url = op === 'edit' ? urlCng.accountEdit : urlCng.accountAdd
+      const params =
+        op === 'edit' ? Object.assign({}, values, { id: 16 }) : values
+
+      if (!err) {
+        fetch({
+          url,
+          method: 'POST',
+          data: params
+        }).then(res => {
+          if (res.code === 1) {
+            ref.destroy()
+            this.props.updateData()
+            message.success('操作成功')
+          } else {
+            message.warning('操作失败')
+          }
+        })
+      }
     })
   }
 
@@ -57,13 +63,12 @@ class Add extends Component {
     }
     const { getFieldDecorator } = this.props.form
     let { data } = this.props
-    console.log(data)
     if (!data) data = {}
     return (
       <div id="Add">
         <Form onSubmit={this.handleSubmit}>
           <FormItem {...formItemLayout} label="账号角色">
-            {getFieldDecorator('account', {
+            {getFieldDecorator('roleId', {
               initialValue: data.roleId || accountArr[0].id
             })(
               <Select>
@@ -76,8 +81,8 @@ class Add extends Component {
             )}
           </FormItem>
           <FormItem {...formItemLayout} label="用  户  名">
-            {getFieldDecorator('username', {
-              initialValue: data.username
+            {getFieldDecorator('userName', {
+              initialValue: data.userName
             })(<Input placeholder="请输入用户名" allowClear />)}
           </FormItem>
           <FormItem {...formItemLayout} label="密码">
@@ -96,13 +101,13 @@ class Add extends Component {
             })(<Input type="password" placeholder="请输入密码" allowClear />)}
           </FormItem>
           <FormItem {...formItemLayout} label="姓名">
-            {getFieldDecorator('name', {
-              initialValue: data.name
+            {getFieldDecorator('realName', {
+              initialValue: data.realName
             })(<Input placeholder="请输入姓名" allowClear />)}
           </FormItem>
           <FormItem {...formItemLayout} label="手机">
-            {getFieldDecorator('phone', {
-              initialValue: data.phone,
+            {getFieldDecorator('tel', {
+              initialValue: data.tel,
               rules: [
                 {
                   pattern: /^1[34578]\d{9}$/,

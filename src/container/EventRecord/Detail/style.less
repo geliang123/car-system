@@ -2,7 +2,7 @@
     color: #333333;
     font-size: 15pt;
     background-color: #fff;
-    padding: 16.5pt;
+    padding: 16.5pt 16.5pt 60.5pt;
     border-radius: 8pt;
 
     .detail-content {
@@ -20,21 +20,43 @@
     }
 
     .row-content {
-        margin-top: 11.5pt;
+        margin-top: 14pt;
         display: flex;
         justify-content: space-between;
         font-size: 12pt;
         color: #999999;
-        font-weight: 300;
+        font-weight: 400;
+
+        & span:first-child {
+            min-width: 60pt;
+        }
 
         & span:last-child {
             color: #333333;
+            display: block;
+            width: 300pt;
+            word-break: break-all;
+            text-align: right;
         }
     }
 
-    .img-title {
-        margin: 10pt 0 5pt;
-        color: #707070;
-        font-size: 9pt;
+    .detail-img {
+        display: flex;
+        flex-direction: column;
+
+        .img-title {
+            margin: 10pt 0 5pt;
+            color: #707070;
+            font-size: 9pt;
+
+            &.out {
+                margin-top: 21.5pt;
+            }
+        }
+
+        img {
+            width: 322.5pt;
+            height: 145pt;
+        }
     }
 }
