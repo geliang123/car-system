@@ -40,12 +40,13 @@ class Login extends Component {
       method: 'POST',
       data: {
         username,
-        password // md5(password)
+        password // : md5(password)
       }
     }).then(res => {
       if (res.code === 1) {
-        setLocalStore('token', res.result)
-        this.props.history.push('/account')
+        setLocalStore('token', res.result.token)
+        setLocalStore('userInfo', res.result.user)
+        this.props.history.push('/call')
       } else {
         message.error(res.msg)
       }

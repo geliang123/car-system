@@ -1,16 +1,17 @@
 /* eslint-disable array-callback-return */
 import React, { Component } from 'react'
-import { Table, Button, Input, message } from 'antd'
+import { Table, Button, Input, message, Modal } from 'antd'
 import { hot } from 'react-hot-loader/root'
 import { showConfirm } from '../../utils/ViewUtils'
 import eventObject from '~/config/eventSignal'
 import Add from './Add/index'
 import fetch from '~/utils/fetch'
 import urlCng from '~/config/url'
+import accountArr from '~/config/dropData'
 import '../../less/normal.less'
 import './style.less'
 
-const pageSize = 2
+const pageSize = 10
 @hot
 class Livecall extends Component {
   constructor(props) {
@@ -19,7 +20,8 @@ class Livecall extends Component {
       data: [],
       searchContent: '',
       current: 1, // 当前页
-      total: 0
+      total: 0,
+      visible: false
     }
     this.headers = [
       {
@@ -32,11 +34,11 @@ class Livecall extends Component {
         dataIndex: 'userName',
         key: 'userName'
       },
-      {
-        title: '密码',
-        dataIndex: 'password',
-        key: 'password'
-      },
+      // {
+      //   title: '密码',
+      //   dataIndex: 'password',
+      //   key: 'password'
+      // },
       {
         title: '姓名',
         dataIndex: 'realName',
@@ -45,7 +47,8 @@ class Livecall extends Component {
       {
         title: '角色',
         dataIndex: 'roleId',
-        key: 'roleId'
+        key: 'roleId',
+        render: value => <div>{this.getNameById(value)}</div>
       },
       {
         title: '手机号',
@@ -63,10 +66,10 @@ class Livecall extends Component {
         key: 'op',
         render: (text, record) => (
           <div>
-            <span className="del" onClick={() => this.delete(record)}>
+            <span className="del" onClick={() => this.delete(record, 'del')}>
               删除
             </span>
-            <span className="edit" onClick={() => this.edit(record)}>
+            <span className="edit" onClick={() => this.edit(record, 'edit')}>
               编辑
             </span>
           </div>
@@ -85,6 +88,14 @@ class Livecall extends Component {
     })
   }
 
+  getNameById = id => {
+    const item = accountArr.filter(v => v.id === id)
+    if (item && item.length) {
+      return item[0].displayName
+    }
+    return null
+  }
+
   getList = () => {
     const { current, searchContent } = this.state // &userName=${searchContent}
     let url = `${urlCng.accountList}?pageSize=${pageSize}&curPage=${current}`
@@ -99,6 +110,8 @@ class Livecall extends Component {
           data: res.result.data,
           total: res.result.page.totalNum
         })
+      } else {
+        message.error(res.msg)
       }
     })
   }
@@ -107,13 +120,13 @@ class Livecall extends Component {
   delete = item => {
     this.ref = showConfirm(
       () => this.deleteData(item),
-      <div className="del-text">确定删除“{item.userName}”账号吗？?</div>,
+      <div className="del-text">确认删除“{item.userName}”账号?</div>,
       '提示',
       458
     )
   }
 
-  deleteData = item => {
+  deleteData = item => new Promise((resolve, reject) => {
     fetch({
       url: urlCng.accountDel,
       method: 'POST',
@@ -124,13 +137,11 @@ class Livecall extends Component {
         this.getList()
         message.success('删除成功')
       } else {
-        message.waring('删除失败')
+        message.error(res.msg)
       }
     })
-    return new Promise((resolve, reject) => {
-      reject
-    }).catch(() => console.log('Oops errors!'))
-  }
+    reject
+  })
 
   // 编辑
   edit = item => {
@@ -138,7 +149,7 @@ class Livecall extends Component {
     this.ref = showConfirm(
       () => this.confirm(),
       <Add data={item} op="edit" updateData={this.getList} />,
-      '新建账号',
+      '编辑账号',
       458
     )
   }
@@ -154,12 +165,10 @@ class Livecall extends Component {
   }
 
   // 确认
-  confirm = () => {
+  confirm = () => new Promise((resolve, reject) => {
     eventObject.accountEvent.dispatch(this.ref)
-    return new Promise((resolve, reject) => {
-      reject
-    }).catch(() => console.log('Oops errors!'))
-  }
+    reject
+  }).catch(() => console.log('Oops errors!'))
 
   // 分页
   handlePageChange = pageNumber => {
@@ -181,7 +190,7 @@ class Livecall extends Component {
   }
 
   render() {
-    const { data, searchContent, current, total } = this.state
+    const { data, searchContent, current, total, visible } = this.state
     return (
       <div className="panel">
         <div id="Account">
@@ -218,6 +227,20 @@ class Livecall extends Component {
             共{total}条记录 <span className="page-num">每页10条</span>
           </div>
         </div>
+        {/* 弹框 */}
+        {/* <Modal
+          title="车辆图片"
+          visible={visible}
+          className="watch-image-dialog"
+          okText="确认"
+          cancelText="关闭"
+          onCancel={this.handleCancel}
+          width={457}
+          destroyOnClose
+          confirmLoading={false}
+        >
+          <img src={require('../../images/bg.png')} width="457" height="270" />
+        </Modal> */}
       </div>
     )
   }

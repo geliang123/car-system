@@ -11,10 +11,11 @@ export default class SelectMenu extends React.Component {
 
   render() {
     const { data, defaultValue, style, className } = this.props
+    if (!Array.isArray(data)) return null
     return (
       <Select
         showSearch
-        style={style || { width: 210, }}
+        style={style || { width: 210 }}
         className={className}
         value={defaultValue}
         optionFilterProp="children"
@@ -24,7 +25,7 @@ export default class SelectMenu extends React.Component {
       >
         {data.map((item, i) => (
           <Option key={i} value={item.id}>
-            {item.displayName}
+            {item.name}
           </Option>
         ))}
       </Select>

@@ -16,11 +16,13 @@ export const showConfirm = (
     closable: true,
     maskClosable: false,
     onOk: confirmCallback,
+    confirmLoading: false,
     okText: '确认',
     cancelText: '取消',
     destroyOnClose: true,
     onCancel: cancelCallback,
-    className: 'dialog-car'
+    className: 'dialog-car',
+    autoFocusButton: null
   })
   return ref
 }

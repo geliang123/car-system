@@ -5,21 +5,13 @@ import { hot } from 'react-hot-loader/root'
 import eventObject from '~/config/eventSignal'
 import fetch from '~/utils/fetch'
 import urlCng from '~/config/url'
+import accountArr from '~/config/dropData'
 import '../../../less/normal.less'
 import './style.less'
 
 const FormItem = Form.Item
 const Option = Select.Option
-const accountArr = [
-  {
-    id: '1',
-    displayName: '超级管理员'
-  },
-  {
-    id: '2',
-    displayName: '普通管理员'
-  }
-]
+
 @hot
 class Add extends Component {
   componentDidMount() {
@@ -34,22 +26,21 @@ class Add extends Component {
   save = ref => {
     this.props.form.validateFields((err, values) => {
       const { op, data } = this.props
-      const url = op === 'edit' ? urlCng.accountEdit : urlCng.accountAdd
       const params =
-        op === 'edit' ? Object.assign({}, values, { id: 16 }) : values
+        op === 'edit' ? Object.assign({}, values, { id: data.id }) : values
 
       if (!err) {
         fetch({
-          url,
+          url: urlCng.accountAdd,
           method: 'POST',
           data: params
         }).then(res => {
+          ref.destroy()
           if (res.code === 1) {
-            ref.destroy()
             this.props.updateData()
             message.success('操作成功')
           } else {
-            message.warning('操作失败')
+            message.error(res.msg)
           }
         })
       }

@@ -65,7 +65,7 @@ class ChartComponent extends Component {
     xAxis: [
       {
         type: 'category',
-        data: data.xAxis,
+        data: data.xaxis,
         axisLine: {
           show: false
         },
@@ -115,47 +115,44 @@ class ChartComponent extends Component {
       {
         name: data.displayName,
         symbol: 'none',
-        data: data.data,
+        data: data.hours,
         type: 'line',
         color: '#FFBA01'
       }
     ]
   })
 
+  getArr = data => {
+    const arr = []
+    for (const key in data) {
+      arr.push(data[key])
+    }
+    return arr
+  }
+
   render() {
-    const option = this.formatOption(defaultData.infeed)
+    const { data, allData } = this.props
+    if (!Object.keys(allData).length || !data || !Object.keys(data).length) {
+      return null
+    }
+    const option = this.formatOption(data)
+    const dataAll = this.getArr(allData)
     return (
-      <div>
-        <div>11</div>
-        <div className="chart-content">
-          <ReactEcharts
-            option={option}
-            notMerge
-            style={{ width: '100%', height: '366pt' }}
-            className="chart-style"
-          />
-          <div className="chart-info">
+      <div className="chart-content">
+        <ReactEcharts
+          option={option}
+          notMerge
+          style={{ width: '100%', height: '366pt' }}
+          className="chart-style"
+        />
+
+        <div className="chart-info">
+          {dataAll.map(item => (
             <div className="info-item">
-              <div>进线量</div>
-              <div>36</div>
+              <div>{item.displayName}</div>
+              <div>{item.xaxisSum}</div>
             </div>
-            <div className="info-item">
-              <div>接听量</div>
-              <div>36</div>
-            </div>
-            <div className="info-item">
-              <div>已咨询人数</div>
-              <div>36</div>
-            </div>
-            <div className="info-item">
-              <div>当前排队人数</div>
-              <div>36</div>
-            </div>
-            <div className="info-item">
-              <div>今日放弃量</div>
-              <div>36</div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     )

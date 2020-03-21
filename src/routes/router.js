@@ -15,7 +15,7 @@ export default [
     component: Login
   },
   {
-    path: ['/liveCall'],
+    path: ['/call'],
     component: LiveCall
   },
   {
@@ -23,7 +23,7 @@ export default [
     component: Account
   },
   {
-    path: ['/eventRecord'],
+    path: ['/event'],
     component: EventRecord
   },
   {

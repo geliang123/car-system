@@ -1,6 +1,6 @@
 /* eslint-disable array-callback-return */
 import React, { Component } from 'react'
-import { Table, Button, Input, Modal } from 'antd'
+import { Table, Button, Input, Modal, message } from 'antd'
 import { hot } from 'react-hot-loader/root'
 import { withRouter } from 'react-router-dom'
 import '../../less/normal.less'
@@ -8,26 +8,9 @@ import './style.less'
 import fetch from '~/utils/fetch'
 import urlCng from '~/config/url'
 import SelectMenu from '~/component/SelectMenu'
+import { getUrl } from '~/utils/index'
 
-const pageSize = 2
-const dropData = [
-  {
-    id: 'all',
-    displayName: '全部'
-  },
-  {
-    id: '1',
-    displayName: '停车场'
-  },
-  {
-    id: '2',
-    displayName: '出入场'
-  },
-  {
-    id: '3',
-    displayName: '等待时长'
-  }
-]
+const pageSize = 10
 
 @hot
 @withRouter
@@ -38,9 +21,9 @@ class Livecall extends Component {
       data: [],
       searchContent: '',
       current: 1, // 当前页
-      visible: false,
       selected: 'all',
-      total: 0
+      total: 0,
+      parkList: [] // 停车场位置
     }
     this.headers = [
       {
@@ -65,8 +48,8 @@ class Livecall extends Component {
       },
       {
         title: '呼叫时间',
-        dataIndex: 'role',
-        key: 'role'
+        dataIndex: 'createTimeStr',
+        key: 'createTimeStr'
       },
       {
         title: '等待时长',
@@ -98,12 +81,27 @@ class Livecall extends Component {
   }
 
   componentDidMount() {
-    this.getList()
+    this.getParkPos() // 停车场下拉
+    this.getList() // 列表数据
   }
 
-  changeValue = e => {
-    this.setState({
-      searchContent: e.target.value
+  // 获取停车场位置
+  getParkPos = () => {
+    fetch({
+      url: urlCng.parkList
+    }).then(res => {
+      if (res.code === 1) {
+        if (res.result && res.result.data) {
+          const resData = res.result.data
+          resData.unshift({
+            id: 'all',
+            name: '全部'
+          })
+          this.setState({
+            parkList: resData
+          })
+        }
+      }
     })
   }
 
@@ -112,15 +110,22 @@ class Livecall extends Component {
     this.props.history.push('/livedetail', { data: item })
   }
 
-  // 查看信息
-  watchInfo = item => {}
-
   getList = () => {
-    const { current, searchContent } = this.state // &userName=${searchContent}
-    let url = `${urlCng.callList}?pageSize=${pageSize}&curPage=${current}`
-    if (searchContent) {
-      url += `&userName=${searchContent}`
+    const { current, searchContent, selected } = this.state // &userName=${searchContent}
+    const params = {
+      pageSize,
+      curPage: current
     }
+    // 车牌号
+    if (searchContent) {
+      params.carNum = searchContent
+    }
+    // 停车场
+    if (selected !== 'all') {
+      params.parkId = selected
+    }
+    const url = getUrl(params, `${urlCng.callList}`)
+
     fetch({
       url
     }).then(res => {
@@ -129,6 +134,8 @@ class Livecall extends Component {
           data: res.result.data,
           total: res.result.page.totalNum
         })
+      } else {
+        message.error(res.msg)
       }
     })
   }
@@ -145,17 +152,28 @@ class Livecall extends Component {
     )
   }
 
-  // 取消弹框
-  handleCancel = () => {
-    this.setState({
-      visible: false
-    })
-  }
-
+  // 下拉改变
   dropChange = (e, key) => {
     this.setState({
       [key]: e
     })
+  }
+
+  // 搜索框改变
+  changeValue = e => {
+    this.setState({
+      searchContent: e.target.value
+    })
+  }
+
+  // 筛选
+  filter = () => {
+    this.getList()
+  }
+
+  // 搜索
+  search = () => {
+    this.getList()
   }
 
   render() {
@@ -163,9 +181,9 @@ class Livecall extends Component {
       data,
       searchContent,
       current,
-      visible,
       selected,
-      total
+      total,
+      parkList
     } = this.state
     return (
       <div className="panel">
@@ -173,7 +191,7 @@ class Livecall extends Component {
           <div className="search-wrap">
             <div>
               <SelectMenu
-                data={dropData}
+                data={parkList}
                 change={e => this.dropChange(e, 'selected')}
                 defaultValue={selected}
               />
@@ -188,7 +206,9 @@ class Livecall extends Component {
                 value={searchContent}
                 onChange={e => this.changeValue(e, 'username')}
               />
-              <Button className="search-btn">搜索</Button>
+              <Button className="search-btn" onClick={this.search}>
+                搜索
+              </Button>
             </div>
           </div>
           {/* 表格数据 */}
@@ -207,22 +227,6 @@ class Livecall extends Component {
           <div className="total">
             共{total}条记录 <span className="page-num">每页{pageSize}条</span>
           </div>
-          {/* 弹框 */}
-          <Modal
-            title="车辆图片"
-            visible={visible}
-            className="watch-image-dialog"
-            okText="确认"
-            cancelText="关闭"
-            onCancel={this.handleCancel}
-            width={457}
-          >
-            <img
-              src={require('../../images/bg.png')}
-              width="457"
-              height="270"
-            />
-          </Modal>
         </div>
       </div>
     )

@@ -6,7 +6,7 @@ import '../../less/antd.less'
 import './style.less'
 
 @hot
-class EquipmentCheck extends Component {
+class DataReport extends Component {
   componentDidMount() {}
 
   checkClient = () => {
@@ -33,7 +33,7 @@ class EquipmentCheck extends Component {
 
   render() {
     return (
-      <div className="panel" id="EquipmentCheck">
+      <div className="panel" id="ReportCheck">
         <div className="client-check">
           <div className="title">客户端检测</div>
           <Button className="check" onClick={this.checkClient}>
@@ -50,4 +50,4 @@ class EquipmentCheck extends Component {
   }
 }
 
-export default EquipmentCheck
+export default DataReport

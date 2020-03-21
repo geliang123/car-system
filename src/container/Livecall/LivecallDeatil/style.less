@@ -40,7 +40,7 @@
         height: 44pt;
         display: flex;
         flex-direction: row;
-        justify-content: flex-start;
+        justify-content: space-between;
         background-color: #EAF0FD;
         border-radius: 3pt;
         align-items: center;
@@ -48,6 +48,42 @@
         .text {
             margin-left: 23pt;
             color: #333333;
+        }
+
+        .calling-right {
+            display: flex;
+        }
+
+        .icon-wrap {
+            margin-right: 16.5pt;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #FF9640;
+            font-size: 12pt;
+            cursor: pointer;
+
+            &.hujiao {
+                color: #4098FF;
+            }
+        }
+
+        .icon {
+            width: 44px;
+            height: 44px;
+            display: inline-block;
+
+            &.jingyin {
+                background: url(../../../images//home/jingyin.png)
+            }
+
+            &.guaduan {
+                background: url(../../../images//home/guaduan.png)
+            }
+
+            &.hujiao {
+                background: url(../../../images//home/hujiao.png)
+            }
         }
     }
 
@@ -69,12 +105,28 @@
         font-size: 12pt;
     }
 
+    .car-num {
+        .ant-input {
+            background-color: #EAF0FD !important;
+        }
+
+
+    }
+
     .wrap-info {
         display: flex;
         justify-content: space-between;
         align-items: center;
         width: 80%;
-        margin: 0 auto
+        margin: 0 auto;
+
+        .label {
+            min-width: 50pt;
+        }
+
+        &.car {
+            margin-top: 15pt;
+        }
     }
 
     .info-item {

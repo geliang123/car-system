@@ -1,6 +1,5 @@
-/* eslint-disable array-callback-return */
 import React, { Component } from 'react'
-import { Table, Button, Input, Modal } from 'antd'
+import { Table, Button, Input, Modal, message } from 'antd'
 import { hot } from 'react-hot-loader/root'
 import { withRouter } from 'react-router-dom'
 import '../../less/normal.less'
@@ -8,7 +7,7 @@ import './style.less'
 import fetch from '~/utils/fetch'
 import urlCng from '~/config/url'
 
-const pageSize = 2
+const pageSize = 10
 @hot
 @withRouter
 class EventRecord extends Component {
@@ -19,7 +18,7 @@ class EventRecord extends Component {
       searchContent: '',
       current: 1, // 当前页
       visible: false,
-      total: 0,
+      total: 0
     }
     this.headers = [
       {
@@ -106,15 +105,22 @@ class EventRecord extends Component {
           data: res.result.data,
           total: res.result.page.totalNum
         })
+      } else {
+        message.error(res.msg)
       }
     })
   }
 
   // 分页
   handlePageChange = pageNumber => {
-    this.setState({
-      current: pageNumber
-    })
+    this.setState(
+      {
+        current: pageNumber
+      },
+      () => {
+        this.getList()
+      }
+    )
   }
 
   // 取消弹框
@@ -150,6 +156,8 @@ class EventRecord extends Component {
             scroll={{ x: true }}
             rowKey={(record, index) => index}
             pagination={{
+              total,
+              pageSize,
               current,
               onChange: this.handlePageChange
             }}

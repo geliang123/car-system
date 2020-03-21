@@ -1,0 +1,189 @@
+#TopContainer {
+    width: 100%;
+    height: 45pt;
+    background-color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+
+    .logo {
+        margin-left: 15pt;
+        width: 115.5pt;
+        height: 21.5pt;
+    }
+
+    .right-info {
+        position: relative;
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #4B4B4B;
+        float: right;
+    }
+
+    .user-image {
+        margin-right: 7.5pt;
+        width: 28pt;
+        height: 28pt;
+        border-radius: 50%;
+    }
+
+    .login-out {
+        margin-right: 17pt;
+        margin-left: 10pt;
+        width: 34pt;
+        height: 16.6pt;
+        border-radius: 15pt;
+        text-align: center;
+        line-height: 16.5pt;
+        background-color: #F5F6FC;
+        font-size: 7pt;
+        font-weight: 100;
+        cursor: pointer;
+    }
+
+    .status {
+        color: #4098FF;
+        display: flex;
+        align-items: center;
+
+        &.spleep {
+            color: #4098FF;
+        }
+
+        &.online {
+            color: #3CEA43;
+        }
+
+        &.offline {
+            color: #939699;
+        }
+
+        & .circle {
+            margin-right: 2pt;
+            display: inline-block;
+            width: 4pt;
+            height: 4pt;
+            background-color: #4098FF;
+            border-radius: 4pt;
+
+            &.sleep {
+                background-color: #4098FF;
+            }
+
+            &.online {
+                background-color: #3CEA43;
+            }
+
+            &.offline {
+                background-color: #939699;
+            }
+        }
+    }
+
+    .tri {
+        margin-right: 19.5pt;
+        margin-left: 2pt;
+        width: 0;
+        height: 0;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 7px solid #939699;
+        border-radius: 2px;
+    }
+
+    .jiance,
+    .settings {
+        width: 25pt;
+        height: 25pt;
+        cursor: pointer;
+        margin-right: 10pt;
+    }
+
+    .settings {
+        background: url(../../images/home/shezhi.png) no-repeat;
+    }
+
+    .jiance {
+        background: url(../../images/home/jiance.png) no-repeat;
+    }
+
+    .ant-tabs {
+        margin-left: 30pt;
+    }
+
+    .ant-tabs-bar {
+        margin: 0;
+        border: none;
+    }
+
+    .ant-tabs-nav .ant-tabs-tab {
+        width: 90pt;
+        height: 45pt;
+        margin: 0 0 0 0;
+        padding: 0;
+        text-align: center;
+        line-height: 45pt;
+        font-size: 12pt;
+        color: #9A9999;
+    }
+
+    .ant-tabs-nav .ant-tabs-tab:active {
+        color: #fff;
+        background-color: #FF9640;
+    }
+
+    .ant-tabs-nav .ant-tabs-tab-active {
+        color: #fff;
+        background-color: #FF9640;
+    }
+
+    .ant-tabs-ink-bar {
+        background-color: transparent !important;
+    }
+
+    .menu-tab {
+        margin-left: 15pt;
+        margin-right: auto;
+
+        .ant-menu-item,
+        .ant-menu-submenu-title {
+            padding: 0 32px;
+            line-height: 45pt;
+        }
+    }
+
+    .indicator {
+        display: flex;
+        flex-direction: row;
+        font-size: 8pt;
+        color: #9A9999;
+
+        .indi-item {
+            margin-right: 22.5pt;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            &:last-child {
+                margin-right: 26.5pt;
+            }
+
+            p {
+                margin: 0
+            }
+        }
+
+        .value {
+            color: #4098FF;
+            font-size: 10pt;
+
+            &.todo {
+                color: red;
+            }
+        }
+    }
+}

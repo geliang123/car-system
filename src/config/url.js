@@ -2,8 +2,14 @@ const url = `${process.env.API_URL}`
 const urlCng = {
   login: `${url}/login`,
   logout: `${url}/logout`,
+  // 菜单
+  menu: `${url}/menu/getData`,
+  logData: `${url}/data/logData`,
+  // 停车场位置
+  parkList: `${url}/park/list`,
   // 账户管理
-  accountAdd: `${url}/sysUser/add`,
+  accountAdd: `${url}/sysUser/addOrUpdate
+  `,
   accountDel: `${url}/sysUser/delete`,
   accountList: `${url}/sysUser/list`,
   accountEdit: `${url}/sysUser/update`,
@@ -11,6 +17,9 @@ const urlCng = {
   callUpdate: `${url}/callLog/update`,
   callList: `${url}/callLog/list`,
   callDetail: `${url}/callLog/detail`,
-  callDel: `${url}/callLog/delete`
+  callDel: `${url}/callLog/delete`,
+  // 数据报表
+  serviceData: `${url}/data/serviceData`,
+  todayData: `${url}/data/todayData`
 }
 export default urlCng

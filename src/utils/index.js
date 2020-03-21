@@ -1,4 +1,5 @@
-import { forEach, filter } from 'lodash'
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable guard-for-in */
 
 export const resizeImg = (url, type, w, h, webp) => {
   const defaultImg =
@@ -36,6 +37,13 @@ export const getQueryString = name => {
   const r = window.location.search.substr(1).match(reg)
   if (r != null) return unescape(r[2])
   return null
+}
+export const getUrl = (params, url) => {
+  const arr = []
+  for (const key in params) {
+    arr.push(`${key}=${params[key]}`)
+  }
+  return `${url}?${arr.join('&')}`
 }
 /**
  * 获取localStorage

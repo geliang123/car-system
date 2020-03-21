@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Route, Switch, withRouter } from 'react-router-dom'
 import routes from './router'
 import '../less/antd.less'
-import NavTop from './NavTop'
+import TopContainer from '../container/TopContainer'
 import './index.less'
 
 @withRouter
@@ -38,13 +38,14 @@ class App extends Component {
   }
 
   render() {
-    if (this.state.hasError) {
+    const { hasError } = this.state
+    if (hasError) {
       // 你可以自定义降级后的 UI 并渲染
       return <h1>网页出错啦，请返回</h1>
     }
     return (
       <div style={{ height: '100%' }}>
-        {!this.isLogin() ? <NavTop /> : null}
+        {!this.isLogin() ? <TopContainer /> : null}
         <Switch>
           {routes.map((route, index) => this.routeWithSubRoutes(route, index))}
         </Switch>
