@@ -44,16 +44,24 @@
         cursor: pointer;
     }
 
+    .status-drop {
+        display: flex;
+        cursor: pointer;
+        align-items: center;
+
+
+    }
+
     .status {
         color: #4098FF;
         display: flex;
         align-items: center;
 
-        &.spleep {
+        &.status2 {
             color: #4098FF;
         }
 
-        &.online {
+        &.status1 {
             color: #3CEA43;
         }
 
@@ -69,11 +77,11 @@
             background-color: #4098FF;
             border-radius: 4pt;
 
-            &.sleep {
+            &.status2 {
                 background-color: #4098FF;
             }
 
-            &.online {
+            &.status1 {
                 background-color: #3CEA43;
             }
 
@@ -184,6 +192,26 @@
             &.todo {
                 color: red;
             }
+        }
+    }
+}
+
+
+.ant-popover-inner-content {
+    padding: 0 !important
+}
+
+.status-item {
+    & li {
+        width: 80pt;
+        height: 32pt;
+        text-align: center;
+        cursor: pointer;
+        line-height: 32pt;
+        font-size: 12pt;
+
+        &:hover {
+            color: #FF9640;
         }
     }
 }

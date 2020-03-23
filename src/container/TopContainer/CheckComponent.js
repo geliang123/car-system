@@ -19,16 +19,33 @@ class CheckComponent extends Component {
   }
 
   repeat = () => {
-    // 检测浏览器
-    this.countNumber(
-      'browser',
-      {
-        time: 1500,
-        num: 100,
-        regulator: 50
-      },
-      true
-    )
+    const data = [
+      this.countNumber(
+        'browser',
+        {
+          time: 1000,
+          num: 100,
+          regulator: 50
+        },
+        true
+      ),
+      // 检测浏览器
+      this.countNumber(
+        'browser',
+        {
+          time: 1000,
+          num: 100,
+          regulator: 50
+        },
+        true
+      ),
+      this.checkoutVoice('voice1'),
+      this.checkoutVoice('voice2')
+    ]
+    for (let i = 0; i < 4; i++) {
+      setTimeout(() => {})
+    }
+
     // 检测ip
     this.countNumber(
       'ip',
@@ -40,8 +57,6 @@ class CheckComponent extends Component {
       true
     )
     // 检测扬声器 和麦克风
-    this.checkoutVoice('voice1')
-    this.checkoutVoice('voice2')
   }
 
   checkoutVoice = id => {

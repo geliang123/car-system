@@ -35,7 +35,6 @@ class Add extends Component {
           method: 'POST',
           data: params
         }).then(res => {
-          ref.destroy()
           if (res.code === 1) {
             this.props.updateData()
             message.success('操作成功')

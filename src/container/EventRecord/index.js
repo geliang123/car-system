@@ -4,8 +4,10 @@ import { hot } from 'react-hot-loader/root'
 import { withRouter } from 'react-router-dom'
 import '../../less/normal.less'
 import './style.less'
-import fetch from '~/utils/fetch'
 import urlCng from '~/config/url'
+import fetch from '~/utils/fetch'
+import SelectMenu from '~/component/SelectMenu'
+import { getUrl } from '~/utils/index'
 
 const pageSize = 10
 @hot
@@ -18,7 +20,10 @@ class EventRecord extends Component {
       searchContent: '',
       current: 1, // 当前页
       visible: false,
-      total: 0
+      total: 0,
+      loading: true,
+      selected: 'all',
+      parkList: []
     }
     this.headers = [
       {
@@ -68,18 +73,12 @@ class EventRecord extends Component {
 
   componentDidMount() {
     this.getList()
+    this.getParkPos()
   }
 
   changeValue = e => {
     this.setState({
       searchContent: e.target.value
-    })
-  }
-
-  // 查看图片
-  watchImage = item => {
-    this.setState({
-      visible: true
     })
   }
 
@@ -92,21 +91,50 @@ class EventRecord extends Component {
   confirm = () => {}
 
   getList = () => {
-    const { current, searchContent } = this.state
-    let url = `${urlCng.callList}?pageSize=${pageSize}&curPage=${current}&status=4`
-    if (searchContent) {
-      url += `&userName=${searchContent}`
+    const { current, searchContent, selected } = this.state // &userName=${searchContent}
+    const params = {
+      pageSize,
+      curPage: current
     }
+    // 车牌号
+    if (searchContent) {
+      params.carNum = searchContent
+    }
+    // 停车场
+    if (selected !== 'all') {
+      params.parkId = selected
+    }
+    const url = getUrl(params, `${urlCng.callList}`)
     fetch({
       url
     }).then(res => {
       if (res.code === 1) {
         this.setState({
           data: res.result.data,
-          total: res.result.page.totalNum
+          total: res.result.page.totalNum,
+          loading: false
         })
       } else {
         message.error(res.msg)
+      }
+    })
+  }
+
+  getParkPos = () => {
+    fetch({
+      url: urlCng.parkList
+    }).then(res => {
+      if (res.code === 1) {
+        if (res.result && res.result.data) {
+          const resData = res.result.data
+          resData.unshift({
+            id: 'all',
+            name: '全部'
+          })
+          this.setState({
+            parkList: resData
+          })
+        }
       }
     })
   }
@@ -130,15 +158,45 @@ class EventRecord extends Component {
     })
   }
 
+  // 下拉改变
+  dropChange = (e, key) => {
+    this.setState({
+      [key]: e
+    })
+  }
+
+  // 筛选
+  filter = () => {
+    this.setState({ current: 1 }, () => {
+      this.getList()
+    })
+  }
+
   render() {
-    const { data, searchContent, current, visible, total } = this.state
+    const {
+      data,
+      searchContent,
+      current,
+      visible,
+      total,
+      selected,
+      loading,
+      parkList
+    } = this.state
     return (
       <div className="panel">
         <div id="eventRecord">
           <div className="search-wrap">
-            <Button className="add" onClick={this.add}>
-              新建账号
-            </Button>
+            <div>
+              <SelectMenu
+                data={parkList}
+                change={e => this.dropChange(e, 'selected')}
+                defaultValue={selected}
+              />
+              <Button className="filter" onClick={this.filter}>
+                筛选
+              </Button>
+            </div>
             <div className="search">
               <Input
                 className="search-content"
@@ -146,7 +204,9 @@ class EventRecord extends Component {
                 value={searchContent}
                 onChange={e => this.changeValue(e, 'username')}
               />
-              <Button className="search-btn">搜索</Button>
+              <Button className="search-btn" onClick={this.filter}>
+                搜索
+              </Button>
             </div>
           </div>
           {/* 表格数据 */}
@@ -155,6 +215,8 @@ class EventRecord extends Component {
             columns={this.headers}
             scroll={{ x: true }}
             rowKey={(record, index) => index}
+            loading={loading}
+            locale={{ emptyText: '暂无数据' }}
             pagination={{
               total,
               pageSize,

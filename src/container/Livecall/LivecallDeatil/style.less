@@ -20,11 +20,19 @@
 
     .left-item {
         width: 48%;
-
         margin: 0 9.5pt 9.5pt 0;
 
-        img {
+        .car-img {
             min-height: 178pt;
+        }
+
+        .no-img {
+            width: 100%;
+            min-height: 178pt;
+            background-color: #F5F6FC;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
     }
 
@@ -33,6 +41,12 @@
         background-color: #9FCBFF;
         color: #fff;
         text-indent: 10pt;
+        display: flex;
+        justify-content: space-between;
+
+        & span:last-child {
+            margin-right: 10pt;
+        }
     }
 
     .bottom-calling {
@@ -105,12 +119,8 @@
         font-size: 12pt;
     }
 
-    .car-num {
-        .ant-input {
-            background-color: #EAF0FD !important;
-        }
-
-
+    .ant-input {
+        background-color: #EAF0FD !important;
     }
 
     .wrap-info {
@@ -201,5 +211,9 @@
         height: 32pt;
         line-height: 32pt;
         color: #fff;
+    }
+
+    .ant-input[disabled] {
+        background-color: #EAF0FD;
     }
 }

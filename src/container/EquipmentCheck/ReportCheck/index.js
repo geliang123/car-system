@@ -1,9 +1,6 @@
 import React, { Component } from 'react'
 import { Button, message } from 'antd'
 import { hot } from 'react-hot-loader/root'
-import '../../less/normal.less'
-import '../../less/antd.less'
-import './style.less'
 
 @hot
 class DataReport extends Component {

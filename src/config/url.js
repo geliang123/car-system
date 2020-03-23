@@ -18,6 +18,9 @@ const urlCng = {
   callList: `${url}/callLog/list`,
   callDetail: `${url}/callLog/detail`,
   callDel: `${url}/callLog/delete`,
+  callProblem: `${url}/callLog/callProblemType`,
+  callWaitList: `${url}/callLog/waitList`,
+
   // 数据报表
   serviceData: `${url}/data/serviceData`,
   todayData: `${url}/data/todayData`

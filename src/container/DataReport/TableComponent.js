@@ -69,6 +69,7 @@ class TableComponent extends Component {
           columns={this.headers}
           scroll={{ x: true }}
           rowKey={(record, index) => index}
+          locale={{ emptyText: '暂无数据' }}
           pagination={{
             total: data.total,
             pageSize: data.pageSize,

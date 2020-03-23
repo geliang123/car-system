@@ -38,6 +38,15 @@ export const getQueryString = name => {
   if (r != null) return unescape(r[2])
   return null
 }
+export const getColor = duration => {
+  if (duration <= 60) {
+    return '#3CEA43'
+  }
+  if (duration >= 60 && duration <= 120) {
+    return '#EAB43C'
+  }
+  return '#EA3C3C'
+}
 export const getUrl = (params, url) => {
   const arr = []
   for (const key in params) {

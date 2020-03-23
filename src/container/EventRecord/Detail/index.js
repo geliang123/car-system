@@ -79,7 +79,7 @@ class Detail extends Component {
               </div>
               <div className="row-content">
                 <span>问题类型：</span>
-                <span>{data.operatedTypeStr || '--'}</span>
+                <span>{data.problemIdStr || '--'}</span>
               </div>
               <div className="row-content">
                 <span>备注信息：</span>

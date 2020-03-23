@@ -147,8 +147,8 @@ class ChartComponent extends Component {
         />
 
         <div className="chart-info">
-          {dataAll.map(item => (
-            <div className="info-item">
+          {dataAll.map((item, index) => (
+            <div className="info-item" key={index}>
               <div>{item.displayName}</div>
               <div>{item.xaxisSum}</div>
             </div>

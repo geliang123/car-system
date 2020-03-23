@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 
 import '../../../less/normal.less'
 import './style.less'
+import { message } from 'antd'
 import Title from '~/component/Title'
 import urlCng from '~/config/url'
 import { getStore, setStore } from '~/utils'
@@ -24,7 +25,7 @@ class LivecallDeatil extends Component {
       (location &&
         location.state &&
         location.state.data &&
-        location.state.data.parkId) ||
+        location.state.data.id) ||
       getStore('callDetailId')
     setStore('callDetailId', callDetailId)
     if (callDetailId) {
@@ -55,14 +56,51 @@ class LivecallDeatil extends Component {
     })
   }
 
+  // 更新
+  updateList = (item, status) => {
+    fetch({
+      url: urlCng.callUpdate,
+      method: 'POST',
+      data: { id: item.id, status }
+    }).then(res => {
+      if (res.code === 1) {
+        message.success('操作成功')
+        this.setState({
+          data: res.result
+        })
+      } else {
+        message.error(res.msg)
+      }
+    })
+  }
+
   changeValue = (e, key) => {
     this.setState({
       [key]: e.target.value
     })
   }
 
+  getShow = () => {
+    const { data } = this.state
+    if (!data.carImgUrl) {
+      return (
+        <img
+          src={require('../../../images/bg.png')}
+          width="100%"
+          className="car-img"
+        />
+      )
+    }
+    return (
+      <div className="no-img">
+        <img src={require('../../../images/home/no-img.png')} />
+      </div>
+    )
+  }
+
   render() {
     const { data } = this.state
+
     return (
       <div className="panel">
         <div id="LiveCallDeatail">
@@ -71,36 +109,59 @@ class LivecallDeatil extends Component {
             {/* 右边内容 */}
             <div className="left">
               <div className="left-item">
-                <div className="img-watch">入场车辆监控</div>
-                <img src={require('../../../images/bg.png')} width="100%" />
+                <div className="img-watch">
+                  <span>入场车辆监控</span>
+                  <span>{data.inTimeStr}</span>
+                </div>
+                {this.getShow()}
               </div>
               <div className="left-item">
-                <div className="img-watch">出场车辆监控</div>
-                <img src={require('../../../images/bg.png')} width="100%" />
+                <div className="img-watch">
+                  <span>出场车辆监控</span>
+                  <span>{data.outTimeStr}</span>
+                </div>
+                {this.getShow()}
               </div>
               <div className="left-item">
-                <div className="img-watch">入场车道监控</div>
-                <img src={require('../../../images/bg.png')} width="100%" />
+                <div className="img-watch">
+                  <span>入场车道监控</span>
+                  <span>{data.inTimeStr}</span>
+                </div>
+                {this.getShow()}
               </div>
               <div className="left-item">
-                <div className="img-watch">出场车道监控</div>
-                <img src={require('../../../images/bg.png')} width="100%" />
+                <div className="img-watch">
+                  <span>出场车道监控</span>
+                  <span>{data.outTimeStr}</span>
+                </div>
+                {this.getShow()}
               </div>
               <div className="bottom-calling">
-                <span className="text">通话中 10:33</span>
+                <span className="text">
+                  {data.status === 3 ? '通话中 10:33' : '通话结束'}
+                </span>
                 <div className="calling-right">
-                  <div className="icon-wrap">
-                    <span className="icon jingyin" />
-                    <span>静音</span>
-                  </div>
-                  <div className="icon-wrap">
-                    <span className="icon guaduan" />
-                    <span>挂断</span>
-                  </div>
-                  <div className="icon-wrap hujiao">
-                    <span className="icon hujiao" />
-                    <span>呼叫</span>
-                  </div>
+                  {data.status === 5 ? (
+                    <div className="icon-wrap hujiao">
+                      <span className="icon hujiao" />
+                      <span onClick={() => this.updateList(data, 3)}>呼叫</span>
+                    </div>
+                  ) : null}
+                  {data.status === 3 ? (
+                    <div className="icon-wrap">
+                      <span className="icon jingyin" />
+                      <span>静音</span>
+                    </div>
+                  ) : null}
+                  {data.status === 3 ? (
+                    <div
+                      className="icon-wrap"
+                      onClick={() => this.updateList(data, 5)}
+                    >
+                      <span className="icon guaduan" />
+                      <span>挂断</span>
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </div>

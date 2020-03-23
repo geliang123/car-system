@@ -4,45 +4,57 @@ import React, { Component } from 'react'
 import { Input, Button, message } from 'antd'
 import '../../../less/normal.less'
 import './style.less'
+import moment from 'moment'
 import SelectMenu from '~/component/SelectMenu'
+import urlCng from '~/config/url'
+import fetch from '~/utils/fetch'
+import { getColor } from '~/utils'
 
 const { TextArea } = Input
-const dropData = [
-  {
-    id: '1',
-    displayName: '车牌识别错误'
-  },
-  {
-    id: '2',
-    displayName: '支付未开闸'
-  },
-  {
-    id: '3',
-    displayName: '未显示二维码'
-  },
-  {
-    id: '',
-    displayName: '其他原因'
-  }
-]
 @hot
 @withRouter
 class RightComponent extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      questionSelected: '',
+      questionSelected: props.data && props.data.problemId,
       comments: '',
       disabled: true,
-      carNumber: props.data && props.data.carNum
+      carNumber: props.data && props.data.carNum,
+      probleList: []
     }
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.data.carNum !== prevState.carNumber) {
-      return { carNumber: nextProps.data.carNum }
+  componentDidMount() {
+    this.getProblemList()
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.data.carNum !== this.props.carNum) {
+      this.setState({
+        carNumber: nextProps.data.carNum,
+        questionSelected: nextProps.data.problemId
+      })
     }
-    return null
+  }
+
+  getProblemList = () => {
+    fetch({
+      url: urlCng.callProblem
+    }).then(res => {
+      if (res.code === 1) {
+        const data = []
+        for (let i = 0; i < res.result.length; i++) {
+          data.push({
+            id: res.result[i].code,
+            name: res.result[i].text
+          })
+        }
+        this.setState({
+          probleList: data
+        })
+      }
+    })
   }
 
   dropChange = (e, key) => {
@@ -59,9 +71,30 @@ class RightComponent extends Component {
 
   // 提交
   submit = () => {
-    const { comments } = this.state
+    const { comments, carNumber, questionSelected } = this.state
+    const { data } = this.props
     if (comments.length < 4) {
       message.warning('问题描述需要大于4个文字')
+      return
+    }
+    const params = {
+      remark: comments,
+      carNum: carNumber,
+      id: data.id,
+      problemId: questionSelected
+    }
+    if (data.id) {
+      fetch({
+        url: urlCng.callUpdate,
+        method: 'POST',
+        data: params
+      }).then(res => {
+        if (res.code === 1) {
+          message.success('提交成功')
+        } else {
+          message.success('提交失败')
+        }
+      })
     }
   }
 
@@ -71,7 +104,7 @@ class RightComponent extends Component {
     })
   }
 
-  // 修改车牌
+  // 修改车
   modifyCarNum = () => {
     this.setState({
       disabled: false
@@ -79,20 +112,29 @@ class RightComponent extends Component {
   }
 
   render() {
-    const { questionSelected, comments, carNumber, disabled } = this.state
+    const {
+      questionSelected,
+      comments,
+      carNumber,
+      disabled,
+      probleList
+    } = this.state
     const { data } = this.props
+    if (!Object.keys(data).length) return null
+    const m1 = moment(data.createTimeStr)
+    const m2 = moment()
+    const duration = m2.diff(m1, 'seconds')
     return (
       <div className="right">
         <div className="top-title">
-          <span style={{ marginLeft: '13.5pt' }}>红星大厦停车场</span>
-          <span style={{ marginRight: '13.5pt' }}>2020-03-03</span>
+          <span style={{ marginLeft: '13.5pt' }}>{data.parkName}</span>
+          <span style={{ marginRight: '13.5pt' }}>{data.createTimeStr}</span>
         </div>
         <div className="wrap-info car">
           <div className="label">车牌号:</div>
           <Input
             placeholder="请输入车牌号"
             disabled={disabled}
-            allowClear
             className="car-num"
             value={carNumber}
             onChange={e => this.changeValue(e, 'carNumber')}
@@ -102,7 +144,9 @@ class RightComponent extends Component {
         <div className="wrap-info">
           <div className="info-item">
             <p className="text">等待时长</p>
-            <p className="duration">03:32</p>
+            <p className="duration" style={{ color: getColor(duration) }}>
+              {duration}s
+            </p>
             <div className="op-btn in">入场开闸</div>
           </div>
           <div className="info-item">
@@ -123,7 +167,7 @@ class RightComponent extends Component {
           <div className="drop-wrap">
             <div className="label">问题类型:</div>
             <SelectMenu
-              data={dropData}
+              data={probleList}
               style={{ background: '#eee', width: '85%' }}
               className="detailDrop"
               change={e => this.dropChange(e, 'questionSelected')}

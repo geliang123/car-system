@@ -1,19 +1,33 @@
-import React, { Component } from 'react'
-import { Menu, Modal } from 'antd'
+import React, { Component, Fragment } from 'react'
+import { Menu, Modal, Popover } from 'antd'
 import { Link, withRouter } from 'react-router-dom'
 import fetch from '~/utils/fetch'
 import { removeStore, getLocalStore } from '~/utils/index'
 import CheckComponent from './CheckComponent'
 import urlCng from '~/config/url'
 import './style.less'
+import { showConfirm } from '~/utils/ViewUtils'
 
 @withRouter
 class NavTop extends Component {
-  state = {
-    key: 'call',
-    indicator: {},
-    menuData: [],
-    visible: false
+  constructor(props) {
+    super(props)
+    this.user = JSON.parse(getLocalStore('userInfo'))
+    this.state = {
+      key: 'call',
+      indicator: {},
+      menuData: [],
+      visible: false,
+      visiblePopover: false,
+      status: this.user.status
+    }
+    // 1 在线 2 休息
+    this.content = (
+      <ul className="status-item">
+        <li onClick={() => this.changeStatus(1)}>在线</li>
+        <li onClick={() => this.changeStatus(2)}>休息</li>
+      </ul>
+    )
   }
 
   componentDidMount() {
@@ -40,12 +54,23 @@ class NavTop extends Component {
   }
 
   logout = () => {
+    this.ref = showConfirm(
+      () => this.confirm(),
+      <div className="logout-confirm">是否确认退出？</div>,
+      '提示',
+      457
+    )
+  }
+
+  confirm = () => {
+    this.props.history.push('/')
+    removeStore('token')
+    this.ref.destroy()
     fetch({
       url: urlCng.logout,
       method: 'POST'
     }).then(res => {
       if (res.code === 1) {
-        this.props.history.push('/')
         removeStore('token')
       }
     })
@@ -77,10 +102,27 @@ class NavTop extends Component {
     })
   }
 
+  handleVisibleChange = visiblePopover => {
+    this.setState({ visiblePopover })
+  }
+
+  changeStatus = status => {
+    this.setState({
+      visiblePopover: false,
+      status
+    })
+  }
+
   render() {
-    const { key, indicator, menuData, visible } = this.state
-    const user = JSON.parse(getLocalStore('userInfo'))
-    if (!Object.keys(user).length) return null
+    const {
+      key,
+      indicator,
+      menuData,
+      visible,
+      visiblePopover,
+      status
+    } = this.state
+    if (!Object.keys(this.user).length) return null
     return (
       <div className="top" id="TopContainer">
         <img className="logo" src={require('../../images/home/logo.png')} />
@@ -121,15 +163,28 @@ class NavTop extends Component {
             src={require('../images/home/logo.png')}
             className="user-image"
           /> */}
-          <div>{user.userName}</div>
+          <div>{this.user.userName}</div>
           <div className="login-out" onClick={this.logout}>
             退出
           </div>
-          <div className="status">
-            <span className="circle sleep" />
-            休息
-          </div>
-          <div className="tri" />
+          {/* 状态 */}
+          <Popover
+            placement="bottom"
+            title=""
+            content={this.content}
+            trigger="click"
+            visible={visiblePopover}
+            onVisibleChange={this.handleVisibleChange}
+          >
+            <div className="status-drop">
+              <div className={`status status${status}`}>
+                <span className={`circle status${status}`} />
+                {status === 1 ? '在线' : '休息'}
+              </div>
+              <div className="tri" />
+            </div>
+          </Popover>
+
           <div className="settings" />
           <div className="jiance" onClick={this.check} />
         </div>

@@ -1,14 +1,15 @@
 /* eslint-disable array-callback-return */
 import React, { Component } from 'react'
-import { Table, Button, Input, Modal, message } from 'antd'
+import { Table, Button, Input, message } from 'antd'
 import { hot } from 'react-hot-loader/root'
 import { withRouter } from 'react-router-dom'
 import '../../less/normal.less'
 import './style.less'
+import moment from 'moment'
 import fetch from '~/utils/fetch'
 import urlCng from '~/config/url'
 import SelectMenu from '~/component/SelectMenu'
-import { getUrl } from '~/utils/index'
+import { getUrl, getColor } from '~/utils/index'
 
 const pageSize = 10
 
@@ -23,6 +24,7 @@ class Livecall extends Component {
       current: 1, // 当前页
       selected: 'all',
       total: 0,
+      loading: true,
       parkList: [] // 停车场位置
     }
     this.headers = [
@@ -54,23 +56,49 @@ class Livecall extends Component {
       {
         title: '等待时长',
         dataIndex: 'waitCountTime',
-        key: 'waitCountTime'
+        key: 'waitCountTime',
+        render: (text, record) => {
+          const m1 = moment(record.createTimeStr)
+          const m2 = moment()
+          const duration = m2.diff(m1, 'seconds')
+          return (
+            <div
+              id={`wait${record.id}${record.parkId}`}
+              style={{ color: getColor(duration) }}
+            >
+              {duration}s
+            </div>
+          )
+        }
       },
       {
         title: '事件处理',
         dataIndex: 'op',
         key: 'op',
         render: (text, record) => (
+          // 状态 1、未接听；2、等待接听；3、通话中、4、完成；5、挂断
           <div>
-            <span className="online" onClick={() => this.answer(record)}>
-              通话中
-            </span>
-            <span className="hang-up" onClick={() => this.watchInfo(record)}>
+            {record.status === 3 ? (
+              <span className="online" onClick={() => this.answer(record)}>
+                通话中
+              </span>
+            ) : (
+              <span
+                className="online"
+                onClick={() => this.updateList(record, 3)}
+              >
+                接听
+              </span>
+            )}
+            <span
+              className="hang-up"
+              onClick={() => this.updateList(record, 5)}
+            >
               挂断
             </span>
             <span
               className="not-operate"
-              onClick={() => this.watchInfo(record)}
+              onClick={() => this.noOperate(record)}
             >
               暂不处理
             </span>
@@ -83,6 +111,12 @@ class Livecall extends Component {
   componentDidMount() {
     this.getParkPos() // 停车场下拉
     this.getList() // 列表数据
+  }
+
+  componentWillUnmount() {
+    if (this.timer) {
+      window.clearInterval(this.timer)
+    }
   }
 
   // 获取停车场位置
@@ -105,6 +139,62 @@ class Livecall extends Component {
     })
   }
 
+  // 暂不处理
+  noOperate = item => {
+    fetch({
+      url: urlCng.callDel,
+      method: 'POST',
+      data: { id: item.id }
+    }).then(res => {
+      if (res.code === 1) {
+        this.getList()
+        message.success('操作成功')
+      } else {
+        message.error(res.msg)
+      }
+    })
+  }
+
+  // 更新
+  updateList = (item, status) => {
+    fetch({
+      url: urlCng.callUpdate,
+      method: 'POST',
+      data: { id: item.id, status }
+    }).then(res => {
+      if (res.code === 1) {
+        this.getList()
+        message.success('操作成功')
+      } else {
+        message.error(res.msg)
+      }
+    })
+  }
+
+  componentDidUpdate = () => {
+    const { data } = this.state
+    if (!data.length) return
+    // this.timer = window.setInterval(() => {
+    //   for (let i = 0; i < data.length; i++) {
+    //     const record = data[i]
+    //     const m1 = moment(record.createTimeStr)
+    //     const m2 = moment()
+    //     const $item = document.getElementById(
+    //       `wait${record.id}${record.parkId}`
+    //     )
+    //     const duration = m2.diff(m1, 'seconds')
+    //     if (duration <= 60) {
+    //       $item.style.color = '#3CEA43'
+    //     } else if (duration >= 60 && duration <= 120) {
+    //       $item.style.color = '#EAB43C'
+    //     } else {
+    //       $item.style.color = '#EA3C3C'
+    //     }
+    //     $item.innerHTML = `${m2.diff(m1, 'seconds')}s`
+    //   }
+    // }, 1000)
+  }
+
   // 进入详情
   answer = item => {
     this.props.history.push('/livedetail', { data: item })
@@ -124,7 +214,7 @@ class Livecall extends Component {
     if (selected !== 'all') {
       params.parkId = selected
     }
-    const url = getUrl(params, `${urlCng.callList}`)
+    const url = getUrl(params, `${urlCng.callWaitList}`)
 
     fetch({
       url
@@ -132,7 +222,8 @@ class Livecall extends Component {
       if (res.code === 1) {
         this.setState({
           data: res.result.data,
-          total: res.result.page.totalNum
+          total: res.result.page.totalNum,
+          loading: false
         })
       } else {
         message.error(res.msg)
@@ -168,12 +259,9 @@ class Livecall extends Component {
 
   // 筛选
   filter = () => {
-    this.getList()
-  }
-
-  // 搜索
-  search = () => {
-    this.getList()
+    this.setState({ current: 1 }, () => {
+      this.getList()
+    })
   }
 
   render() {
@@ -183,7 +271,8 @@ class Livecall extends Component {
       current,
       selected,
       total,
-      parkList
+      parkList,
+      loading
     } = this.state
     return (
       <div className="panel">
@@ -206,7 +295,7 @@ class Livecall extends Component {
                 value={searchContent}
                 onChange={e => this.changeValue(e, 'username')}
               />
-              <Button className="search-btn" onClick={this.search}>
+              <Button className="search-btn" onClick={this.filter}>
                 搜索
               </Button>
             </div>
@@ -217,6 +306,8 @@ class Livecall extends Component {
             columns={this.headers}
             scroll={{ x: true }}
             rowKey={(record, index) => index}
+            loading={loading}
+            locale={{ emptyText: '暂无数据' }}
             pagination={{
               total,
               pageSize,
