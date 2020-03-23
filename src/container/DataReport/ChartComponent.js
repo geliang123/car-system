@@ -117,7 +117,7 @@ class ChartComponent extends Component {
         symbol: 'none',
         data: data.hours,
         type: 'line',
-        color: '#FFBA01'
+        color: '#397BEC'
       }
     ]
   })

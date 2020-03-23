@@ -111,6 +111,17 @@ class NavTop extends Component {
       visiblePopover: false,
       status
     })
+    fetch({
+      url: urlCng.changeStatus,
+      method: 'POST',
+      data: {
+        status
+      }
+    }).then(res => {
+      if (res.code === 1) {
+        console.log(res)
+      }
+    })
   }
 
   render() {

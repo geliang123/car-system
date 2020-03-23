@@ -23,6 +23,8 @@ const urlCng = {
 
   // 数据报表
   serviceData: `${url}/data/serviceData`,
-  todayData: `${url}/data/todayData`
+  todayData: `${url}/data/todayData`,
+  // status
+  changeStatus: `${url}/sysUser/changeStatus`
 }
 export default urlCng

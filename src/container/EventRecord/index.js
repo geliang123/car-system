@@ -28,8 +28,8 @@ class EventRecord extends Component {
     this.headers = [
       {
         title: '时间',
-        dataIndex: 'id',
-        key: 'ID'
+        dataIndex: 'createTimeStr',
+        key: 'createTimeStr'
       },
       {
         title: '停车场',
