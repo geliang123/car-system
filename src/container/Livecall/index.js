@@ -1,3 +1,7 @@
+/* eslint-disable no-alert */
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable guard-for-in */
+/* eslint-disable no-undef */
 /* eslint-disable array-callback-return */
 import React, { Component } from 'react'
 import { Table, Button, Input, message } from 'antd'
@@ -13,6 +17,8 @@ import { getUrl, getColor } from '~/utils/index'
 
 const pageSize = 10
 
+global.dhWeb = new DHAlarmWeb()
+global.dhWeb.setWebsocketPort({ dataWsPort: 8088, mediaWsPort: 8088 })
 @hot
 @withRouter
 class Livecall extends Component {
@@ -24,7 +30,7 @@ class Livecall extends Component {
       current: 1, // 当前页
       selected: 'all',
       total: 0,
-      loading: true,
+      loading: false,
       parkList: [] // 停车场位置
     }
     this.headers = [
@@ -110,12 +116,80 @@ class Livecall extends Component {
 
   componentDidMount() {
     this.getParkPos() // 停车场下拉
-    this.getList() // 列表数据
+    // this.getList() // 列表数据
+
+    global.dhWeb.login('test001', '123456', '212.129.140.31')
+    global.dhWeb.onDeviceList = mess => {
+      this.onDeviceList(mess)
+    }
+    global.dhWeb.onLogin = mess => {
+      this.onLogin(mess)
+    }
+    global.dhWeb.onNotify = mess => {
+      this.onNotify(mess)
+    }
+    global.dhWeb.onParseMsgError = mess => {
+      if (mess.error.indexOf('alarmServer offline') != -1) {
+        alert('报警服务器不在线')
+      }
+    }
+    global.dhWeb.onAlarmServerClosed = mess => {
+      $('#logout').click()
+    }
+    global.dhWeb.onPlayRT = data => {
+      if (data.error != 'success') {
+        $('#closeAll').click()
+      }
+    }
+    global.dhWeb.onDeviceMove = data => {
+      const deviceList = data.params.list
+      for (const i in deviceList) {
+        const parentId = deviceList[i].parentId
+        const deviceId = deviceList[i].deviceId
+        $(`#device_${deviceId}`).attr('parentId', parentId)
+      }
+    }
   }
 
   componentWillUnmount() {
     if (this.timer) {
       window.clearInterval(this.timer)
+    }
+    if (global.dhWeb) {
+      global.dhWeb = null
+    }
+  }
+
+  onDeviceList = data => {
+    const deviceList = data.params.list
+    let className
+    for (const i in deviceList) {
+      if (deviceList[i].deviceType == 'Alarm') {
+        if (deviceList[i].action == 'Offline') {
+          className = 'alarm_Offline'
+        } else {
+          className = 'alarm_Online'
+        }
+      } else if (deviceList[i].action == 'Offline') {
+        className = 'linkage_Offline'
+      } else {
+        className = 'linkage_Online'
+      }
+      if ($(`#device_${deviceList[i].deviceId}`)[0]) return
+      const deviceHtml = `<li class='${className}' ondblclick='dbClickDevice(this)' id='device_${deviceList[i].deviceId}' parentId=${deviceList[i].parentId}>${deviceList[i].deviceName}</li>`
+      $('.device').append(deviceHtml)
+    }
+  }
+
+  onLogin = data => {
+    const params = data.params
+    if (data.error == 'success') {
+      sessionStorage.setItem('loginHandle', params.loginHandle)
+      $('.loginDiv').hide()
+      $('.deviceDiv').show()
+      $('.showNameDiv p').text(`用户名：${$('#uname').val()}`)
+    } else {
+      alert('登录失败')
     }
   }
 
