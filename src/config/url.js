@@ -8,8 +8,7 @@ const urlCng = {
   // 停车场位置
   parkList: `${url}/park/list`,
   // 账户管理
-  accountAdd: `${url}/sysUser/addOrUpdate
-  `,
+  accountAdd: `${url}/sysUser/addOrUpdate`,
   accountDel: `${url}/sysUser/delete`,
   accountList: `${url}/sysUser/list`,
   accountEdit: `${url}/sysUser/update`,
@@ -20,11 +19,14 @@ const urlCng = {
   callDel: `${url}/callLog/delete`,
   callProblem: `${url}/callLog/callProblemType`,
   callWaitList: `${url}/callLog/waitList`,
+  callSoundAccount: `${url}/acquire/sound/account`,
 
   // 数据报表
   serviceData: `${url}/data/serviceData`,
   todayData: `${url}/data/todayData`,
   // status
   changeStatus: `${url}/sysUser/changeStatus`
+
+
 }
 export default urlCng

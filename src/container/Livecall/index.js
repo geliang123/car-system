@@ -14,11 +14,13 @@ import fetch from '~/utils/fetch'
 import urlCng from '~/config/url'
 import SelectMenu from '~/component/SelectMenu'
 import { getUrl, getColor } from '~/utils/index'
+import { getLocalStore } from '~/utils/index'
 
 const pageSize = 10
 
 global.dhWeb = new DHAlarmWeb()
 global.dhWeb.setWebsocketPort({ dataWsPort: 8088, mediaWsPort: 8088 })
+global.cloudWebsocket
 @hot
 @withRouter
 class Livecall extends Component {
@@ -115,17 +117,39 @@ class Livecall extends Component {
   }
 
   componentDidMount() {
-    this.getParkPos() // 停车场下拉
-    // this.getList() // 列表数据
+  
+    var userInfo = JSON.parse(getLocalStore('userInfo'));
+  
+    global.cloudWebsocket = new WebSocket("ws://47.104.198.34:8080/cloud-park-websocket/client/" + userInfo.id)
 
-    global.dhWeb.login('test001', '123456', '212.129.140.31')
+    //连接成功建立的回调方法
+    global.cloudWebsocket.onopen = event => {
+      fetch({
+        url: urlCng.callSoundAccount
+      }).then(res => {
+        if (res.code === 1) {
+          global.dhWeb.login(res.result.username, res.result.password, res.result.url)
+        }
+      })
+    }
+    // 停车场下拉
+    this.getParkPos() 
+    this.getList() // 列表数据
+    global.cloudWebsocket.onmessage = messs => {
+        alert(1);
+    }
     global.dhWeb.onDeviceList = mess => {
       this.onDeviceList(mess)
     }
+
+    //语音设备登录
     global.dhWeb.onLogin = mess => {
       this.onLogin(mess)
     }
+
+    //语音消息通知
     global.dhWeb.onNotify = mess => {
+      console.log(mess)
       this.onNotify(mess)
     }
     global.dhWeb.onParseMsgError = mess => {
@@ -141,14 +165,7 @@ class Livecall extends Component {
         $('#closeAll').click()
       }
     }
-    global.dhWeb.onDeviceMove = data => {
-      const deviceList = data.params.list
-      for (const i in deviceList) {
-        const parentId = deviceList[i].parentId
-        const deviceId = deviceList[i].deviceId
-        $(`#device_${deviceId}`).attr('parentId', parentId)
-      }
-    }
+
   }
 
   componentWillUnmount() {
@@ -181,6 +198,12 @@ class Livecall extends Component {
     }
   }
 
+  onNotify = data => {
+    const params = data.params
+    global.cloudWebsocket.send(JSON.stringify(data))
+    
+  }
+
   onLogin = data => {
     const params = data.params
     if (data.error == 'success') {
@@ -188,6 +211,7 @@ class Livecall extends Component {
       $('.loginDiv').hide()
       $('.deviceDiv').show()
       $('.showNameDiv p').text(`用户名：${$('#uname').val()}`)
+      global.cloudWebsocket.send(JSON.stringify(data))
     } else {
       alert('登录失败')
     }
@@ -212,7 +236,7 @@ class Livecall extends Component {
       }
     })
   }
-
+    
   // 暂不处理
   noOperate = item => {
     fetch({
