@@ -25,6 +25,11 @@ const urlCng = {
   serviceData: `${url}/data/serviceData`,
   todayData: `${url}/data/todayData`,
   // status
-  changeStatus: `${url}/sysUser/changeStatus`
+  changeStatus: `${url}/sysUser/changeStatus`,
+  // 打开
+  open: `${url}/cloudSeat/openBarrier`,
+  // search
+  searchCar: `${url}/cloudSeat/search`,
+  updateCarNum: `${url}/cloudSeat/updateCarNum`
 }
 export default urlCng

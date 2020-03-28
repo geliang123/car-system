@@ -39,7 +39,7 @@ export default [
     component: LiveCallDetail
   },
   {
-    path: ['/dataReport'],
+    path: ['/report'],
     component: DataReport
   },
   {

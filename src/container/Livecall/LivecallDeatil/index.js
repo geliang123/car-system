@@ -126,20 +126,6 @@ class LivecallDeatil extends Component {
                 </div>
                 {this.getShow()}
               </div>
-              <div className="left-item">
-                <div className="img-watch">
-                  <span>入场车道监控</span>
-                  <span>{data.inTimeStr}</span>
-                </div>
-                {this.getShow()}
-              </div>
-              <div className="left-item">
-                <div className="img-watch">
-                  <span>出场车道监控</span>
-                  <span>{data.outTimeStr}</span>
-                </div>
-                {this.getShow()}
-              </div>
               <div className="bottom-calling">
                 <span className="text">
                   {data.status === 3 ? '通话中 10:33' : '通话结束'}

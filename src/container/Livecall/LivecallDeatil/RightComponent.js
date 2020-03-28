@@ -1,7 +1,7 @@
 import { withRouter } from 'react-router-dom'
 import { hot } from 'react-hot-loader/root'
 import React, { Component } from 'react'
-import { Input, Button, message } from 'antd'
+import { Input, Button, message, DatePicker, Modal } from 'antd'
 import '../../../less/normal.less'
 import './style.less'
 import moment from 'moment'
@@ -9,8 +9,20 @@ import SelectMenu from '~/component/SelectMenu'
 import urlCng from '~/config/url'
 import fetch from '~/utils/fetch'
 import { getColor } from '~/utils'
+import CollapseComponent from './CollapseComponent'
 
+const { RangePicker } = DatePicker
 const { TextArea } = Input
+const dropData = [
+  {
+    id: 'car',
+    name: '车牌'
+  },
+  {
+    id: 'time',
+    name: '时间'
+  }
+]
 @hot
 @withRouter
 class RightComponent extends Component {
@@ -19,10 +31,12 @@ class RightComponent extends Component {
     this.state = {
       questionSelected: props.data && props.data.problemId,
       comments: '',
-      disabled: true,
       carNumber: props.data && props.data.carNum,
-      probleList: []
+      probleList: [],
+      type: 'car',
+      visible: false
     }
+    this.flag = false
   }
 
   componentDidMount() {
@@ -104,10 +118,45 @@ class RightComponent extends Component {
     })
   }
 
-  // 修改车
-  modifyCarNum = () => {
+  filter = () => {
+    fetch({
+      url: urlCng.callUpdate
+    }).then(res => {
+      if (res.code === 1) {
+        message.success('提交成功')
+      } else {
+        message.success('提交失败')
+      }
+    })
+  }
+
+  // 入场
+  open = () => {
+    if (!this.flag) {
+      fetch({
+        url: urlCng.open,
+        method: 'POST'
+      }).then(res => {
+        if (res.code === 1) {
+          this.flag = true
+          message.success('开闸成功')
+        } else {
+          message.success('开失败成功')
+        }
+      })
+    }
+  }
+
+  // 检索
+  search = () => {
+    // this.setState({
+    //   visible: true
+    // })
+  }
+
+  handleCancel = () => {
     this.setState({
-      disabled: false
+      visible: false
     })
   }
 
@@ -116,8 +165,9 @@ class RightComponent extends Component {
       questionSelected,
       comments,
       carNumber,
-      disabled,
-      probleList
+      probleList,
+      type,
+      visible
     } = this.state
     const { data } = this.props
     if (!Object.keys(data).length) return null
@@ -132,13 +182,27 @@ class RightComponent extends Component {
         </div>
         <div className="wrap-info car">
           <div className="label">车牌号:</div>
-          <Input
-            placeholder="请输入车牌号"
-            disabled={disabled}
-            className="car-num"
-            value={carNumber}
-            onChange={e => this.changeValue(e, 'carNumber')}
+          <SelectMenu
+            data={dropData}
+            className="select-type"
+            change={e => this.dropChange(e, 'type')}
+            defaultValue={type}
+            style={{ width: '75.5pt', marginRight: '15pt' }}
           />
+          {type === 'car' ? (
+            <Input
+              placeholder="请输入车牌关键词"
+              className="car-num"
+              value={carNumber}
+              onChange={e => this.changeValue(e, 'carNumber')}
+            />
+          ) : (
+            <RangePicker className="car-num" />
+          )}
+
+          <Button className="filter" onClick={this.search}>
+            检索
+          </Button>
         </div>
         {/* 操作按钮 */}
         <div className="wrap-info">
@@ -147,18 +211,20 @@ class RightComponent extends Component {
             <p className="duration" style={{ color: getColor(duration) }}>
               {duration}s
             </p>
-            <div className="op-btn in">入场开闸</div>
           </div>
           <div className="info-item">
-            <p className="text">剩余车位</p>
-            <p className="duration">10</p>
-            <div className="op-btn free" onClick={this.modifyCarNum}>
+            {/* <p className="text">剩余车位</p>
+            <p className="duration">10</p> */}
+            {/* <div className="op-btn free" onClick={this.modifyCarNum}>
               修改车牌
+            </div> */}
+            <div className="op-btn in" onClick="this.open">
+              入场开闸
             </div>
           </div>
           <div className="info-item">
-            <p className="text">收费标准</p>
-            <p className="duration">¥10(每小时)</p>
+            {/* <p className="text">收费标准</p>
+            <p className="duration">¥10(每小时)</p> */}
             <div className="op-btn operate">现场处理</div>
           </div>
         </div>
@@ -196,6 +262,21 @@ class RightComponent extends Component {
             提交
           </Button>
         </div>
+        {/* 弹框 */}
+        <Modal
+          title="客服端检测"
+          visible={visible}
+          className="watch-image-dialog"
+          okText="确认"
+          cancelText=""
+          onCancel={this.handleCancel}
+          width={908}
+          height={500}
+          destroyOnClose
+          confirmLoading={false}
+        >
+          <CollapseComponent />
+        </Modal>
       </div>
     )
   }

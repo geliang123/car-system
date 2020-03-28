@@ -4,6 +4,7 @@
     flex: 1;
     padding: 16pt;
     font-size: 12pt;
+    min-height: 461pt;
 
     .wrap-content {
         display: flex;
@@ -106,7 +107,13 @@
         border-radius: 3pt;
         background-color: #F7F8FC;
         margin-top: 11.5pt;
-        flex: 3.6
+        min-height: 388pt;
+        flex: 3.6;
+
+        .select-type .ant-select-selection {
+            border: 1px solid #EAF0FD !important;
+            width: 76.5pt;
+        }
     }
 
     .top-title {
@@ -123,12 +130,24 @@
         background-color: #EAF0FD !important;
     }
 
+    .filter {
+        margin-left: 20pt;
+        background-color: #4098FF;
+        color: #fff;
+        height: 32pt;
+        line-height: 32pt;
+    }
+
     .wrap-info {
         display: flex;
         justify-content: space-between;
         align-items: center;
         width: 80%;
         margin: 0 auto;
+
+        .car-num {
+            width: 170pt
+        }
 
         .label {
             min-width: 50pt;
@@ -215,5 +234,9 @@
 
     .ant-input[disabled] {
         background-color: #EAF0FD;
+    }
+
+    .ant-calendar-picker-input {
+        line-height: 32px !important;
     }
 }
