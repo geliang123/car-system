@@ -30,6 +30,9 @@ const urlCng = {
   open: `${url}/cloudSeat/openBarrier`,
   // search
   searchCar: `${url}/cloudSeat/search`,
-  updateCarNum: `${url}/cloudSeat/updateCarNum`
+  updateCarNum: `${url}/cloudSeat/updateCarNum`,
+  // 车场管理
+  equipList: `${url}/equipment/selectList`,
+  equipAdd: `${url}/equipment/addOrUpdate`
 }
 export default urlCng

@@ -12,6 +12,7 @@ const LiveCallDetail = loadable(() =>
 )
 const DataReport = loadable(() => import('../container/DataReport'))
 const EquipmentCheck = loadable(() => import('../container/EquipmentCheck'))
+const CarManage = loadable(() => import('../container/CarManage'))
 export default [
   {
     path: ['/', '/login'],
@@ -45,5 +46,9 @@ export default [
   {
     path: ['/equipmentCheck'],
     component: EquipmentCheck
+  },
+  {
+    path: ['/carmanage'],
+    component: CarManage
   }
 ]

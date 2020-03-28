@@ -1,3 +1,4 @@
+/* eslint-disable new-cap */
 /* eslint-disable no-alert */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable guard-for-in */
@@ -35,6 +36,18 @@ class LivecallDeatil extends Component {
     if (callDetailId) {
       this.getDetail(callDetailId)
     }
+    this.videoView = new mainClass()
+    this.videoView.devicetype = '1'
+    const loginJsonMap = {
+      szIPAddr: '192.168.0.104',
+      dwPort: '80',
+      szUserName: 'admin',
+      szPassword: '123456',
+      dwLoginProto: 0
+    }
+    const loginJsonstring = JSON.stringify(loginJsonMap)
+    this.videoView.login(loginJsonstring)
+    this.videoView.getChannellist()
   }
 
   componentWillUnmount() {
@@ -112,47 +125,8 @@ class LivecallDeatil extends Component {
           <div className="wrap-content">
             {/* 右边内容 */}
             <div className="left">
-              <div className="left-item">
-                <div className="img-watch">
-                  <span>入场车辆监控</span>
-                  <span>{data.inTimeStr}</span>
-                </div>
-                {this.getShow()}
-              </div>
-              <div className="left-item">
-                <div className="img-watch">
-                  <span>出场车辆监控</span>
-                  <span>{data.outTimeStr}</span>
-                </div>
-                {this.getShow()}
-              </div>
-              <div className="bottom-calling">
-                <span className="text">
-                  {data.status === 3 ? '通话中 10:33' : '通话结束'}
-                </span>
-                <div className="calling-right">
-                  {data.status === 5 ? (
-                    <div className="icon-wrap hujiao">
-                      <span className="icon hujiao" />
-                      <span onClick={() => this.updateList(data, 3)}>呼叫</span>
-                    </div>
-                  ) : null}
-                  {data.status === 3 ? (
-                    <div className="icon-wrap">
-                      <span className="icon jingyin" />
-                      <span>静音</span>
-                    </div>
-                  ) : null}
-                  {data.status === 3 ? (
-                    <div
-                      className="icon-wrap"
-                      onClick={() => this.updateList(data, 5)}
-                    >
-                      <span className="icon guaduan" />
-                      <span>挂断</span>
-                    </div>
-                  ) : null}
-                </div>
+              <div className="ocxStyle">
+                <div id="playerContainer" />
               </div>
             </div>
             {/* 左边内容 */}

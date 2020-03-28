@@ -13,7 +13,7 @@ import moment from 'moment'
 import fetch from '~/utils/fetch'
 import urlCng from '~/config/url'
 import SelectMenu from '~/component/SelectMenu'
-import { getUrl, getColor } from '~/utils/index'
+import { setStore, getUrl, getColor } from '~/utils'
 
 const pageSize = 10
 
@@ -205,6 +205,7 @@ class Livecall extends Component {
             id: 'all',
             name: '全部'
           })
+          setStore('parkList', resData)
           this.setState({
             parkList: resData
           })
