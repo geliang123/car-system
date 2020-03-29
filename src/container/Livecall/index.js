@@ -13,8 +13,8 @@ import moment from 'moment'
 import fetch from '~/utils/fetch'
 import urlCng from '~/config/url'
 import SelectMenu from '~/component/SelectMenu'
-import { getUrl, getColor } from '~/utils/index'
 import { getLocalStore } from '~/utils/index'
+import { setStore, getUrl, getColor } from '~/utils'
 
 const pageSize = 10
 
@@ -120,61 +120,64 @@ class Livecall extends Component {
   
     var userInfo = JSON.parse(getLocalStore('userInfo'));
   
-    global.cloudWebsocket = new WebSocket("ws://47.104.198.34:8080/cloud-park-websocket/client/" + userInfo.id)
+    if(!global.cloudWebsocket) {
 
-    //连接成功建立的回调方法
-    global.cloudWebsocket.onopen = event => {
-      fetch({
-        url: urlCng.callSoundAccount
-      }).then(res => {
-        if (res.code === 1) {
-          global.dhWeb.login(res.result.username, res.result.password, res.result.url)
+      global.cloudWebsocket = new WebSocket(urlCng.taskDispatch + userInfo.id)
+
+      //连接成功建立的回调方法
+      global.cloudWebsocket.onopen = event => {
+        fetch({
+          url: urlCng.callSoundAccount
+        }).then(res => {
+          if (res.code === 1) {
+            sessionStorage.setItem("serverAddr",res.result.url)
+            global.dhWeb.login(res.result.username, res.result.password, res.result.url)
+          }
+        })
+      }
+
+      global.cloudWebsocket.onmessage = messs => {
+          alert(1);
+      }
+      global.dhWeb.onDeviceList = mess => {
+        this.onDeviceList(mess)
+      }
+
+      //语音设备登录
+      global.dhWeb.onLogin = mess => {
+        console.log( mess)
+        this.onLogin(mess)
+      }
+
+      //语音消息通知
+      global.dhWeb.onNotify = mess => {
+        console.log(mess)
+        this.onNotify(mess)
+      }
+      global.dhWeb.onParseMsgError = mess => {
+        if (mess.error.indexOf('alarmServer offline') != -1) {
+          alert('报警服务器不在线')
         }
-      })
+      }
+      global.dhWeb.onAlarmServerClosed = mess => {
+        $('#logout').click()
+      }
+      global.dhWeb.onPlayRT = data => {
+        if (data.error != 'success') {
+          $('#closeAll').click()
+        }
+      }
     }
     // 停车场下拉
     this.getParkPos() 
     this.getList() // 列表数据
-    global.cloudWebsocket.onmessage = messs => {
-        alert(1);
-    }
-    global.dhWeb.onDeviceList = mess => {
-      this.onDeviceList(mess)
-    }
-
-    //语音设备登录
-    global.dhWeb.onLogin = mess => {
-      this.onLogin(mess)
-    }
-
-    //语音消息通知
-    global.dhWeb.onNotify = mess => {
-      console.log(mess)
-      this.onNotify(mess)
-    }
-    global.dhWeb.onParseMsgError = mess => {
-      if (mess.error.indexOf('alarmServer offline') != -1) {
-        alert('报警服务器不在线')
-      }
-    }
-    global.dhWeb.onAlarmServerClosed = mess => {
-      $('#logout').click()
-    }
-    global.dhWeb.onPlayRT = data => {
-      if (data.error != 'success') {
-        $('#closeAll').click()
-      }
-    }
-
   }
 
   componentWillUnmount() {
     if (this.timer) {
       window.clearInterval(this.timer)
     }
-    if (global.dhWeb) {
-      global.dhWeb = null
-    }
+
   }
 
   onDeviceList = data => {
@@ -200,6 +203,7 @@ class Livecall extends Component {
 
   onNotify = data => {
     const params = data.params
+    params.createTime = 
     global.cloudWebsocket.send(JSON.stringify(data))
     
   }
@@ -213,6 +217,7 @@ class Livecall extends Component {
       $('.showNameDiv p').text(`用户名：${$('#uname').val()}`)
       global.cloudWebsocket.send(JSON.stringify(data))
     } else {
+      console.log( data.params)
       alert('登录失败')
     }
   }
@@ -229,6 +234,7 @@ class Livecall extends Component {
             id: 'all',
             name: '全部'
           })
+          setStore('parkList', resData)
           this.setState({
             parkList: resData
           })

@@ -1,4 +1,5 @@
-#liveCall {
+#Account {
+    min-height: 200pt;
     display: flex;
     flex: 1;
     flex-direction: column;
@@ -6,8 +7,8 @@
     border-radius: 8pt;
     font-size: 12pt;
     position: relative;
-    min-height: 461pt;
 
+    //padding: 16pt;
     .search-wrap {
         margin: 18pt 15.5pt;
         display: flex;
@@ -34,33 +35,28 @@
             background-color: #FF9640;
             color: #fff;
         }
-
-        .filter {
-            margin-left: 20pt;
-            background-color: #4098FF;
-            color: #fff;
-            height: 32pt;
-            line-height: 32pt;
-        }
     }
 
-    .hang-up,
-    .online,
-    .not-operate {
-        color: #4098FF;
-        margin-right: 20.5pt;
+    .add {
+        width: 78pt;
+        height: 32pt;
+        border-radius: 2pt;
+        background-color: #4098FF;
+        color: #fff;
         font-size: 12pt;
+    }
+
+
+
+    .del,
+    .edit {
+        color: #FF6540;
+        margin-right: 20.5pt;
         cursor: pointer;
     }
 
-    .not-operate,
-    .hang-up {
-        color: #FF6540
-    }
-
-    .carImage {
-        width: 343pt;
-        height: 202pt;
+    .edit {
+        color: #4098FF;
     }
 
     .total {
@@ -86,4 +82,5 @@
         box-shadow: none;
         border: none
     }
+
 }

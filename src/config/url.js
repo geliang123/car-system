@@ -1,4 +1,5 @@
 const url = `${process.env.API_URL}`
+const websocket_url = `${process.env.API_WEBSOCKET_URL}`
 const urlCng = {
   login: `${url}/login`,
   logout: `${url}/logout`,
@@ -25,8 +26,17 @@ const urlCng = {
   serviceData: `${url}/data/serviceData`,
   todayData: `${url}/data/todayData`,
   // status
-  changeStatus: `${url}/sysUser/changeStatus`
+  changeStatus: `${url}/sysUser/changeStatus`,
+  // 打开
+  open: `${url}/cloudSeat/openBarrier`,
+  // search
+  searchCar: `${url}/cloudSeat/search`,
+  updateCarNum: `${url}/cloudSeat/updateCarNum`,
+  // 车场管理
+  equipList: `${url}/equipment/selectList`,
+  equipAdd: `${url}/equipment/addOrUpdate`,
 
-
+  //任务分配websocket
+  taskDispatch: `${websocket_url}/task/dispatch/`
 }
 export default urlCng
