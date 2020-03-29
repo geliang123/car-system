@@ -13,7 +13,10 @@ import urlCng from '~/config/url'
 import { getStore, setStore } from '~/utils'
 import fetch from '~/utils/fetch'
 import RightComponent from './RightComponent'
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 @hot
 class LivecallDeatil extends Component {
   constructor(props) {
