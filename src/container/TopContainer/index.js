@@ -1,8 +1,8 @@
-import React, { Component, Fragment } from 'react'
-import { Menu, Modal, Popover } from 'antd'
+import React, { Component } from 'react'
+import { Menu, Modal, Popover, message } from 'antd'
 import { Link, withRouter } from 'react-router-dom'
 import fetch from '~/utils/fetch'
-import { removeStore, getLocalStore } from '~/utils/index'
+import { removeStore, getLocalStore, setStore } from '~/utils/index'
 import CheckComponent from './CheckComponent'
 import urlCng from '~/config/url'
 import './style.less'
@@ -84,7 +84,7 @@ class NavTop extends Component {
     }).then(res => {
       if (!res.code) {
         this.setState({
-          menuData: res || []
+          menuData: (Array.isArray(res) && res) || []
         })
       }
     })
@@ -111,6 +111,7 @@ class NavTop extends Component {
       visiblePopover: false,
       status
     })
+    setStore('status', status)
     fetch({
       url: urlCng.changeStatus,
       method: 'POST',
@@ -119,7 +120,7 @@ class NavTop extends Component {
       }
     }).then(res => {
       if (res.code === 1) {
-        console.log(res)
+        message.success('修改成功')
       }
     })
   }
