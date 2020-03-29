@@ -14,6 +14,11 @@ import urlCng from '~/config/url'
 import { getStore, setStore } from '~/utils'
 import fetch from '~/utils/fetch'
 import RightComponent from './RightComponent'
+
+let hour = 0
+let minute = 0
+let second = 0 // 时 分 秒
+let millisecond = 0 // 毫秒
 @hot
 class LivecallDeatil extends Component {
   constructor(props) {
@@ -32,15 +37,16 @@ class LivecallDeatil extends Component {
         location.state.data.id) ||
       getStore('callDetailId')
     setStore('callDetailId', callDetailId)
+    this.countTimer = setInterval(this.countItem, 50)
     if (callDetailId) {
       this.getDetail(callDetailId)
       console.log(location.state.data)
       this.deviceId = location.state.data.audioDeviceId
-      this.playVideo(962025,912043,true)
+      this.playVideo(962025, 912043, true)
 
-      this.timer=setTimeout(()=>{
-        global.dhWeb.startTalk(this.deviceId);
-      },3000)
+      this.timer = setTimeout(() => {
+        global.dhWeb.startTalk(this.deviceId)
+      }, 3000)
     }
     this.videoView = new mainClass()
     this.videoView.devicetype = '1'
@@ -57,49 +63,72 @@ class LivecallDeatil extends Component {
   }
 
   componentWillUnmount() {
-    if(this.timer) clearTimeout(this.timer)
+    if (this.timer) clearTimeout(this.timer)
+    if (this.countTimer) clearInterval(this.countTimer)
   }
 
-  playVideo=(videoDeviceId,audioDeviceId,isTalk)=>{
-    
-    closeAll();
-    var html = '<div class="videoboxDiv" ondblclick="launchFullscreen(this)">'+
-           '<video id="play_'+912043+'" onclick="selectedVideo(this)" oncanplay="canplayVideo(this)"></video><span>'+$('#device_'+audioDeviceId).text()+'</span>'+
-           '<img class="loading" src="./image/loading.gif"/>'+
-         '</div>';
-   $('.videoDiv').append(html);
-   global.dhWeb.playDeviceAudio(912043);
-    $('.selectVideo').parent().css("zIndex","2");
-    var video = document.getElementById("play_"+912043);
-    global.dhWeb.playRT(video,912043,sessionStorage.getItem('loginHandle'),isTalk);
-    if(isTalk){
-      if($("#talk").hasClass("talking")) return;
-     $('#talk').addClass("talking");
-     $(".talking").css("background","#aaa");
-      //播放联动
-     var parentId = $("#device_"+audioDeviceId).attr('parentId');
-     var groupDevices = $('li[parentId = '+parentId+']');
-     global.dhWeb.playRT($('#play_962065')[0],962025,sessionStorage.getItem('loginHandle'),false);
-    //  for(var i =0; i<groupDevices.length;i++){
-    //    var deviceId = groupDevices[i].id.split("_")[1];
-    //    if($('#play_'+deviceId)[0]) continue;
-    //    var iconClassName = getIconClassName($('#device_'+deviceId));
-    //    if(!iconClassName) continue;
-    //    var status = iconClassName.split('_');
-    //    if(status[0] == 'alarm') continue;
-    //    if(status[1] == 'Offline') continue;
-    //    var html = '<div class="videoboxDiv linkDiv" >'+
-    //            '<video id="play_'+deviceId+'"></video><span>'+$('#device_'+deviceId).text()+'</span>'+
-    //            '<img class="loading" src="./image/loading.gif"/>'+
-    //          '</div>';
-    //    $('.videoDiv').append(html);
+  countItem = () => {
+    // 计时
+    millisecond += 50
+    if (millisecond >= 1000) {
+      millisecond = 0
+      second += 1
+    }
+    if (second >= 60) {
+      second = 0
+      minute += 1
+    }
 
-    //  }
+    if (minute >= 60) {
+      minute = 0
+      hour += 1
+    }
+    document.getElementById(
+      'timetext'
+    ).innerHTML = `${hour}时${minute}分${second}秒`
+  }
+
+  playVideo = (videoDeviceId, audioDeviceId, isTalk) => {
+    closeAll()
+    const html =
+      `${'<div class="videoboxDiv" ondblclick="launchFullscreen(this)">' +
+        '<video id="play_'}${912043}" width="327" onclick="selectedVideo(this)" oncanplay="canplayVideo(this)"></video><span>${$(
+        `#device_${audioDeviceId}`
+      ).text()}</span>` +
+      '<img class="loading" src="./image/loading.gif"/>' +
+      '</div>'
+    $('.videoDiv').append(html)
+    global.dhWeb.playDeviceAudio(912043)
+    $('.selectVideo')
+      .parent()
+      .css('zIndex', '2')
+    const video = document.getElementById(`play_${912043}`)
+    global.dhWeb.playRT(
+      video,
+      912043,
+      sessionStorage.getItem('loginHandle'),
+      isTalk
+    )
+    if (isTalk) {
+      if ($('#talk').hasClass('talking')) return
+      $('#talk').addClass('talking')
+      $('.talking').css('background', '#aaa')
+      // 播放联动
+      const parentId = $(`#device_${audioDeviceId}`).attr('parentId')
+      const groupDevices = $(`li[parentId = ${parentId}]`)
+      global.dhWeb.playRT(
+        $('#play_962065')[0],
+        962025,
+        sessionStorage.getItem('loginHandle'),
+        false
+      )
     }
   }
-  closeAll=()=>{
-    global.dhWeb.stopRT(this.deviceId,sessionStorage.getItem('loginHandle'));
+
+  closeAll = () => {
+    global.dhWeb.stopRT(this.deviceId, sessionStorage.getItem('loginHandle'))
   }
+
   goback = () => {
     this.props.history.goBack()
   }
@@ -125,6 +154,9 @@ class LivecallDeatil extends Component {
 
   // 更新
   updateList = (item, status) => {
+    if (this.countTimer) clearInterval(this.countTimer)
+    this.closeAll()
+    this.videoView.stopVideo()
     fetch({
       url: urlCng.callUpdate,
       method: 'POST',
@@ -169,10 +201,57 @@ class LivecallDeatil extends Component {
           <div className="wrap-content">
             {/* 右边内容 */}
             <div className="left">
-              <div className="ocxStyle">
-                <div id="playerContainer" />        
+              <div className="left-item">
+                <div className="title">
+                  {data.inOut === 2 ? '入场' : '出场'}车辆监控
+                </div>
+                <div
+                  className={`ocxStyle ${data.inOut == 2 ? 'block' : 'none'}`}
+                >
+                  <div id="playerContainer" />
+                </div>
               </div>
-              <div class= "videoDiv"></div>
+              <div className="left-item">
+                <div className="title">
+                  {data.inOut === 2 ? '入场' : '出场'}车辆监控
+                </div>
+                <div className="videoDiv" />
+              </div>
+              <div className="bottom-calling">
+                <span className="text">
+                  {data.status === 3 ? (
+                    <span id="">
+                      通话中:
+                      <span id="timetext" />
+                    </span>
+                  ) : (
+                    '通话结束'
+                  )}
+                </span>
+                <div className="calling-right">
+                  {data.status === 5 ? (
+                    <div className="icon-wrap hujiao">
+                      <span className="icon hujiao" />
+                      <span onClick={() => this.updateList(data, 3)}>呼叫</span>
+                    </div>
+                  ) : null}
+                  {data.status === 3 ? (
+                    <div className="icon-wrap">
+                      <span className="icon jingyin" />
+                      <span>静音</span>
+                    </div>
+                  ) : null}
+                  {data.status === 3 ? (
+                    <div
+                      className="icon-wrap"
+                      onClick={() => this.updateList(data, 5)}
+                    >
+                      <span className="icon guaduan" />
+                      <span>挂断</span>
+                    </div>
+                  ) : null}
+                </div>
+              </div>
             </div>
             {/* 左边内容 */}
             <RightComponent data={data} />

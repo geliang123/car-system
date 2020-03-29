@@ -11,11 +11,6 @@
         flex-direction: row;
     }
 
-    .ocxStyle {
-        width: 500px;
-        height: 500px;
-    }
-
     .left {
         margin-top: 11.5pt;
         flex: 5;
@@ -24,9 +19,21 @@
         flex-wrap: wrap;
     }
 
+    .ocxStyle,
+    .videoboxDiv {
+        width: 246pt;
+        height: 327px;
+    }
+
     .left-item {
-        width: 48%;
         margin: 0 9.5pt 9.5pt 0;
+
+        .title {
+            height: 20pt;
+            background-color: #9FCBFF;
+            color: #fff;
+            text-indent: 4pt;
+        }
 
         .car-img {
             min-height: 178pt;
@@ -34,7 +41,7 @@
 
         .no-img {
             width: 100%;
-            min-height: 178pt;
+            height: 178pt;
             background-color: #F5F6FC;
             display: flex;
             justify-content: center;
@@ -56,6 +63,8 @@
     }
 
     .bottom-calling {
+        position: relative;
+        top: -80px;
         width: 98%;
         height: 44pt;
         display: flex;
@@ -244,4 +253,12 @@
     .ant-calendar-picker-input {
         line-height: 32px !important;
     }
+}
+
+.hide {
+    display: none;
+}
+
+.block {
+    display: block;
 }
