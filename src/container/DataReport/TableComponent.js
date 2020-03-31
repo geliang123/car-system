@@ -67,7 +67,6 @@ class TableComponent extends Component {
         <Table
           dataSource={data.tableData}
           columns={this.headers}
-          scroll={{ x: true }}
           rowKey={(record, index) => index}
           locale={{ emptyText: '暂无数据' }}
           pagination={{

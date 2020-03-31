@@ -2,12 +2,14 @@ import React, { Component } from 'react'
 import { Menu, Modal, Popover, message } from 'antd'
 import { Link, withRouter } from 'react-router-dom'
 import fetch from '~/utils/fetch'
-import { removeStore, getLocalStore, setStore } from '~/utils/index'
+import { removeStore, setStore, getStore, getLocalStore } from '~/utils/index'
 import CheckComponent from './CheckComponent'
 import urlCng from '~/config/url'
 import './style.less'
 import { showConfirm } from '~/utils/ViewUtils'
 
+const { SubMenu } = Menu
+const MenuItemGroup = Menu.ItemGroup
 @withRouter
 class NavTop extends Component {
   constructor(props) {
@@ -107,11 +109,11 @@ class NavTop extends Component {
   }
 
   changeStatus = status => {
+    setStore('status', status)
     this.setState({
       visiblePopover: false,
       status
     })
-    setStore('status', status)
     fetch({
       url: urlCng.changeStatus,
       method: 'POST',
@@ -134,6 +136,7 @@ class NavTop extends Component {
       visiblePopover,
       status
     } = this.state
+    const mergeStatus = JSON.parse(getStore('status')) || status
     if (!Object.keys(this.user).length) return null
     return (
       <div className="top" id="TopContainer">
@@ -145,12 +148,31 @@ class NavTop extends Component {
           mode="horizontal"
           className="menu-tab"
         >
-          {menuData.map(item => (
-            <Menu.Item key={item.code.toLowerCase()}>
-              <span />
-              <Link to={`/${item.code.toLowerCase()}`}>{item.name}</Link>
-            </Menu.Item>
-          ))}
+          {menuData.map(item =>
+            !item.childes ? (
+              <Menu.Item key={item.code.toLowerCase()}>
+                <span />
+                <Link to={`/${item.code.toLowerCase()}`}>{item.name}</Link>
+              </Menu.Item>
+            ) : (
+              <SubMenu
+                key={item.code.toLowerCase()}
+                title={
+                  <span style={{ display: 'flex', alignItems: 'center' }}>
+                    {item.name}
+                  </span>
+                }
+              >
+                <MenuItemGroup>
+                  {item.childes.map(obj => (
+                    <Menu.Item key={obj.code.toLowerCase()}>
+                      <Link to={`/${obj.code.toLowerCase()}`}>{obj.name}</Link>
+                    </Menu.Item>
+                  ))}
+                </MenuItemGroup>
+              </SubMenu>
+            )
+          )}
         </Menu>
         <div className="indicator">
           <div className="indi-item">
@@ -189,9 +211,9 @@ class NavTop extends Component {
             onVisibleChange={this.handleVisibleChange}
           >
             <div className="status-drop">
-              <div className={`status status${status}`}>
-                <span className={`circle status${status}`} />
-                {status === 1 ? '在线' : '休息'}
+              <div className={`status status${mergeStatus}`}>
+                <span className={`circle status${mergeStatus}`} />
+                {mergeStatus === 1 ? '在线' : '休息'}
               </div>
               <div className="tri" />
             </div>

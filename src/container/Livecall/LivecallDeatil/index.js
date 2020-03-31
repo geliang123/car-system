@@ -5,7 +5,6 @@
 /* eslint-disable no-undef */
 import { hot } from 'react-hot-loader/root'
 import React, { Component } from 'react'
-
 import '../../../less/normal.less'
 import './style.less'
 import { message } from 'antd'
@@ -40,26 +39,25 @@ class LivecallDeatil extends Component {
     this.countTimer = setInterval(this.countItem, 50)
     if (callDetailId) {
       this.getDetail(callDetailId)
-      console.log(location.state.data)
-      this.deviceId = location.state.data.audioDeviceId
-      this.playVideo(962025, 912043, true)
+      // this.deviceId = location.state.data.audioDeviceId
+      // this.playVideo(962025, 912043, true)
 
-      this.timer = setTimeout(() => {
-        global.dhWeb.startTalk(this.deviceId)
-      }, 3000)
+      // this.timer = setTimeout(() => {
+      //   global.dhWeb.startTalk(this.deviceId)
+      // }, 3000)
     }
-    this.videoView = new mainClass()
-    this.videoView.devicetype = '1'
-    const loginJsonMap = {
-      szIPAddr: '192.168.1.14',
-      dwPort: '80',
-      szUserName: 'admin',
-      szPassword: '123456',
-      dwLoginProto: 0
-    }
-    const loginJsonstring = JSON.stringify(loginJsonMap)
-    this.videoView.login(loginJsonstring)
-    this.videoView.getChannellist()
+    // this.videoView = new mainClass()
+    // this.videoView.devicetype = '1'
+    // const loginJsonMap = {
+    //   szIPAddr: '192.168.1.14',
+    //   dwPort: '80',
+    //   szUserName: 'admin',
+    //   szPassword: '123456',
+    //   dwLoginProto: 0
+    // }
+    // const loginJsonstring = JSON.stringify(loginJsonMap)
+    // this.videoView.login(loginJsonstring)
+    // this.videoView.getChannellist()
   }
 
   componentWillUnmount() {
@@ -152,11 +150,15 @@ class LivecallDeatil extends Component {
     })
   }
 
+  close = () => {
+    this.closeAll()
+    this.videoView.stopVideo()
+  }
+
   // 更新
   updateList = (item, status) => {
     if (this.countTimer) clearInterval(this.countTimer)
-    this.closeAll()
-    this.videoView.stopVideo()
+    this.close()
     fetch({
       url: urlCng.callUpdate,
       method: 'POST',
@@ -236,7 +238,7 @@ class LivecallDeatil extends Component {
                     </div>
                   ) : null}
                   {data.status === 3 ? (
-                    <div className="icon-wrap">
+                    <div className="icon-wrap" onClick={this}>
                       <span className="icon jingyin" />
                       <span>静音</span>
                     </div>
@@ -254,7 +256,7 @@ class LivecallDeatil extends Component {
               </div>
             </div>
             {/* 左边内容 */}
-            <RightComponent data={data} />
+            <RightComponent data={data} close={this.close} />
           </div>
         </div>
       </div>

@@ -31,34 +31,34 @@ class CarManage extends Component {
       },
       {
         title: '状态',
-        dataIndex: 'userName',
-        key: 'userName'
+        dataIndex: 'type',
+        key: 'type'
       },
       {
         title: '停车场名称',
-        dataIndex: 'realName',
-        key: 'realName'
+        dataIndex: 'name',
+        key: 'name'
       },
       {
         title: '设备编号',
-        dataIndex: 'roleId',
-        key: 'roleId',
-        render: value => <div>{this.getNameById(value)}</div>
+        dataIndex: 'code',
+        key: 'code'
+        // render: value => <div>{this.getNameById(value)}</div>
       },
       {
         title: '对应IP',
-        dataIndex: 'tel',
-        key: 'tel'
+        dataIndex: 'detailInfo',
+        key: 'detailInfo'
       },
       {
         title: '对应闸口',
-        dataIndex: 'email',
-        key: 'email'
+        dataIndex: 'address',
+        key: 'address'
       },
       {
         title: '备注',
-        dataIndex: 'email',
-        key: 'email'
+        dataIndex: 'remark',
+        key: 'remark'
       },
       {
         title: '操作',
@@ -111,7 +111,7 @@ class CarManage extends Component {
 
   getList = () => {
     const { current, searchContent } = this.state // &userName=${searchContent}
-    let url = `${urlCng.accountList}?pageSize=${pageSize}&curPage=${current}`
+    let url = `${urlCng.equipList}?pageSize=${pageSize}&curPage=${current}`
     if (searchContent) {
       url += `&userName=${searchContent}`
     }
@@ -120,8 +120,8 @@ class CarManage extends Component {
     }).then(res => {
       if (res.code === 1) {
         this.setState({
-          data: res.result.data,
-          total: res.result.page.totalNum,
+          data: res.result,
+          total: 30, // res.result.page.totalNum,
           visible: false,
           loading: false
         })
@@ -213,11 +213,7 @@ class CarManage extends Component {
       case 'equip':
         return <Add data={this.selectItem} op={op} updateData={this.getList} />
       case 'del':
-        return (
-          <div className="del-text">
-            确认删除“{this.selectItem.userName}”账号?
-          </div>
-        )
+        return <div className="del-text">确认删除?</div>
       default:
         break
     }

@@ -247,7 +247,6 @@ class Livecall extends Component {
           <Table
             dataSource={data}
             columns={this.headers}
-            scroll={{ x: true }}
             rowKey={(record, index) => index}
             loading={loading}
             locale={{ emptyText: '暂无数据' }}

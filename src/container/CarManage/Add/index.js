@@ -5,7 +5,6 @@ import { hot } from 'react-hot-loader/root'
 import eventObject from '~/config/eventSignal'
 import fetch from '~/utils/fetch'
 import urlCng from '~/config/url'
-import accountArr from '~/config/dropData'
 import '../../../less/normal.less'
 import './style.less'
 import { getStore } from '~/utils'
@@ -32,12 +31,21 @@ class Add extends Component {
   save = () => {
     this.props.form.validateFields((err, values) => {
       const { op, data } = this.props
-      const params =
-        op === 'edit' ? Object.assign({}, values, { id: data.id }) : values
-
+      let params = values
+      if (op === 'equip') {
+        params = Object.assign({}, values, {
+          parkName: data.parkName,
+          id: data.id
+        })
+      }
+      if (op === 'edit') {
+        params = Object.assign({}, values, {
+          id: data.id
+        })
+      }
       if (!err) {
         fetch({
-          url: urlCng.accountAdd,
+          url: urlCng.equipAdd,
           method: 'POST',
           data: params
         }).then(res => {
@@ -66,15 +74,15 @@ class Add extends Component {
         <Form onSubmit={this.handleSubmit}>
           {op === 'add' ? (
             <FormItem {...formItemLayout} label="停车场">
-              {getFieldDecorator('userName', {
-                initialValue: data.userName
+              {getFieldDecorator('parkName', {
+                initialValue: data.parkName
               })(<Input placeholder="请输入停车场" allowClear />)}
             </FormItem>
           ) : null}
           {op === 'edit' ? (
-            <FormItem {...formItemLayout} label="请选择停车场">
-              {getFieldDecorator('roleId', {
-                initialValue: data.roleId || accountArr[0].id
+            <FormItem {...formItemLayout} label="停车场">
+              {getFieldDecorator('parkName', {
+                initialValue: data.parkName
               })(
                 <Select>
                   {this.parkList.map((item, i) => (
@@ -86,35 +94,27 @@ class Add extends Component {
               )}
             </FormItem>
           ) : null}
-          {op === 'edit' ? (
-            <FormItem {...formItemLayout} label="设备">
-              {getFieldDecorator('realName', {
-                initialValue: data.realName
-              })(<Input placeholder="请输入设备名" allowClear />)}
-            </FormItem>
-          ) : null}
 
-          {op === 'equip' ? (
-            <FormItem {...formItemLayout} label="设备编号">
-              {getFieldDecorator('email', {
-                initialValue: data.email
-              })(<Input placeholder="请输入设备编号" allowClear />)}
-            </FormItem>
-          ) : null}
-          {op === 'equip' ? (
-            <FormItem {...formItemLayout} label="对应IP">
-              {getFieldDecorator('email', {
-                initialValue: data.email
-              })(<Input placeholder="请输入对应IP" allowClear />)}
-            </FormItem>
-          ) : null}
-          {op === 'edit' || op === 'equip' ? (
-            <FormItem {...formItemLayout} label="备注">
-              {getFieldDecorator('tel', {
-                initialValue: data.tel
-              })(<Input placeholder="请输入备注" allowClear />)}
-            </FormItem>
-          ) : null}
+          <FormItem {...formItemLayout} label="设备编号">
+            {getFieldDecorator('code', {
+              initialValue: data.code
+            })(<Input placeholder="请输入设备编号" allowClear />)}
+          </FormItem>
+          <FormItem {...formItemLayout} label="对应IP">
+            {getFieldDecorator('detailInfo', {
+              initialValue: data.detailInfo
+            })(<Input placeholder="请输入对应IP" allowClear />)}
+          </FormItem>
+          <FormItem {...formItemLayout} label="闸口">
+            {getFieldDecorator('address', {
+              initialValue: data.address
+            })(<Input placeholder="请输入闸口" allowClear />)}
+          </FormItem>
+          <FormItem {...formItemLayout} label="备注">
+            {getFieldDecorator('remark', {
+              initialValue: data.remark
+            })(<Input placeholder="请输入备注" allowClear />)}
+          </FormItem>
         </Form>
       </div>
     )

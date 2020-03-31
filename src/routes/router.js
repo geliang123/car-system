@@ -20,7 +20,7 @@ export default [
     component: Login
   },
   {
-    path: ['/call'],
+    path: ['/call_now'],
     component: LiveCall
   },
   {
@@ -48,7 +48,7 @@ export default [
     component: EquipmentCheck
   },
   {
-    path: ['/carmanage'],
+    path: ['/car'],
     component: CarManage
   }
 ]

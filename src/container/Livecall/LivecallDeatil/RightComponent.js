@@ -105,6 +105,8 @@ class RightComponent extends Component {
       }).then(res => {
         if (res.code === 1) {
           message.success('提交成功')
+          this.props.close()
+          this.props.history.goBack()
         } else {
           message.success('提交失败')
         }

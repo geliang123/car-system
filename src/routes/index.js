@@ -4,6 +4,7 @@ import routes from './router'
 import '../less/antd.less'
 import TopContainer from '../container/TopContainer'
 import './index.less'
+import '../less/config.less'
 
 @withRouter
 class App extends Component {

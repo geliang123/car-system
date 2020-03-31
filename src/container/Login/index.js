@@ -46,7 +46,7 @@ class Login extends Component {
       if (res.code === 1) {
         setLocalStore('token', res.result.token)
         setLocalStore('userInfo', res.result.user)
-        this.props.history.push('/call')
+        this.props.history.push('/call_now')
       } else {
         message.error(res.msg)
       }
