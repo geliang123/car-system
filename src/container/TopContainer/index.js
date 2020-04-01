@@ -206,6 +206,7 @@ class NavTop extends Component {
             placement="bottom"
             title=""
             content={this.content}
+            className="drop-status"
             trigger="click"
             visible={visiblePopover}
             onVisibleChange={this.handleVisibleChange}

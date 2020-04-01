@@ -1,7 +1,7 @@
 import { withRouter } from 'react-router-dom'
 import { hot } from 'react-hot-loader/root'
 import React, { Component } from 'react'
-import { Input, Button, message, DatePicker, Modal } from 'antd'
+import { Input, Button, message, DatePicker, Modal, Popconfirm } from 'antd'
 import '../../../less/normal.less'
 import './style.less'
 import moment from 'moment'
@@ -151,9 +151,18 @@ class RightComponent extends Component {
 
   // 检索
   search = () => {
-    // this.setState({
-    //   visible: true
-    // })
+    fetch({
+      url: urlCng.searchCar
+    }).then(res => {
+      if (res.code === 1) {
+        console.log(res)
+      } else {
+        message.success('提交失败')
+      }
+    })
+    this.setState({
+      visible: true
+    })
   }
 
   handleCancel = () => {
@@ -220,14 +229,26 @@ class RightComponent extends Component {
             {/* <div className="op-btn free" onClick={this.modifyCarNum}>
               修改车牌
             </div> */}
-            <div className="op-btn in" onClick="this.open">
-              入场开闸
-            </div>
+            <Popconfirm
+              title="请确认是否对闸口进行放行?"
+              onConfirm={this.open}
+              okText="确定"
+              cancelText="取消"
+            >
+              <div className="op-btn in">入场开闸</div>
+            </Popconfirm>
           </div>
           <div className="info-item">
             {/* <p className="text">收费标准</p>
             <p className="duration">¥10(每小时)</p> */}
-            <div className="op-btn operate">现场处理</div>
+            <Popconfirm
+              title="请联系停车场管理人员 电话:15317035193"
+              okText="确定"
+              cancelText="取消"
+              style={{ width: '200px' }}
+            >
+              <div className="op-btn operate">现场处理</div>
+            </Popconfirm>
           </div>
         </div>
         {/* 提交内容 */}
@@ -266,18 +287,17 @@ class RightComponent extends Component {
         </div>
         {/* 弹框 */}
         <Modal
-          title="客服端检测"
+          title={type === 'car' ? '车牌检索' : '时间检索'}
           visible={visible}
-          className="watch-image-dialog"
+          className="watch-image-dialog panle-dialog"
           okText="确认"
           cancelText=""
           onCancel={this.handleCancel}
           width={908}
-          height={500}
           destroyOnClose
           confirmLoading={false}
         >
-          <CollapseComponent />
+          <CollapseComponent type={type} />
         </Modal>
       </div>
     )

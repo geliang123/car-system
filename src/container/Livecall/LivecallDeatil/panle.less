@@ -1,0 +1,117 @@
+.panle-dialog {
+    .ant-modal-body {
+        padding-bottom: 30px !important;
+    }
+
+    .info {
+        margin-bottom: 10pt;
+        font-size: 18pt;
+        color: #323233;
+    }
+
+    //panle检索
+    .header-info {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 16pt;
+
+        :last-child {
+            color: #4098FF;
+        }
+
+        span {
+            color: #323233;
+            font-size: 12pt;
+
+
+        }
+    }
+
+    .detail-content {
+        display: flex;
+    }
+
+    .left {
+        padding-left: 25pt;
+    }
+
+    .left,
+    .right {
+        display: flex;
+        flex: 1;
+        flex-wrap: wrap;
+
+        .item {
+            margin-top: 30pt;
+            width: 50%;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+
+            .img {
+                height: 81pt;
+            }
+        }
+
+        .name {
+            font-size: 9pt;
+            color: #999999;
+        }
+
+        .value {
+            font-size: 12pt;
+            color: #323233;
+        }
+    }
+
+    .right {
+        flex-direction: column;
+
+        .wrap-top {
+            display: flex;
+            justify-content: center;
+            text-align: center;
+
+
+            img {
+                margin-top: 10pt;
+                margin-left: 20pt;
+                width: 133pt;
+                height: 81pt;
+            }
+        }
+    }
+
+    .btn {
+        margin: 29.5pt 0 23pt;
+        width: 100%;
+        height: 32pt;
+        background-color: #4098FF;
+        color: #fff;
+    }
+
+    .empty {
+        height: 261pt;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        color: #969699;
+        border: 1px solid #D3D9E6;
+        border-radius: 4px;
+    }
+
+    .ant-collapse>.ant-collapse-item {
+        border-bottom: none;
+        background-color: #fff;
+
+        &:nth-child(2n) {
+            background-color: #F0F3FC;
+        }
+    }
+
+    .ant-collapse {
+        border-bottom: 1px solid #D3D9E6;
+    }
+}

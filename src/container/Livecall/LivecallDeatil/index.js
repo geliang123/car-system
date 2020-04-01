@@ -7,7 +7,7 @@ import { hot } from 'react-hot-loader/root'
 import React, { Component } from 'react'
 import '../../../less/normal.less'
 import './style.less'
-import { message } from 'antd'
+import { message, Button } from 'antd'
 import Title from '~/component/Title'
 import urlCng from '~/config/url'
 import { getStore, setStore } from '~/utils'
@@ -36,7 +36,7 @@ class LivecallDeatil extends Component {
         location.state.data.id) ||
       getStore('callDetailId')
     setStore('callDetailId', callDetailId)
-    this.countTimer = setInterval(this.countItem, 50)
+    // this.countTimer = setInterval(this.countItem, 50)
     if (callDetailId) {
       this.getDetail(callDetailId)
       // this.deviceId = location.state.data.audioDeviceId
@@ -193,6 +193,8 @@ class LivecallDeatil extends Component {
     )
   }
 
+  muted = () => {}
+
   render() {
     const { data } = this.state
 
@@ -238,7 +240,7 @@ class LivecallDeatil extends Component {
                     </div>
                   ) : null}
                   {data.status === 3 ? (
-                    <div className="icon-wrap" onClick={this}>
+                    <div className="icon-wrap" onClick={this.muted}>
                       <span className="icon jingyin" />
                       <span>静音</span>
                     </div>
