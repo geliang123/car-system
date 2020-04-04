@@ -41,7 +41,7 @@ class Add extends Component {
     super(props)
     this.state = {
       audioList: [],
-      type: this.props.data.type
+      type: this.props.data.type || 1
     }
     this.parkList = JSON.parse(getStore('parkList'))
   }
@@ -122,8 +122,7 @@ class Add extends Component {
     const { getFieldDecorator } = this.props.form
     const { audioList, type } = this.state
     let { data } = this.props
-    if (!data) data = {}
-
+    if (!data) data = { type: 1 }
     return (
       <div id="Add">
         <Form onSubmit={this.handleSubmit} className="formName">

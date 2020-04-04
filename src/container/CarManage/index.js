@@ -77,7 +77,12 @@ class CarManage extends Component {
       {
         title: '备注',
         dataIndex: 'remark',
-        key: 'remark'
+        key: 'remark',
+        render: value => (
+          <div className="ellipsis" style={{ maxWidth: '100px' }}>
+            {value}
+          </div>
+        )
       },
       {
         title: '操作',
@@ -129,7 +134,7 @@ class CarManage extends Component {
     const { current, searchContent } = this.state // &userName=${searchContent}
     let url = `${urlCng.equipList}?pageSize=${pageSize}&curPage=${current}`
     if (searchContent) {
-      url += `&userName=${searchContent}`
+      url += `&code=${searchContent}`
     }
     fetch({
       url
@@ -176,7 +181,9 @@ class CarManage extends Component {
 
   // 新增
   add = () => {
-    this.selectItem = {}
+    this.selectItem = {
+      type: 1
+    }
     this.dialogTitle = '新增设备'
     this.op = 'add'
     this.setState({
@@ -261,9 +268,9 @@ class CarManage extends Component {
             <div className="search">
               <Input
                 className="search-content"
-                placeholder="请输入账户关键词"
+                placeholder="请输入设备编号关键词"
                 value={searchContent}
-                onChange={e => this.changeValue(e, 'username')}
+                onChange={e => this.changeValue(e, 'code')}
               />
               <Button className="search-btn" onClick={this.search}>
                 搜索

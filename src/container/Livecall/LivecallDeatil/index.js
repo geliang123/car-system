@@ -7,7 +7,7 @@ import { hot } from 'react-hot-loader/root'
 import React, { Component } from 'react'
 import '../../../less/normal.less'
 import './style.less'
-import { message, Button } from 'antd'
+import { message } from 'antd'
 import Title from '~/component/Title'
 import urlCng from '~/config/url'
 import { getStore, setStore } from '~/utils'
@@ -224,7 +224,7 @@ class LivecallDeatil extends Component {
               <div className="bottom-calling">
                 <span className="text">
                   {data.status === 3 ? (
-                    <span id="">
+                    <span>
                       通话中:
                       <span id="timetext" />
                     </span>

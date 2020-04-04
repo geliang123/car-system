@@ -138,7 +138,6 @@ class NavTop extends Component {
     } = this.state
     const mergeStatus = JSON.parse(getStore('status')) || status
     if (!Object.keys(this.user).length) return null
-    console.log(key)
     return (
       <div className="top" id="TopContainer">
         <img className="logo" src={require('../../images/home/logo.png')} />

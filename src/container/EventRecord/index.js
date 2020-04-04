@@ -84,7 +84,9 @@ class EventRecord extends Component {
 
   // 查看信息
   watchInfo = item => {
-    this.props.history.push('/detail', { data: item })
+    if (item.id) {
+      this.props.history.push('/detail', { data: item })
+    }
   }
 
   // 确认

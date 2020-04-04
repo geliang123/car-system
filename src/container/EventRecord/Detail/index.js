@@ -17,8 +17,9 @@ class Detail extends Component {
 
   componentDidMount() {
     const { location } = this.props
+    console.log(location)
     const eventRecordDetailId =
-      (location && location.state.data && location.state.data.parkId) ||
+      (location && location.state.data && location.state.data.id) ||
       getStore('eventRecordDetailId')
     setStore('eventRecordDetailId', eventRecordDetailId)
     if (eventRecordDetailId) {
