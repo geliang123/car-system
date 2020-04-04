@@ -34,6 +34,7 @@ class Livecall extends Component {
       loading: false,
       parkList: [] // 停车场位置
     }
+    this.count = 0
     this.headers = [
       {
         title: 'ID',
@@ -124,6 +125,7 @@ class Livecall extends Component {
         }).then(res => {
           if (res.code === 1) {
             sessionStorage.setItem('serverAddr', res.result.url)
+            this.loginResult = res.result
             global.dhWeb.login(
               res.result.username,
               res.result.password,
@@ -133,8 +135,8 @@ class Livecall extends Component {
         })
       }
 
-      global.cloudWebsocket.onmessage = messs => {
-        alert(1)
+      global.cloudWebsocket.onmessage = () => {
+        this.getList()
       }
       global.dhWeb.onDeviceList = mess => {
         this.onDeviceList(mess)
@@ -142,13 +144,11 @@ class Livecall extends Component {
 
       // 语音设备登录
       global.dhWeb.onLogin = mess => {
-        console.log(mess)
         this.onLogin(mess)
       }
 
       // 语音消息通知
       global.dhWeb.onNotify = mess => {
-        console.log(mess)
         this.onNotify(mess)
       }
       global.dhWeb.onParseMsgError = mess => {
@@ -174,6 +174,10 @@ class Livecall extends Component {
     if (this.timer) {
       window.clearInterval(this.timer)
     }
+    if (this.timerSendMessage) {
+      window.clearInterval(this.timerSendMessage)
+    }
+    this.count = 0
   }
 
   onDeviceList = data => {
@@ -206,12 +210,22 @@ class Livecall extends Component {
     const params = data.params
     if (data.error == 'success') {
       sessionStorage.setItem('loginHandle', params.loginHandle)
-      $('.loginDiv').hide()
-      $('.deviceDiv').show()
-      $('.showNameDiv p').text(`用户名：${$('#uname').val()}`)
+      this.timerSendMessage = window.setInterval(() => {
+        global.cloudWebsocket.send('I am here')
+      }, 10000)
       global.cloudWebsocket.send(JSON.stringify(data))
+      this.count = 0
     } else {
-      alert('登录失败')
+      global.dhWeb.logout(params.loginHandle)
+      this.count = this.count + 1
+      message.warning('登录失败')
+      if (this.loginResult && this.count <= 3) {
+        global.dhWeb.login(
+          this.loginResult.username,
+          this.loginResult.password,
+          this.loginResult.url
+        )
+      }
     }
   }
 
