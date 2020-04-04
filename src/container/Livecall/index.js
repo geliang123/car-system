@@ -90,17 +90,11 @@ class Livecall extends Component {
                 通话中
               </span>
             ) : (
-              <span
-                className="online"
-                onClick={() => this.updateList(record, 3)}
-              >
+              <span className="online" onClick={() => this.online(record, 3)}>
                 接听
               </span>
             )}
-            <span
-              className="hang-up"
-              onClick={() => this.updateList(record, 5)}
-            >
+            <span className="hang-up" onClick={() => this.hangUp(record, 5)}>
               挂断
             </span>
             <span
@@ -255,6 +249,27 @@ class Livecall extends Component {
         message.error(res.msg)
       }
     })
+  }
+
+  // 挂断
+  hangUp = (item, status) => {
+    this.updateList(item, status)
+  }
+
+  // 接听
+  online = (item, status) => {
+    const { data } = this.state
+    this.flagOnline = false
+    data.map(obj => {
+      if (obj.status === 3) {
+        this.flagOnline = true
+      }
+    })
+    if (this.flagOnline) {
+      message.warning('有通话中的状态不能接听')
+      return
+    }
+    this.updateList(item, status)
   }
 
   // 更新

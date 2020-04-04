@@ -42,11 +42,20 @@ class RightComponent extends Component {
   }
 
   componentDidMount() {
+    const { data } = this.props
+    const m1 = moment(data.createTimeStr)
+    const m2 = moment()
+    this.duration = m2.diff(m1, 'seconds')
+    console.log(this.duration)
     this.getProblemList()
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.data.carNum !== this.props.carNum) {
+      const m1 = moment(nextProps.data.createTimeStr)
+      const m2 = moment()
+      this.duration = m2.diff(m1, 'seconds')
+      console.log(this.duration)
       this.setState({
         carNumber: nextProps.data.carNum,
         questionSelected: nextProps.data.problemId
@@ -191,9 +200,6 @@ class RightComponent extends Component {
     } = this.state
     const { data } = this.props
     if (!Object.keys(data).length) return null
-    const m1 = moment(data.createTimeStr)
-    const m2 = moment()
-    const duration = m2.diff(m1, 'seconds')
     return (
       <div className="right">
         <div className="top-title">
@@ -239,8 +245,8 @@ class RightComponent extends Component {
         <div className="wrap-info">
           <div className="info-item">
             <p className="text">等待时长</p>
-            <p className="duration" style={{ color: getColor(duration) }}>
-              {duration}s
+            <p className="duration" style={{ color: getColor(this.duration) }}>
+              {this.duration}s
             </p>
           </div>
           <div className="info-item">
