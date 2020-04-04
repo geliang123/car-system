@@ -97,12 +97,14 @@ class Livecall extends Component {
             <span className="hang-up" onClick={() => this.hangUp(record, 5)}>
               挂断
             </span>
-            <span
-              className="not-operate"
-              onClick={() => this.noOperate(record)}
-            >
-              暂不处理
-            </span>
+            {record.status != 3 ? (
+              <span
+                className="not-operate"
+                onClick={() => this.noOperate(record)}
+              >
+                暂不处理
+              </span>
+            ) : null}
           </div>
         )
       }
@@ -209,7 +211,6 @@ class Livecall extends Component {
       $('.showNameDiv p').text(`用户名：${$('#uname').val()}`)
       global.cloudWebsocket.send(JSON.stringify(data))
     } else {
-      console.log(data.params)
       alert('登录失败')
     }
   }
@@ -270,14 +271,18 @@ class Livecall extends Component {
       return
     }
     this.updateList(item, status)
+    this.answer(item)
   }
 
   // 更新
   updateList = (item, status) => {
+    const m1 = moment(item.createTimeStr)
+    const m2 = moment()
+    const waitCountTime = m2.diff(m1, 'seconds')
     fetch({
       url: urlCng.callUpdate,
       method: 'POST',
-      data: { id: item.id, status }
+      data: { id: item.id, status, waitCountTime }
     }).then(res => {
       if (res.code === 1) {
         this.getList()
@@ -289,17 +294,17 @@ class Livecall extends Component {
   }
 
   componentDidUpdate = () => {
-    const { data } = this.state
-    if (!data.length) return
+    // const { data } = this.state
+    // if (!data.length) return
     // this.timer = window.setInterval(() => {
     //   for (let i = 0; i < data.length; i++) {
     //     const record = data[i]
     //     const m1 = moment(record.createTimeStr)
     //     const m2 = moment()
+    //     const duration = m2.diff(m1, 'seconds')
     //     const $item = document.getElementById(
     //       `wait${record.id}${record.parkId}`
     //     )
-    //     const duration = m2.diff(m1, 'seconds')
     //     if (duration <= 60) {
     //       $item.style.color = '#3CEA43'
     //     } else if (duration >= 60 && duration <= 120) {

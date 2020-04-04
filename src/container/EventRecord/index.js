@@ -57,6 +57,11 @@ class EventRecord extends Component {
         key: 'payAmount'
       },
       {
+        title: '状态',
+        dataIndex: 'statusStr',
+        key: 'statusStr'
+      },
+      {
         title: '操作',
         dataIndex: 'op',
         key: 'op',

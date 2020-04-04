@@ -46,7 +46,6 @@ class RightComponent extends Component {
     const m1 = moment(data.createTimeStr)
     const m2 = moment()
     this.duration = m2.diff(m1, 'seconds')
-    console.log(this.duration)
     this.getProblemList()
   }
 
@@ -55,7 +54,6 @@ class RightComponent extends Component {
       const m1 = moment(nextProps.data.createTimeStr)
       const m2 = moment()
       this.duration = m2.diff(m1, 'seconds')
-      console.log(this.duration)
       this.setState({
         carNumber: nextProps.data.carNum,
         questionSelected: nextProps.data.problemId
@@ -102,11 +100,14 @@ class RightComponent extends Component {
       message.warning('问题描述需要大于4个文字')
       return
     }
+    const operatedSum = document.getElementById('allSecond').innerText
     const params = {
       remark: comments,
       carNum: carNumber,
       id: data.id,
-      problemId: questionSelected
+      problemId: questionSelected,
+      status: 4,
+      operatedSum: operatedSum && parseInt(operatedSum)
     }
     if (data.id) {
       fetch({
@@ -116,8 +117,8 @@ class RightComponent extends Component {
       }).then(res => {
         if (res.code === 1) {
           message.success('提交成功')
+          this.props.goback()
           this.props.close()
-          this.props.history.goBack()
         } else {
           message.success('提交失败')
         }

@@ -18,6 +18,7 @@ let hour = 0
 let minute = 0
 let second = 0 // 时 分 秒
 let millisecond = 0 // 毫秒
+let allSecond = 0
 @hot
 class LivecallDeatil extends Component {
   constructor(props) {
@@ -36,7 +37,7 @@ class LivecallDeatil extends Component {
         location.state.data.id) ||
       getStore('callDetailId')
     setStore('callDetailId', callDetailId)
-    // this.countTimer = setInterval(this.countItem, 50)
+    this.countTimer = setInterval(this.countItem, 50)
     if (callDetailId) {
       this.getDetail(callDetailId)
       // this.deviceId = location.state.data.audioDeviceId
@@ -63,11 +64,17 @@ class LivecallDeatil extends Component {
   componentWillUnmount() {
     if (this.timer) clearTimeout(this.timer)
     if (this.countTimer) clearInterval(this.countTimer)
+    hour = 0
+    minute = 0
+    millisecond = 0
+    allSecond = 0
+    second0
   }
 
   countItem = () => {
     // 计时
     millisecond += 50
+    allSecond += 50
     if (millisecond >= 1000) {
       millisecond = 0
       second += 1
@@ -84,6 +91,7 @@ class LivecallDeatil extends Component {
     document.getElementById(
       'timetext'
     ).innerHTML = `${hour}时${minute}分${second}秒`
+    document.getElementById('allSecond').innerHTML = allSecond
   }
 
   playVideo = (videoDeviceId, audioDeviceId, isTalk) => {
@@ -124,7 +132,9 @@ class LivecallDeatil extends Component {
   }
 
   closeAll = () => {
-    global.dhWeb.stopRT(this.deviceId, sessionStorage.getItem('loginHandle'))
+    if (global.dhWeb) {
+      global.dhWeb.stopRT(this.deviceId, sessionStorage.getItem('loginHandle'))
+    }
   }
 
   goback = () => {
@@ -151,8 +161,10 @@ class LivecallDeatil extends Component {
   }
 
   close = () => {
-    this.closeAll()
-    this.videoView.stopVideo()
+    if (this.videoView) {
+      this.closeAll()
+      this.videoView.stopVideo()
+    }
   }
 
   // 更新
@@ -232,6 +244,7 @@ class LivecallDeatil extends Component {
                     '通话结束'
                   )}
                 </span>
+                <span id="allSecond" style={{ display: 'none' }} />
                 <div className="calling-right">
                   {data.status === 5 ? (
                     <div className="icon-wrap hujiao">
@@ -258,7 +271,11 @@ class LivecallDeatil extends Component {
               </div>
             </div>
             {/* 左边内容 */}
-            <RightComponent data={data} close={this.close} />
+            <RightComponent
+              data={data}
+              close={this.close}
+              goback={this.goback}
+            />
           </div>
         </div>
       </div>
