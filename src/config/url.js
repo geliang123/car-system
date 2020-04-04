@@ -33,12 +33,13 @@ const urlCng = {
   searchCar: `${url}/cloudSeat/search`,
   updateCarNum: `${url}/cloudSeat/updateCarNum`,
   // 设备
-  equipList: `${url}/equipment/selectList`,
+  equipList: `${url}/equipment/list`,
   equipAdd: `${url}/equipment/addOrUpdate`,
   equipDel: `${url}/equipment/delete`,
   // 新建车场
   parkAdd: `${url}/equipment/`,
   // 任务分配websocket
-  taskDispatch: `${websocket_url}/task/dispatch/`
+  taskDispatch: `${websocket_url}/task/dispatch/`,
+  audioUrl: `${url}/equipment/selectList`
 }
 export default urlCng

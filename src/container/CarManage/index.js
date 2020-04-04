@@ -30,30 +30,49 @@ class CarManage extends Component {
         key: 'id'
       },
       {
-        title: '状态',
-        dataIndex: 'type',
-        key: 'type'
+        title: '停车场名称',
+        dataIndex: 'parkName',
+        key: 'parkName'
       },
       {
-        title: '停车场名称',
-        dataIndex: 'name',
-        key: 'name'
+        title: '闸口',
+        dataIndex: 'gateName',
+        key: 'gateName'
+      },
+      {
+        title: '设备位置',
+        dataIndex: 'inOutTypeStr',
+        key: 'inOutTypeStr'
+      },
+      {
+        title: '设备类型',
+        dataIndex: 'typeStr',
+        key: 'typeStr'
       },
       {
         title: '设备编号',
         dataIndex: 'code',
         key: 'code'
-        // render: value => <div>{this.getNameById(value)}</div>
       },
       {
-        title: '对应IP',
-        dataIndex: 'detailInfo',
-        key: 'detailInfo'
+        title: '远程停车场ID',
+        dataIndex: 'remoteParkId',
+        key: 'remoteParkId'
       },
       {
-        title: '对应闸口',
-        dataIndex: 'address',
-        key: 'address'
+        title: '远程闸口ID',
+        dataIndex: 'remoteGateId',
+        key: 'remoteGateId'
+      },
+      {
+        title: 'IP',
+        dataIndex: 'equipmentIP',
+        key: 'equipmentIP'
+      },
+      {
+        title: '端口',
+        dataIndex: 'equipmentPort',
+        key: 'equipmentPort'
       },
       {
         title: '备注',
@@ -71,9 +90,6 @@ class CarManage extends Component {
             </span>
             <span className="edit" onClick={() => this.edit(record)}>
               编辑
-            </span>
-            <span className="edit" onClick={() => this.addEquipment(record)}>
-              新增设备
             </span>
           </div>
         )
@@ -120,8 +136,8 @@ class CarManage extends Component {
     }).then(res => {
       if (res.code === 1) {
         this.setState({
-          data: res.result,
-          total: 30, // res.result.page.totalNum,
+          data: res.result.data,
+          total: res.result.page.totalNum,
           visible: false,
           loading: false
         })
@@ -134,7 +150,7 @@ class CarManage extends Component {
   deleteData = () => {
     if (this.selectItem.id) {
       fetch({
-        url: urlCng.accountDel,
+        url: urlCng.equipDel,
         method: 'POST',
         data: { id: this.selectItem.id }
       }).then(res => {
@@ -151,7 +167,7 @@ class CarManage extends Component {
   // 编辑
   edit = item => {
     this.selectItem = item
-    this.dialogTitle = '编辑车场'
+    this.dialogTitle = '编辑设备'
     this.op = 'edit'
     this.setState({
       visible: true
@@ -161,7 +177,7 @@ class CarManage extends Component {
   // 新增
   add = () => {
     this.selectItem = {}
-    this.dialogTitle = '新建车场'
+    this.dialogTitle = '新增设备'
     this.op = 'add'
     this.setState({
       visible: true
@@ -240,7 +256,7 @@ class CarManage extends Component {
         <div id="Account">
           <div className="search-wrap">
             <Button className="add" onClick={this.add}>
-              新建车场
+              新增设备
             </Button>
             <div className="search">
               <Input
@@ -258,7 +274,6 @@ class CarManage extends Component {
           <Table
             dataSource={data}
             columns={this.headers}
-            scroll={{ x: true }}
             rowKey={(record, index) => index}
             loading={loading}
             locale={{ emptyText: '暂无数据' }}
@@ -282,7 +297,7 @@ class CarManage extends Component {
           cancelText="关闭"
           onCancel={this.handleCancel}
           onOk={this.onOk}
-          width={457}
+          width={this.op === 'del' ? 497 : 1000}
           destroyOnClose
         >
           {this.getComponent(this.op)}

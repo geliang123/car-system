@@ -34,8 +34,10 @@ class RightComponent extends Component {
       carNumber: props.data && props.data.carNum,
       probleList: [],
       type: 'car',
-      visible: false
+      visible: false,
+      deatilData: [] // 弹框信息
     }
+    this.strTime = ''
     this.flag = false
   }
 
@@ -115,6 +117,7 @@ class RightComponent extends Component {
   }
 
   changeValue = (e, key) => {
+    this.str = e.target.value
     this.setState({
       [key]: e.target.value
     })
@@ -155,13 +158,13 @@ class RightComponent extends Component {
       url: urlCng.searchCar
     }).then(res => {
       if (res.code === 1) {
-        console.log(res)
+        this.setState({
+          visible: true,
+          deatilData: res.result
+        })
       } else {
         message.success('提交失败')
       }
-    })
-    this.setState({
-      visible: true
     })
   }
 
@@ -171,6 +174,11 @@ class RightComponent extends Component {
     })
   }
 
+  // 时间改变
+  onChangeDate = (dates, dateStrings) => {
+    this.str = `${dateStrings[0]}-${dateStrings[1]}`
+  }
+
   render() {
     const {
       questionSelected,
@@ -178,7 +186,8 @@ class RightComponent extends Component {
       carNumber,
       probleList,
       type,
-      visible
+      visible,
+      deatilData
     } = this.state
     const { data } = this.props
     if (!Object.keys(data).length) return null
@@ -208,7 +217,18 @@ class RightComponent extends Component {
               onChange={e => this.changeValue(e, 'carNumber')}
             />
           ) : (
-            <RangePicker className="car-num" />
+            <RangePicker
+              ranges={{
+                Today: [moment(), moment()],
+                'This Month': [
+                  moment().startOf('month'),
+                  moment().endOf('month')
+                ]
+              }}
+              showTime
+              format="YYYY/MM/DD HH:mm"
+              onChange={this.onChangeDate}
+            />
           )}
 
           <Button className="filter" onClick={this.search}>
@@ -297,7 +317,13 @@ class RightComponent extends Component {
           destroyOnClose
           confirmLoading={false}
         >
-          <CollapseComponent type={type} />
+          <CollapseComponent
+            type={type}
+            data={deatilData}
+            keyword={carNumber}
+            str={this.str}
+            onCancel={this.handleCancel}
+          />
         </Modal>
       </div>
     )

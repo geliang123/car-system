@@ -16,7 +16,7 @@ class NavTop extends Component {
     super(props)
     this.user = JSON.parse(getLocalStore('userInfo'))
     this.state = {
-      key: 'call',
+      key: 'call_now',
       indicator: {},
       menuData: [],
       visible: false,
@@ -138,6 +138,7 @@ class NavTop extends Component {
     } = this.state
     const mergeStatus = JSON.parse(getStore('status')) || status
     if (!Object.keys(this.user).length) return null
+    console.log(key)
     return (
       <div className="top" id="TopContainer">
         <img className="logo" src={require('../../images/home/logo.png')} />
@@ -151,7 +152,6 @@ class NavTop extends Component {
           {menuData.map(item =>
             !item.childes ? (
               <Menu.Item key={item.code.toLowerCase()}>
-                <span />
                 <Link to={`/${item.code.toLowerCase()}`}>{item.name}</Link>
               </Menu.Item>
             ) : (
@@ -160,6 +160,11 @@ class NavTop extends Component {
                 title={
                   <span style={{ display: 'flex', alignItems: 'center' }}>
                     {item.name}
+                    <div
+                      className={`tri ${
+                        key === 'call_now' || key === 'event' ? 'selected' : ''
+                      }`}
+                    />
                   </span>
                 }
               >
