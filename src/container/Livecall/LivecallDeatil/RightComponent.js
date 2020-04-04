@@ -235,6 +235,7 @@ class RightComponent extends Component {
               showTime
               format="YYYY/MM/DD HH:mm"
               onChange={this.onChangeDate}
+              style={{ width: '170pt' }}
             />
           )}
 
