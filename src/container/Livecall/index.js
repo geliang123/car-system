@@ -10,6 +10,7 @@ import { withRouter } from 'react-router-dom'
 import '../../less/normal.less'
 import './style.less'
 import moment from 'moment'
+import eventObject from '~/config/eventSignal'
 import fetch from '~/utils/fetch'
 import urlCng from '~/config/url'
 import SelectMenu from '~/component/SelectMenu'
@@ -114,7 +115,7 @@ class Livecall extends Component {
 
   componentDidMount() {
     const userInfo = JSON.parse(getLocalStore('userInfo'))
-
+    this.getList() // 列表数据
     if (!global.cloudWebsocket) {
       global.cloudWebsocket = new WebSocket(urlCng.taskDispatch + userInfo.id)
 
@@ -126,6 +127,7 @@ class Livecall extends Component {
           if (res.code === 1) {
             sessionStorage.setItem('serverAddr', res.result.url)
             this.loginResult = res.result
+
             global.dhWeb.login(
               res.result.username,
               res.result.password,
@@ -133,8 +135,8 @@ class Livecall extends Component {
             )
           }
         })
+        this.getList() // 列表数据
       }
-
       global.cloudWebsocket.onmessage = () => {
         this.getList()
       }
@@ -167,7 +169,6 @@ class Livecall extends Component {
     }
     // 停车场下拉
     this.getParkPos()
-    this.getList() // 列表数据
   }
 
   componentWillUnmount() {
@@ -219,13 +220,13 @@ class Livecall extends Component {
       global.dhWeb.logout(params.loginHandle)
       this.count = this.count + 1
       message.warning('登录失败')
-      if (this.loginResult && this.count <= 3) {
-        global.dhWeb.login(
-          this.loginResult.username,
-          this.loginResult.password,
-          this.loginResult.url
-        )
-      }
+      // if (this.loginResult && this.count <= 3) {
+      //   global.dhWeb.login(
+      //     this.loginResult.username,
+      //     this.loginResult.password,
+      //     this.loginResult.url
+      //   )
+      // }
     }
   }
 

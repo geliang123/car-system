@@ -40,14 +40,35 @@ class LivecallDeatil extends Component {
     this.countTimer = setInterval(this.countItem, 50)
     if (callDetailId) {
       this.getDetail(callDetailId)
-      // this.deviceId = location.state.data.audioDeviceId
-      // this.playVideo(962025, 912043, true)
+      this.deviceId = location.state.data.audioDeviceId
+      this.playVideo(962025, 912043, true)
 
-      // this.timer = setTimeout(() => {
-      //   global.dhWeb.startTalk(this.deviceId)
-      // }, 3000)
+      this.timer = setTimeout(() => {
+        global.dhWeb.startTalk(this.deviceId)
+      }, 3000)
     }
     // this.videoView = new mainClass()
+    // const rst = this.videoView.cloudlogin(
+    //   'ezcloud.uniview.com',
+    //   '15755355045',
+    //   'loveyou520'
+    // )
+    // if (rst.code !== 1) {
+    //   message.warning(rst.msg)
+    // }
+    try {
+      this.videoView = new mainClass()
+      const rst = this.videoView.cloudlogin(
+        'ezcloud.uniview.com',
+        '15755355045',
+        'loveyou520'
+      )
+      if (rst.code !== 1) {
+        message.warning(rst.msg)
+      }
+    } catch (e) {
+      message.error('监控初始化失败')
+    }
     // this.videoView.devicetype = '1'
     // const loginJsonMap = {
     //   szIPAddr: '192.168.1.14',
@@ -68,7 +89,9 @@ class LivecallDeatil extends Component {
     minute = 0
     millisecond = 0
     allSecond = 0
-    second0
+    second = 0
+    this.closeAll()
+    // this.videoView.cloudloginout();
   }
 
   countItem = () => {
@@ -88,21 +111,21 @@ class LivecallDeatil extends Component {
       minute = 0
       hour += 1
     }
-    document.getElementById(
-      'timetext'
-    ).innerHTML = `${hour}时${minute}分${second}秒`
-    document.getElementById('allSecond').innerHTML = allSecond
+    if (document.getElementById('timetext')) {
+      document.getElementById(
+        'timetext'
+      ).innerHTML = `${hour}时${minute}分${second}秒`
+      document.getElementById('allSecond').innerHTML = allSecond
+    }
   }
 
   playVideo = (videoDeviceId, audioDeviceId, isTalk) => {
     closeAll()
     const html =
       `${'<div class="videoboxDiv" ondblclick="launchFullscreen(this)">' +
-        '<video id="play_'}${912043}" width="327" onclick="selectedVideo(this)" oncanplay="canplayVideo(this)"></video><span>${$(
+        '<video id="play_'}${912043}" width="365" onclick="selectedVideo(this)" oncanplay="canplayVideo(this)"></video><span>${$(
         `#device_${audioDeviceId}`
-      ).text()}</span>` +
-      '<img class="loading" src="./image/loading.gif"/>' +
-      '</div>'
+      ).text()}</span>` + '</div>'
     $('.videoDiv').append(html)
     global.dhWeb.playDeviceAudio(912043)
     $('.selectVideo')
@@ -154,16 +177,19 @@ class LivecallDeatil extends Component {
     }).then(res => {
       if (res.code === 1) {
         this.setState({
-          data: res.result
+          data: res.result,
+          loading: false
         })
       }
     })
   }
 
   close = () => {
-    if (this.videoView) {
+    if (global.dhWeb) {
       this.closeAll()
-      this.videoView.stopVideo()
+    }
+    if (this.videoView) {
+      this.videoView.cloudloginout()
     }
   }
 
@@ -207,15 +233,19 @@ class LivecallDeatil extends Component {
 
   muted = () => {}
 
+  call = (data, status) => {
+    this.playVideo(962025, 912043, true)
+    this.updateList(data, status)
+  }
+
   render() {
     const { data } = this.state
-
     return (
       <div className="panel">
         <div id="LiveCallDeatail">
           <Title title="事件处理" />
           <div className="wrap-content">
-            {/* 右边内容 */}
+            {/* 右边内容 ${!loading ? 'show' : 'hide'} */}
             <div className="left">
               <div className="left-item">
                 <div className="title">
@@ -249,15 +279,18 @@ class LivecallDeatil extends Component {
                   {data.status === 5 ? (
                     <div className="icon-wrap hujiao">
                       <span className="icon hujiao" />
-                      <span onClick={() => this.updateList(data, 3)}>呼叫</span>
+                      <span onClick={() => this.call(data, 3)}>呼叫</span>
                     </div>
                   ) : null}
-                  {data.status === 3 ? (
-                    <div className="icon-wrap" onClick={this.muted}>
+                  {/* {data.status === 3 ? (
+                    <div
+                      className="icon-wrap"
+                      onClick={() => this.call(data, 3)}
+                    >
                       <span className="icon jingyin" />
                       <span>静音</span>
                     </div>
-                  ) : null}
+                  ) : null} */}
                   {data.status === 3 ? (
                     <div
                       className="icon-wrap"
@@ -277,6 +310,8 @@ class LivecallDeatil extends Component {
               goback={this.goback}
             />
           </div>
+
+          {/* {loading ? <Spin /> : null} */}
         </div>
       </div>
     )
