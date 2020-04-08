@@ -142,10 +142,10 @@ class Add extends Component {
                 initialValue: data.code
               })(<Input placeholder="请输入设备编号" allowClear />)}
             </FormItem>
-            <FormItem {...formItemLayout} label="远程闸口ID">
-              {getFieldDecorator('remoteGateId', {
-                initialValue: data.remoteGateId
-              })(<Input placeholder="远程闸口ID" allowClear />)}
+            <FormItem {...formItemLayout} label="设备名称">
+              {getFieldDecorator('name', {
+                initialValue: data.code
+              })(<Input placeholder="请输入设备名称" allowClear />)}
             </FormItem>
             <FormItem {...formItemLayout} label="设备类型">
               {getFieldDecorator('type', {
@@ -179,6 +179,11 @@ class Add extends Component {
               {getFieldDecorator('remoteParkId', {
                 initialValue: data.remoteParkId
               })(<Input placeholder="远程停车场ID" allowClear />)}
+            </FormItem>
+            <FormItem {...formItemLayout} label="远程闸口ID">
+              {getFieldDecorator('remoteGateId', {
+                initialValue: data.remoteGateId
+              })(<Input placeholder="远程闸口ID" allowClear />)}
             </FormItem>
             <FormItem {...formItemLayout} label="IP">
               {getFieldDecorator('equipmentIP', {

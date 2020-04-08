@@ -67,7 +67,8 @@ class LivecallDeatil extends Component {
         message.warning(rst.msg)
       }
     } catch (e) {
-      message.error('监控初始化失败')
+      message.error('监控初始化失败');
+      console.error('监控初始化失败异常：'+e);
     }
     // this.videoView.devicetype = '1'
     // const loginJsonMap = {
