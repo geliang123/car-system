@@ -125,6 +125,7 @@ class Livecall extends Component {
           url: urlCng.callSoundAccount
         }).then(res => {
           if (res.code === 1) {
+            console.log("user:" + res.result.username)
             sessionStorage.setItem('serverAddr', res.result.url)
             this.loginResult = res.result
 
@@ -137,7 +138,8 @@ class Livecall extends Component {
         })
         this.getList() // 列表数据
       }
-      global.cloudWebsocket.onmessage = () => {
+      global.cloudWebsocket.onmessage = message => {
+        console.log("cloudWebsocket---------------------"+JSON.stringify(message)+"----------------------")
         this.getList()
       }
       global.dhWeb.onDeviceList = mess => {
@@ -151,6 +153,7 @@ class Livecall extends Component {
 
       // 语音消息通知
       global.dhWeb.onNotify = mess => {
+        console.log("onNotify-----------------------"+JSON.stringify(mess)+"--------------------")
         this.onNotify(mess)
       }
       global.dhWeb.onParseMsgError = mess => {
@@ -212,14 +215,14 @@ class Livecall extends Component {
     if (data.error == 'success') {
       sessionStorage.setItem('loginHandle', params.loginHandle)
       this.timerSendMessage = window.setInterval(() => {
-        global.cloudWebsocket.send('I am here')
+        global.cloudWebsocket.send('{"method":"cloud.notify","params":{"heartlive":"I am here!"}}')
       }, 10000)
       global.cloudWebsocket.send(JSON.stringify(data))
       this.count = 0
     } else {
       global.dhWeb.logout(params.loginHandle)
       this.count = this.count + 1
-      message.warning('登录失败')
+      message.warning('语音设备服务器已断开，请刷新页面重试')
       // if (this.loginResult && this.count <= 3) {
       //   global.dhWeb.login(
       //     this.loginResult.username,
@@ -253,23 +256,34 @@ class Livecall extends Component {
 
   // 暂不处理
   noOperate = item => {
-    fetch({
-      url: urlCng.callDel,
-      method: 'POST',
-      data: { id: item.id }
-    }).then(res => {
-      if (res.code === 1) {
-        this.getList()
-        message.success('操作成功')
-      } else {
-        message.error(res.msg)
-      }
-    })
+    // fetch({
+    //   url: urlCng.callDel,
+    //   method: 'POST',
+    //   data: { id: item.id }
+    // }).then(res => {
+    //   if (res.code === 1) {
+    //     this.getList()
+    //     message.success('操作成功')
+    //   } else {
+    //     message.error(res.msg)
+    //   }
+    // })
+    debugger
+    const data = '{"callLogId":'+item.id+',"params":{},"method":"task.reject"}'
+    global.cloudWebsocket.send(data);
   }
 
   // 挂断
   hangUp = (item, status) => {
+    debugger
     this.updateList(item, status)
+    this.closeAll(item.audioDeviceId)
+  }
+
+  closeAll = audioDeviceId => {
+    if (global.dhWeb) {
+      global.dhWeb.directCloseRT(audioDeviceId, sessionStorage.getItem('loginHandle'))
+    }
   }
 
   // 接听

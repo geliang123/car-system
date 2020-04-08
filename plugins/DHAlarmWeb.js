@@ -605,6 +605,34 @@ DHAlarmWeb.prototype.playRT = function(video, deviceId, loginHandle, isTalk) {
   this.openDeviceAudio(loginHandle, deviceId)
   this.playVideo(video, deviceId, loginHandle)
 }
+
+DHAlarmWeb.prototype.directCloseRT = function(deviceId, loginHandle, isTalk) {
+  if (!deviceId || !loginHandle) return
+  const msg = {
+    method: 'deviceManager.playRT',
+    params: {
+      deviceId: parseInt(deviceId),
+      loginHandle: parseInt(loginHandle),
+      preview: false
+    }
+  }
+  const sendMsg = {
+    cmd: 'send',
+    msg: JSON.stringify(msg)
+  }
+  if (isTalk != false) {
+    isTalk = true
+  }
+  this.sendAlarmMessage(sendMsg)
+  this.openAudio(loginHandle, deviceId, isTalk)
+  if (isTalk) {
+    this.playDeviceAudio(deviceId)
+  }
+  this.openDeviceAudio(loginHandle, deviceId)
+  sessionStorage.setItem('directCloseDeviceId', deviceId)
+  this.stopRT(deviceId,loginHandle)
+}
+
 DHAlarmWeb.prototype.stopRT = function(deviceId, loginHandle) {
   if (!deviceId || !loginHandle) return
   const msg = {
