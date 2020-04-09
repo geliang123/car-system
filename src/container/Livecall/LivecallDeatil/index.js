@@ -92,7 +92,9 @@ class LivecallDeatil extends Component {
     allSecond = 0
     second = 0
     this.closeAll()
-    // this.videoView.cloudloginout();
+    if (this.videoView) {
+      this.videoView.cloudloginout();
+    }
   }
 
   countItem = () => {
