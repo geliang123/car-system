@@ -117,6 +117,7 @@ class Livecall extends Component {
     const userInfo = JSON.parse(getLocalStore('userInfo'))
     this.getList() // 列表数据
     if (!global.cloudWebsocket) {
+      this.audioLoginSuccess = false;
       global.cloudWebsocket = new WebSocket(urlCng.taskDispatch + userInfo.id)
 
       // 连接成功建立的回调方法
@@ -219,6 +220,7 @@ class Livecall extends Component {
       }, 10000)
       global.cloudWebsocket.send(JSON.stringify(data))
       this.count = 0
+      this.audioLoginSuccess = ture
     } else {
       global.dhWeb.logout(params.loginHandle)
       this.count = this.count + 1
