@@ -2,9 +2,7 @@ import { hot } from 'react-hot-loader/root'
 import React, { Component } from 'react'
 import '../../../less/normal.less'
 import './panle.less'
-import { Collapse, Button, Input, message } from 'antd'
-import urlCng from '~/config/url'
-import fetch from '~/utils/fetch'
+import { Collapse, Button, Input } from 'antd'
 
 const { Panel } = Collapse
 
@@ -14,17 +12,17 @@ class CarNumber extends Component {
     super(props)
     this.state = {
       edit: false,
-      data: this.props.data
+      data: this.props.data,
     }
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      data: nextProps.data
+      data: nextProps.data,
     })
   }
 
-  renderHeader = item => {
+  renderHeader = (item) => {
     const { type } = this.props
     if (!item) return <span />
     return (
@@ -41,44 +39,56 @@ class CarNumber extends Component {
   // 修改车牌
   editCar = () => {
     this.setState({
-      edit: true
+      edit: true,
     })
   }
 
-  // 提交
-  submit = item => {
+  // 已确认车辆
+  submit = (item) => {
     // 更新的车牌 this[`textInput${item.id}`].state.value
-    fetch({
-      url: urlCng.updateCarNum,
-      method: 'POST'
-    }).then(res => {
-      if (res.code === 1) {
-        message.success('更新成功')
-        this.props.onCancel && this.props.onCancel()
-      } else {
-        message.error('更新失败')
-      }
-    })
+    // fetch({
+    //   url: urlCng.updateCarNum,
+    //   method: 'POST',
+    // }).then(res => {
+    //   if (res.code === 1) {
+    //     message.success('更新成功')
+    //     this.props.onCancel && this.props.onCancel()
+    //   } else {
+    //     message.error('更新失败')
+    //   }
+    // })
+    const updataItem = {
+      carNum:
+        this.refs[`textInput${item.parking_id}`] &&
+        this.refs[`textInput${item.parking_id}`].state.value,
+      inTime: item.start_time,
+      outTime: item.start_end,
+      parkId: item.parking_id,
+      parkName: item.parking_name,
+      pay_amount: item.paid_amount,
+      car_img_url: item.picture_url_in,
+    }
+
+    this.props.selectCarItem && this.props.selectCarItem(updataItem)
   }
 
-  getContent = item => {
+  getContent = (item) => {
     const { edit } = this.state
     return (
       <div className="detail-content">
         <div className="left">
           <div className="item">
             <p className="name">车牌号</p>
-            {edit ? (
-              <Input
-                ref={input => {
-                  this[`textInput${item.id}`] = input
-                }}
-                defaultValue={item.plate_number}
-                style={{ width: '60pt', height: '20pt' }}
-              />
-            ) : (
-              <p className="value">{item.plate_number}</p>
-            )}
+            <Input
+              ref={`textInput${item.parking_id}`}
+              defaultValue={item.plate_number}
+              style={{ width: '60pt', height: '20pt' }}
+              className={edit ? 'block' : 'hide'}
+            />
+            <p className={`value ${!edit ? 'block' : 'hide'}`}>
+              {item.plate_number}
+            </p>
+
             <span className="edit" onClick={this.editCar}>
               修正
             </span>
@@ -96,7 +106,7 @@ class CarNumber extends Component {
             <p className="value">{item.paid_amount}</p>
           </div>
           <Button className="btn" onClick={() => this.submit(item)}>
-            提交
+            已确认车辆
           </Button>
         </div>
         <div className="right">

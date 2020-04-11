@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 /* eslint-disable new-cap */
 /* eslint-disable no-alert */
 /* eslint-disable no-restricted-syntax */
@@ -24,7 +25,7 @@ class LivecallDeatil extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      data: {}
+      data: {},
     }
   }
 
@@ -40,46 +41,26 @@ class LivecallDeatil extends Component {
     this.countTimer = setInterval(this.countItem, 50)
     if (callDetailId) {
       this.getDetail(callDetailId)
-      this.deviceId = location.state.data.audioDeviceId
-      this.playVideo(962025, 912043, true)
+      // this.deviceId = location.state.data.audioDeviceId
+      // this.playVideo(962025, 912043, true)
 
-      this.timer = setTimeout(() => {
-        global.dhWeb.startTalk(this.deviceId)
-      }, 3000)
+      // this.timer = setTimeout(() => {
+      //   global.dhWeb.startTalk(this.deviceId)
+      // }, 3000)
     }
-    // this.videoView = new mainClass()
-    // const rst = this.videoView.cloudlogin(
-    //   'ezcloud.uniview.com',
-    //   '15755355045',
-    //   'loveyou520'
-    // )
-    // if (rst.code !== 1) {
-    //   message.warning(rst.msg)
-    // }
     try {
-      this.videoView = new mainClass()
-      const rst = this.videoView.cloudlogin(
-        'ezcloud.uniview.com',
-        '15755355045',
-        'loveyou520'
-      )
-      if (rst.code !== 1) {
-        message.warning(rst.msg)
-      }
+      // this.videoView = new mainClass()
+      // const rst = this.videoView.cloudlogin(
+      //   'ezcloud.uniview.com',
+      //   '15755355045',
+      //   'loveyou520'
+      // )
+      // if (rst.code !== 1) {
+      //   message.warning(rst.msg)
+      // }
     } catch (e) {
       message.error('监控初始化失败')
     }
-    // this.videoView.devicetype = '1'
-    // const loginJsonMap = {
-    //   szIPAddr: '192.168.1.14',
-    //   dwPort: '80',
-    //   szUserName: 'admin',
-    //   szPassword: '123456',
-    //   dwLoginProto: 0
-    // }
-    // const loginJsonstring = JSON.stringify(loginJsonMap)
-    // this.videoView.login(loginJsonstring)
-    // this.videoView.getChannellist()
   }
 
   componentWillUnmount() {
@@ -91,7 +72,6 @@ class LivecallDeatil extends Component {
     allSecond = 0
     second = 0
     this.closeAll()
-    // this.videoView.cloudloginout();
   }
 
   countItem = () => {
@@ -122,15 +102,15 @@ class LivecallDeatil extends Component {
   playVideo = (videoDeviceId, audioDeviceId, isTalk) => {
     closeAll()
     const html =
-      `${'<div class="videoboxDiv" ondblclick="launchFullscreen(this)">' +
-        '<video id="play_'}${912043}" width="365" onclick="selectedVideo(this)" oncanplay="canplayVideo(this)"></video><span>${$(
+      `${
+        '<div class="videoboxDiv" ondblclick="launchFullscreen(this)">' +
+        '<video id="play_'
+      }${912043}" width="365" onclick="selectedVideo(this)" oncanplay="canplayVideo(this)"></video><span>${$(
         `#device_${audioDeviceId}`
       ).text()}</span>` + '</div>'
     $('.videoDiv').append(html)
     global.dhWeb.playDeviceAudio(912043)
-    $('.selectVideo')
-      .parent()
-      .css('zIndex', '2')
+    $('.selectVideo').parent().css('zIndex', '2')
     const video = document.getElementById(`play_${912043}`)
     global.dhWeb.playRT(
       video,
@@ -166,19 +146,18 @@ class LivecallDeatil extends Component {
 
   dropChange = (e, key) => {
     this.setState({
-      [key]: e
+      [key]: e,
     })
   }
 
-  getDetail = id => {
+  getDetail = (id) => {
     const url = `${urlCng.callDetail}?id=${id}`
     fetch({
-      url
-    }).then(res => {
+      url,
+    }).then((res) => {
       if (res.code === 1) {
         this.setState({
           data: res.result,
-          loading: false
         })
       }
     })
@@ -200,12 +179,16 @@ class LivecallDeatil extends Component {
     fetch({
       url: urlCng.callUpdate,
       method: 'POST',
-      data: { id: item.id, status }
-    }).then(res => {
+      data: {
+        id: item.id,
+        status,
+        operatedSum: allSecond,
+      },
+    }).then((res) => {
       if (res.code === 1) {
         message.success('操作成功')
         this.setState({
-          data: res.result
+          data: res.result,
         })
       } else {
         message.error(res.msg)
@@ -215,7 +198,7 @@ class LivecallDeatil extends Component {
 
   changeValue = (e, key) => {
     this.setState({
-      [key]: e.target.value
+      [key]: e.target.value,
     })
   }
 
@@ -294,7 +277,7 @@ class LivecallDeatil extends Component {
                   {data.status === 3 ? (
                     <div
                       className="icon-wrap"
-                      onClick={() => this.updateList(data, 5)}
+                      onClick={() => this.updateList(data, 6)}
                     >
                       <span className="icon guaduan" />
                       <span>挂断</span>

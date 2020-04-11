@@ -16,12 +16,12 @@ const { TextArea } = Input
 const dropData = [
   {
     id: 'car',
-    name: '车牌'
+    name: '车牌',
   },
   {
     id: 'time',
-    name: '时间'
-  }
+    name: '时间',
+  },
 ]
 @hot
 @withRouter
@@ -35,10 +35,11 @@ class RightComponent extends Component {
       probleList: [],
       type: 'car',
       visible: false,
-      deatilData: [] // 弹框信息
+      deatilData: [], // 弹框信息
     }
     this.strTime = ''
     this.flag = false
+    this.selectCarObj = {}
   }
 
   componentDidMount() {
@@ -47,6 +48,7 @@ class RightComponent extends Component {
     const m2 = moment()
     this.duration = m2.diff(m1, 'seconds')
     this.getProblemList()
+    this.updateSystemTime()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -56,25 +58,47 @@ class RightComponent extends Component {
       this.duration = m2.diff(m1, 'seconds')
       this.setState({
         carNumber: nextProps.data.carNum,
-        questionSelected: nextProps.data.problemId
+        questionSelected: nextProps.data.problemId,
       })
+      this.updateSystemTime()
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.updateTimer) clearTimeout(this.updateTimer)
+  }
+
+  updateSystemTime = () => {
+    // if (this.updateTimer) clearTimeout(this.updateTimer)
+    const p = document.getElementById('nowTime')
+    if (p) {
+      const time = new Date()
+      const year = time.getFullYear()
+      const month = time.getMonth() + 1
+      const day = time.getDate()
+      const hour = time.getHours()
+      const minutes = time.getMinutes()
+      const seconds = time.getSeconds()
+      const str = `${year}-${month}-${day} ${hour}:${minutes}:${seconds}`
+      p.innerText = str
+      this.updateTimer = window.setTimeout(this.updateSystemTime, 1000)
     }
   }
 
   getProblemList = () => {
     fetch({
-      url: urlCng.callProblem
-    }).then(res => {
+      url: urlCng.callProblem,
+    }).then((res) => {
       if (res.code === 1) {
         const data = []
         for (let i = 0; i < res.result.length; i++) {
           data.push({
             id: res.result[i].code,
-            name: res.result[i].text
+            name: res.result[i].text,
           })
         }
         this.setState({
-          probleList: data
+          probleList: data,
         })
       }
     })
@@ -82,39 +106,45 @@ class RightComponent extends Component {
 
   dropChange = (e, key) => {
     this.setState({
-      [key]: e
+      [key]: e,
     })
   }
 
-  handleChange = v => {
+  handleChange = (v) => {
     this.setState({
-      comments: v.target.value
+      comments: v.target.value,
     })
   }
 
   // 提交
   submit = () => {
-    const { comments, carNumber, questionSelected } = this.state
+    if (!Object.keys(this.selectCarObj).length) {
+      message.warning('未检索车牌不能提交')
+    }
+    const { comments, questionSelected } = this.state
     const { data } = this.props
     if (comments.length < 4) {
       message.warning('问题描述需要大于4个文字')
       return
     }
     const operatedSum = document.getElementById('allSecond').innerText
-    const params = {
-      remark: comments,
-      carNum: carNumber,
-      id: data.id,
-      problemId: questionSelected,
-      status: 4,
-      operatedSum: operatedSum && parseInt(operatedSum)
-    }
+    const params = Object.assign(
+      {},
+      {
+        remark: comments,
+        id: data.id,
+        problemId: questionSelected,
+        status: 4,
+        operatedSum: operatedSum && parseInt(operatedSum),
+      },
+      this.selectCarObj
+    )
     if (data.id) {
       fetch({
         url: urlCng.callUpdate,
         method: 'POST',
-        data: params
-      }).then(res => {
+        data: params,
+      }).then((res) => {
         if (res.code === 1) {
           message.success('提交成功')
           this.props.goback()
@@ -129,14 +159,14 @@ class RightComponent extends Component {
   changeValue = (e, key) => {
     this.str = e.target.value
     this.setState({
-      [key]: e.target.value
+      [key]: e.target.value,
     })
   }
 
   filter = () => {
     fetch({
-      url: urlCng.callUpdate
-    }).then(res => {
+      url: urlCng.callUpdate,
+    }).then((res) => {
       if (res.code === 1) {
         message.success('提交成功')
       } else {
@@ -150,8 +180,8 @@ class RightComponent extends Component {
     if (!this.flag) {
       fetch({
         url: urlCng.open,
-        method: 'POST'
-      }).then(res => {
+        method: 'POST',
+      }).then((res) => {
         if (res.code === 1) {
           this.flag = true
           message.success('开闸成功')
@@ -165,12 +195,12 @@ class RightComponent extends Component {
   // 检索
   search = () => {
     fetch({
-      url: urlCng.searchCar
-    }).then(res => {
+      url: urlCng.searchCar,
+    }).then((res) => {
       if (res.code === 1) {
         this.setState({
           visible: true,
-          deatilData: res.result
+          deatilData: res.result,
         })
       } else {
         message.success('提交失败')
@@ -180,8 +210,13 @@ class RightComponent extends Component {
 
   handleCancel = () => {
     this.setState({
-      visible: false
+      visible: false,
     })
+  }
+
+  selectCarItem = (item) => {
+    this.selectCarObj = item
+    this.handleCancel()
   }
 
   // 时间改变
@@ -197,48 +232,49 @@ class RightComponent extends Component {
       probleList,
       type,
       visible,
-      deatilData
+      deatilData,
     } = this.state
     const { data } = this.props
-    if (!Object.keys(data).length) return null
+    const dataKeys = Object.keys(data)
     return (
       <div className="right">
         <div className="top-title">
-          <span style={{ marginLeft: '13.5pt' }}>{data.parkName}</span>
-          <span style={{ marginRight: '13.5pt' }}>{data.createTimeStr}</span>
+          <span style={{ marginLeft: '13.5pt' }}>
+            {dataKeys.length && data.parkName}
+          </span>
+          <span id="nowTime" style={{ marginRight: '13.5pt' }} />
         </div>
         <div className="wrap-info car">
           <div className="label">车牌号:</div>
           <SelectMenu
             data={dropData}
             className="select-type"
-            change={e => this.dropChange(e, 'type')}
+            change={(e) => this.dropChange(e, 'type')}
             defaultValue={type}
-            style={{ width: '75.5pt', marginRight: '15pt' }}
+            style={{ width: '55.5pt', marginRight: '5pt' }}
           />
           {type === 'car' ? (
             <Input
               placeholder="请输入车牌关键词"
               className="car-num"
               value={carNumber}
-              onChange={e => this.changeValue(e, 'carNumber')}
+              onChange={(e) => this.changeValue(e, 'carNumber')}
             />
           ) : (
             <RangePicker
-              ranges={{
-                Today: [moment(), moment()],
-                'This Month': [
-                  moment().startOf('month'),
-                  moment().endOf('month')
-                ]
-              }}
-              showTime
+              allowClear
+              showTime={{ format: 'HH:mm' }}
+              placeholder="请选择时间"
               format="YYYY/MM/DD HH:mm"
               onChange={this.onChangeDate}
-              style={{ width: '170pt' }}
+              style={{ width: '310px' }}
             />
           )}
-
+        </div>
+        <div
+          className="wrap-info"
+          style={{ marginTop: '10px', justifyContent: 'flex-end' }}
+        >
           <Button className="filter" onClick={this.search}>
             检索
           </Button>
@@ -252,11 +288,6 @@ class RightComponent extends Component {
             </p>
           </div>
           <div className="info-item">
-            {/* <p className="text">剩余车位</p>
-            <p className="duration">10</p> */}
-            {/* <div className="op-btn free" onClick={this.modifyCarNum}>
-              修改车牌
-            </div> */}
             <Popconfirm
               title="请确认是否对闸口进行放行?"
               onConfirm={this.open}
@@ -267,8 +298,6 @@ class RightComponent extends Component {
             </Popconfirm>
           </div>
           <div className="info-item">
-            {/* <p className="text">收费标准</p>
-            <p className="duration">¥10(每小时)</p> */}
             <Popconfirm
               title="请联系停车场管理人员 电话:15317035193"
               okText="确定"
@@ -287,7 +316,7 @@ class RightComponent extends Component {
               data={probleList}
               style={{ background: '#eee', width: '85%' }}
               className="detailDrop"
-              change={e => this.dropChange(e, 'questionSelected')}
+              change={(e) => this.dropChange(e, 'questionSelected')}
               defaultValue={questionSelected}
             />
           </div>
@@ -295,7 +324,7 @@ class RightComponent extends Component {
             placeholder="请描述问题(4-100)"
             autosize={{ minRows: 3, maxRows: 6 }}
             value={comments}
-            onChange={v => this.handleChange(v)}
+            onChange={(v) => this.handleChange(v)}
             maxLength="100"
             minLength="4"
             style={{
@@ -306,7 +335,7 @@ class RightComponent extends Component {
               color: '#707070',
               fontSize: '10pt',
               marginTop: '15pt',
-              marginBottom: '25.5pt'
+              marginBottom: '25.5pt',
             }}
           />
           <Button className="sumbit" onClick={this.submit}>
@@ -330,7 +359,7 @@ class RightComponent extends Component {
             data={deatilData}
             keyword={carNumber}
             str={this.str}
-            onCancel={this.handleCancel}
+            selectCarItem={this.selectCarItem}
           />
         </Modal>
       </div>
