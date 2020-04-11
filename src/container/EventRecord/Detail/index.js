@@ -12,12 +12,11 @@ import fetch from '~/utils/fetch'
 @withRouter
 class Detail extends Component {
   state = {
-    data: {}
+    data: {},
   }
 
   componentDidMount() {
     const { location } = this.props
-    console.log(location)
     const eventRecordDetailId =
       (location && location.state.data && location.state.data.id) ||
       getStore('eventRecordDetailId')
@@ -27,20 +26,20 @@ class Detail extends Component {
     }
   }
 
-  getDetail = id => {
+  getDetail = (id) => {
     const url = `${urlCng.callDetail}?id=${id}`
     fetch({
-      url
-    }).then(res => {
+      url,
+    }).then((res) => {
       if (res.code === 1) {
         this.setState({
-          data: res.result
+          data: res.result,
         })
       }
     })
   }
 
-  getStr = str => {
+  getStr = (str) => {
     if (!str) return '--'
     return str
   }

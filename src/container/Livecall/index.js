@@ -33,34 +33,34 @@ class Livecall extends Component {
       selected: 'all',
       total: 0,
       loading: false,
-      parkList: [] // 停车场位置
+      // parkList: [], // 停车场位置
     }
     this.count = 0
     this.headers = [
       {
         title: 'ID',
         dataIndex: 'id',
-        key: 'ID'
+        key: 'ID',
       },
       {
         title: '停车场',
         dataIndex: 'parkName',
-        key: 'parkName'
+        key: 'parkName',
       },
       {
         title: '出入场',
         dataIndex: 'inOutStr',
-        key: 'inOutStr'
+        key: 'inOutStr',
       },
       {
         title: '车牌号',
         dataIndex: 'carNum',
-        key: 'carNum'
+        key: 'carNum',
       },
       {
         title: '呼叫时间',
         dataIndex: 'createTimeStr',
-        key: 'createTimeStr'
+        key: 'createTimeStr',
       },
       {
         title: '等待时长',
@@ -78,38 +78,14 @@ class Livecall extends Component {
               {duration}s
             </div>
           )
-        }
+        },
       },
       {
         title: '事件处理',
         dataIndex: 'op',
-        key: 'op',
-        render: (text, record) => (
-          // 状态 1、未接听；2、等待接听；3、通话中、4、完成；5、挂断
-          <div>
-            {record.status === 3 ? (
-              <span className="online" onClick={() => this.answer(record)}>
-                通话中
-              </span>
-            ) : (
-              <span className="online" onClick={() => this.online(record, 3)}>
-                接听
-              </span>
-            )}
-            <span className="hang-up" onClick={() => this.hangUp(record, 5)}>
-              挂断
-            </span>
-            {record.status != 3 ? (
-              <span
-                className="not-operate"
-                onClick={() => this.noOperate(record)}
-              >
-                暂不处理
-              </span>
-            ) : null}
-          </div>
-        )
-      }
+        key: 'op', // 状态 1、未接听；2、等待接听；3、通话中、4、完成；5、挂断 6:未提交
+        render: (text, record) => this.renderOp(record),
+      },
     ]
   }
 
@@ -120,12 +96,11 @@ class Livecall extends Component {
       global.cloudWebsocket = new WebSocket(urlCng.taskDispatch + userInfo.id)
 
       // 连接成功建立的回调方法
-      global.cloudWebsocket.onopen = event => {
+      global.cloudWebsocket.onopen = (event) => {
         fetch({
-          url: urlCng.callSoundAccount
-        }).then(res => {
+          url: urlCng.callSoundAccount,
+        }).then((res) => {
           if (res.code === 1) {
-            console.log("user:" + res.result.username)
             sessionStorage.setItem('serverAddr', res.result.url)
             this.loginResult = res.result
 
@@ -138,40 +113,48 @@ class Livecall extends Component {
         })
         this.getList() // 列表数据
       }
-      global.cloudWebsocket.onmessage = message => {
-        console.log("cloudWebsocket---------------------"+JSON.stringify(message)+"----------------------")
+      global.cloudWebsocket.onmessage = (message) => {
+        console.log(
+          `cloudWebsocket---------------------${JSON.stringify(
+            message
+          )}----------------------`
+        )
         this.getList()
       }
-      global.dhWeb.onDeviceList = mess => {
+      global.dhWeb.onDeviceList = (mess) => {
         this.onDeviceList(mess)
       }
 
       // 语音设备登录
-      global.dhWeb.onLogin = mess => {
+      global.dhWeb.onLogin = (mess) => {
         this.onLogin(mess)
       }
 
       // 语音消息通知
-      global.dhWeb.onNotify = mess => {
-        console.log("onNotify-----------------------"+JSON.stringify(mess)+"--------------------")
+      global.dhWeb.onNotify = (mess) => {
+        console.log(
+          `onNotify-----------------------${JSON.stringify(
+            mess
+          )}--------------------`
+        )
         this.onNotify(mess)
       }
-      global.dhWeb.onParseMsgError = mess => {
+      global.dhWeb.onParseMsgError = (mess) => {
         if (mess.error.indexOf('alarmServer offline') != -1) {
           alert('报警服务器不在线')
         }
       }
-      global.dhWeb.onAlarmServerClosed = mess => {
+      global.dhWeb.onAlarmServerClosed = (mess) => {
         $('#logout').click()
       }
-      global.dhWeb.onPlayRT = data => {
+      global.dhWeb.onPlayRT = (data) => {
         if (data.error != 'success') {
           $('#closeAll').click()
         }
       }
     }
     // 停车场下拉
-    this.getParkPos()
+    //  this.getParkPos()
   }
 
   componentWillUnmount() {
@@ -184,7 +167,7 @@ class Livecall extends Component {
     this.count = 0
   }
 
-  onDeviceList = data => {
+  onDeviceList = (data) => {
     const deviceList = data.params.list
     let className
     for (const i in deviceList) {
@@ -205,17 +188,57 @@ class Livecall extends Component {
     }
   }
 
-  onNotify = data => {
+  renderOp = (record) => {
+    if (record.status === 6) {
+      return (
+        <div>
+          <span className="not-operate" onClick={() => this.answer(record)}>
+            未提交
+          </span>
+        </div>
+      )
+    }
+    return (
+      <div>
+        {record.status === 3 ? (
+          <span className="online" onClick={() => this.answer(record)}>
+            通话中
+          </span>
+        ) : (
+          <span className="online" onClick={() => this.online(record, 3)}>
+            接听
+          </span>
+        )}
+        <span className="hang-up" onClick={() => this.hangUp(record, 5)}>
+          挂断
+        </span>
+        {record.status != 3 ? (
+          <span className="not-operate" onClick={() => this.noOperate(record)}>
+            暂不处理
+          </span>
+        ) : null}
+        {record.status === 6 ? (
+          <span className="not-operate" onClick={() => this.answer(record)}>
+            未提交
+          </span>
+        ) : null}
+      </div>
+    )
+  }
+
+  onNotify = (data) => {
     const params = data.params
     params.createTime = global.cloudWebsocket.send(JSON.stringify(data))
   }
 
-  onLogin = data => {
+  onLogin = (data) => {
     const params = data.params
     if (data.error == 'success') {
       sessionStorage.setItem('loginHandle', params.loginHandle)
       this.timerSendMessage = window.setInterval(() => {
-        global.cloudWebsocket.send('{"method":"cloud.notify","params":{"heartlive":"I am here!"}}')
+        global.cloudWebsocket.send(
+          '{"method":"cloud.notify","params":{"heartlive":"I am here!"}}'
+        )
       }, 10000)
       global.cloudWebsocket.send(JSON.stringify(data))
       this.count = 0
@@ -234,55 +257,44 @@ class Livecall extends Component {
   }
 
   // 获取停车场位置
-  getParkPos = () => {
-    fetch({
-      url: urlCng.parkList
-    }).then(res => {
-      if (res.code === 1) {
-        if (res.result && res.result.data) {
-          const resData = res.result.data
-          resData.unshift({
-            id: 'all',
-            name: '全部'
-          })
-          setStore('parkList', resData)
-          this.setState({
-            parkList: resData
-          })
-        }
-      }
-    })
-  }
+  // getParkPos = () => {
+  //   fetch({
+  //     url: urlCng.parkList,
+  //   }).then(res => {
+  //     if (res.code === 1) {
+  //       if (res.result && res.result.data) {
+  //         const resData = res.result.data
+  //         resData.unshift({
+  //           id: 'all',
+  //           name: '全部',
+  //         })
+  //         setStore('parkList', resData)
+  //         this.setState({
+  //           parkList: resData,
+  //         })
+  //       }
+  //     }
+  //   })
+  // }
 
   // 暂不处理
-  noOperate = item => {
-    // fetch({
-    //   url: urlCng.callDel,
-    //   method: 'POST',
-    //   data: { id: item.id }
-    // }).then(res => {
-    //   if (res.code === 1) {
-    //     this.getList()
-    //     message.success('操作成功')
-    //   } else {
-    //     message.error(res.msg)
-    //   }
-    // })
-    debugger
-    const data = '{"callLogId":'+item.id+',"params":{},"method":"task.reject"}'
-    global.cloudWebsocket.send(data);
+  noOperate = (item) => {
+    const data = `{"callLogId":${item.id},"params":{},"method":"task.reject"}`
+    global.cloudWebsocket.send(data)
   }
 
   // 挂断
   hangUp = (item, status) => {
-    debugger
     this.updateList(item, status)
     this.closeAll(item.audioDeviceId)
   }
 
-  closeAll = audioDeviceId => {
+  closeAll = (audioDeviceId) => {
     if (global.dhWeb) {
-      global.dhWeb.directCloseRT(audioDeviceId, sessionStorage.getItem('loginHandle'))
+      global.dhWeb.directCloseRT(
+        audioDeviceId,
+        sessionStorage.getItem('loginHandle')
+      )
     }
   }
 
@@ -290,7 +302,7 @@ class Livecall extends Component {
   online = (item, status) => {
     const { data } = this.state
     this.flagOnline = false
-    data.map(obj => {
+    data.map((obj) => {
       if (obj.status === 3) {
         this.flagOnline = true
       }
@@ -311,8 +323,8 @@ class Livecall extends Component {
     fetch({
       url: urlCng.callUpdate,
       method: 'POST',
-      data: { id: item.id, status, waitCountTime }
-    }).then(res => {
+      data: { id: item.id, status, waitCountTime },
+    }).then((res) => {
       if (res.code === 1) {
         this.getList()
         message.success('操作成功')
@@ -347,7 +359,7 @@ class Livecall extends Component {
   }
 
   // 进入详情
-  answer = item => {
+  answer = (item) => {
     this.props.history.push('/livedetail', { data: item })
   }
 
@@ -355,7 +367,7 @@ class Livecall extends Component {
     const { current, searchContent, selected } = this.state // &userName=${searchContent}
     const params = {
       pageSize,
-      curPage: current
+      curPage: current,
     }
     // 车牌号
     if (searchContent) {
@@ -368,13 +380,13 @@ class Livecall extends Component {
     const url = getUrl(params, `${urlCng.callWaitList}`)
 
     fetch({
-      url
-    }).then(res => {
+      url,
+    }).then((res) => {
       if (res.code === 1) {
         this.setState({
           data: res.result.data,
           total: res.result.page.totalNum,
-          loading: false
+          loading: false,
         })
       } else {
         message.error(res.msg)
@@ -383,10 +395,10 @@ class Livecall extends Component {
   }
 
   // 分页
-  handlePageChange = pageNumber => {
+  handlePageChange = (pageNumber) => {
     this.setState(
       {
-        current: pageNumber
+        current: pageNumber,
       },
       () => {
         this.getList()
@@ -397,14 +409,14 @@ class Livecall extends Component {
   // 下拉改变
   dropChange = (e, key) => {
     this.setState({
-      [key]: e
+      [key]: e,
     })
   }
 
   // 搜索框改变
-  changeValue = e => {
+  changeValue = (e) => {
     this.setState({
-      searchContent: e.target.value
+      searchContent: e.target.value,
     })
   }
 
@@ -415,20 +427,13 @@ class Livecall extends Component {
     })
   }
 
+  //   parkList, selected,  searchContent,
   render() {
-    const {
-      data,
-      searchContent,
-      current,
-      selected,
-      total,
-      parkList,
-      loading
-    } = this.state
+    const { data, current, total, loading } = this.state
     return (
       <div className="panel">
         <div id="liveCall">
-          <div className="search-wrap">
+          {/* <div className="search-wrap">
             <div>
               <SelectMenu
                 data={parkList}
@@ -450,7 +455,7 @@ class Livecall extends Component {
                 搜索
               </Button>
             </div>
-          </div>
+          </div> */}
           {/* 表格数据 */}
           <Table
             dataSource={data}
@@ -462,7 +467,7 @@ class Livecall extends Component {
               total,
               pageSize,
               current,
-              onChange: this.handlePageChange
+              onChange: this.handlePageChange,
             }}
           />
           <div className="total">
