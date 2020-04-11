@@ -1,15 +1,26 @@
 import { withRouter } from 'react-router-dom'
 import { hot } from 'react-hot-loader/root'
 import React, { Component } from 'react'
-import { Input, Button, message, DatePicker, Modal, Popconfirm } from 'antd'
+import {
+  Input,
+  Button,
+  message,
+  DatePicker,
+  Modal,
+  Popconfirm,
+  LocaleProvider,
+} from 'antd'
 import '../../../less/normal.less'
 import './style.less'
 import moment from 'moment'
+import zh_CN from 'antd/lib/locale-provider/zh_CN'
 import SelectMenu from '~/component/SelectMenu'
 import urlCng from '~/config/url'
 import fetch from '~/utils/fetch'
 import { getColor } from '~/utils'
 import CollapseComponent from './CollapseComponent'
+
+import 'moment/locale/zh-cn'
 
 const { RangePicker } = DatePicker
 const { TextArea } = Input
@@ -261,14 +272,16 @@ class RightComponent extends Component {
               onChange={(e) => this.changeValue(e, 'carNumber')}
             />
           ) : (
-            <RangePicker
-              allowClear
-              showTime={{ format: 'HH:mm' }}
-              placeholder="请选择时间"
-              format="YYYY/MM/DD HH:mm"
-              onChange={this.onChangeDate}
-              style={{ width: '310px' }}
-            />
+            <LocaleProvider locale={zh_CN}>
+              <RangePicker
+                allowClear
+                showTime={{ format: 'HH:mm' }}
+                format="YYYY/MM/DD HH:mm"
+                onChange={this.onChangeDate}
+                style={{ width: '310px' }}
+                placeholder={['开始时间', '结束时间']}
+              />
+            </LocaleProvider>
           )}
         </div>
         <div

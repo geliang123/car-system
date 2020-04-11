@@ -18,7 +18,7 @@ class App extends Component {
       key={index}
       exact={route.exact || false}
       path={route.path}
-      render={props => <route.component {...props} routes={route.routes} />}
+      render={(props) => <route.component {...props} routes={route.routes} />}
     />
   )
 
@@ -32,7 +32,7 @@ class App extends Component {
 
   componentDidCatch(error, info) {
     this.setState({
-      hasError: true
+      hasError: true,
     })
     console.log(`报错信息:${error}`)
     console.log(`报错调用栈的组件: ${JSON.stringify(info)}`)

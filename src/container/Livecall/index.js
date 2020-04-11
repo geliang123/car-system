@@ -4,17 +4,15 @@
 /* eslint-disable no-undef */
 /* eslint-disable array-callback-return */
 import React, { Component } from 'react'
-import { Table, Button, Input, message } from 'antd'
+import { Table, message } from 'antd'
 import { hot } from 'react-hot-loader/root'
 import { withRouter } from 'react-router-dom'
 import '../../less/normal.less'
 import './style.less'
 import moment from 'moment'
-import eventObject from '~/config/eventSignal'
 import fetch from '~/utils/fetch'
 import urlCng from '~/config/url'
-import SelectMenu from '~/component/SelectMenu'
-import { getLocalStore, setStore, getUrl, getColor } from '~/utils/index'
+import { getLocalStore, getUrl, getColor } from '~/utils/index'
 
 const pageSize = 10
 

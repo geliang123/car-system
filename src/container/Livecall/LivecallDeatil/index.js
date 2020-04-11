@@ -226,7 +226,7 @@ class LivecallDeatil extends Component {
     return (
       <div className="panel">
         <div id="LiveCallDeatail">
-          <Title title="事件处理" />
+          {/* <Title title="事件处理" /> */}
           <div className="wrap-content">
             {/* 右边内容 ${!loading ? 'show' : 'hide'} */}
             <div className="left">
