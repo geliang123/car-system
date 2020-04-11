@@ -69,7 +69,7 @@ class RightComponent extends Component {
   }
 
   updateSystemTime = () => {
-    // if (this.updateTimer) clearTimeout(this.updateTimer)
+    if (this.updateTimer) clearTimeout(this.updateTimer)
     const p = document.getElementById('nowTime')
     if (p) {
       const time = new Date()
