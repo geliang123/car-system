@@ -42,12 +42,12 @@ class LivecallDeatil extends Component {
     if (callDetailId) {
       this.getDetail(callDetailId)
       this.deviceId = location.state.data.audioDeviceId
-      this.playVideo(962025, 912043, true)
+      this.playVideo(location.state.data.videoDeviceId, location.state.data.audioDeviceId, true)
 
-      this.timer = setTimeout(() => {
+      // this.timer = setTimeout(() => {
         global.dhWeb.startTalk(this.deviceId)
         this.setState({ loading: false })
-      }, 3000)
+      // }, 3000)
     }
     try {
       this.videoView = new mainClass()
@@ -106,16 +106,16 @@ class LivecallDeatil extends Component {
       `${
         '<div class="videoboxDiv" ondblclick="launchFullscreen(this)">' +
         '<video id="play_'
-      }${912043}" width="365" onclick="selectedVideo(this)" oncanplay="canplayVideo(this)"></video><span>${$(
+      }${audioDeviceId}" width="365" onclick="selectedVideo(this)" oncanplay="canplayVideo(this)"></video><span>${$(
         `#device_${audioDeviceId}`
       ).text()}</span>` + '</div>'
     $('.videoDiv').append(html)
-    global.dhWeb.playDeviceAudio(912043)
+    global.dhWeb.playDeviceAudio(audioDeviceId)
     $('.selectVideo').parent().css('zIndex', '2')
-    const video = document.getElementById(`play_${912043}`)
+    const video = document.getElementById(`play_${audioDeviceId}`)
     global.dhWeb.playRT(
       video,
-      912043,
+      audioDeviceId,
       sessionStorage.getItem('loginHandle'),
       isTalk
     )
@@ -127,8 +127,8 @@ class LivecallDeatil extends Component {
       const parentId = $(`#device_${audioDeviceId}`).attr('parentId')
       const groupDevices = $(`li[parentId = ${parentId}]`)
       global.dhWeb.playRT(
-        $('#play_962065')[0],
-        962025,
+        $(`#play_${videoDeviceId}`)[0],
+        videoDeviceId,
         sessionStorage.getItem('loginHandle'),
         false
       )

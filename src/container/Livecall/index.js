@@ -242,7 +242,7 @@ class Livecall extends Component {
         global.cloudWebsocket.send(
           '{"method":"cloud.notify","params":{"heartlive":"I am here!"}}'
         )
-      }, 10000)
+      }, 15000)
       global.cloudWebsocket.send(JSON.stringify(data))
       this.count = 0
       // this.audioLoginSuccess=ture
@@ -285,6 +285,7 @@ class Livecall extends Component {
   noOperate = (item) => {
     const data = `{"callLogId":${item.id},"params":{},"method":"task.reject"}`
     global.cloudWebsocket.send(data)
+    this.getList()
   }
 
   // 挂断
