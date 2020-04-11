@@ -41,23 +41,23 @@ class LivecallDeatil extends Component {
     this.countTimer = setInterval(this.countItem, 50)
     if (callDetailId) {
       this.getDetail(callDetailId)
-      // this.deviceId = location.state.data.audioDeviceId
-      // this.playVideo(962025, 912043, true)
+      this.deviceId = location.state.data.audioDeviceId
+      this.playVideo(962025, 912043, true)
 
-      // this.timer = setTimeout(() => {
-      //   global.dhWeb.startTalk(this.deviceId)
-      // }, 3000)
+      this.timer = setTimeout(() => {
+        global.dhWeb.startTalk(this.deviceId)
+      }, 3000)
     }
     try {
-      // this.videoView = new mainClass()
-      // const rst = this.videoView.cloudlogin(
-      //   'ezcloud.uniview.com',
-      //   '15755355045',
-      //   'loveyou520'
-      // )
-      // if (rst.code !== 1) {
-      //   message.warning(rst.msg)
-      // }
+      this.videoView = new mainClass()
+      const rst = this.videoView.cloudlogin(
+        'ezcloud.uniview.com',
+        '15755355045',
+        'loveyou520'
+      )
+      if (rst.code !== 1) {
+        message.warning(rst.msg)
+      }
     } catch (e) {
       message.error('监控初始化失败')
     }
