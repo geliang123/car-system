@@ -1,3 +1,4 @@
+/* eslint-disable react/no-string-refs */
 import { hot } from 'react-hot-loader/root'
 import React, { Component } from 'react'
 import '../../../less/normal.less'
@@ -65,8 +66,9 @@ class CarNumber extends Component {
       outTime: item.start_end,
       parkId: item.parking_id,
       parkName: item.parking_name,
-      pay_amount: item.paid_amount,
-      car_img_url: item.picture_url_in,
+      payAmount: item.paid_amount,
+      carImgUrlIn: item.picture_url_in,
+      carImgUrlOut: item.picture_url_out,
     }
 
     this.props.selectCarItem && this.props.selectCarItem(updataItem)
