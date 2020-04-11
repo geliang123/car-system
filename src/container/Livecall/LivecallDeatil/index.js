@@ -78,10 +78,10 @@ class LivecallDeatil extends Component {
   countItem = () => {
     // 计时
     millisecond += 50
-    allSecond += 50
     if (millisecond >= 1000) {
       millisecond = 0
       second += 1
+      allSecond += 1
     }
     if (second >= 60) {
       second = 0
