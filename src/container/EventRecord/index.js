@@ -23,43 +23,43 @@ class EventRecord extends Component {
       total: 0,
       loading: true,
       selected: 'all',
-      parkList: []
+      parkList: [],
     }
     this.headers = [
       {
         title: '时间',
         dataIndex: 'createTimeStr',
-        key: 'createTimeStr'
+        key: 'createTimeStr',
       },
       {
         title: '停车场',
         dataIndex: 'parkName',
-        key: 'parkName'
+        key: 'parkName',
       },
       {
         title: '车牌',
         dataIndex: 'carNum',
-        key: 'carNum'
+        key: 'carNum',
       },
       {
         title: '入场时间',
         dataIndex: 'inTimeStr',
-        key: 'inTimeStr'
+        key: 'inTimeStr',
       },
       {
         title: '出场时间',
         dataIndex: 'outTimeStr',
-        key: 'outTimeStr'
+        key: 'outTimeStr',
       },
       {
         title: '支付费用',
         dataIndex: 'payAmount',
-        key: 'payAmount'
+        key: 'payAmount',
       },
       {
         title: '状态',
         dataIndex: 'statusStr',
-        key: 'statusStr'
+        key: 'statusStr',
       },
       {
         title: '操作',
@@ -71,8 +71,8 @@ class EventRecord extends Component {
               查看详情
             </span>
           </div>
-        )
-      }
+        ),
+      },
     ]
   }
 
@@ -81,14 +81,14 @@ class EventRecord extends Component {
     this.getParkPos()
   }
 
-  changeValue = e => {
+  changeValue = (e) => {
     this.setState({
-      searchContent: e.target.value
+      searchContent: e.target.value,
     })
   }
 
   // 查看信息
-  watchInfo = item => {
+  watchInfo = (item) => {
     if (item.id) {
       this.props.history.push('/detail', { data: item })
     }
@@ -101,11 +101,11 @@ class EventRecord extends Component {
     const { current, searchContent, selected } = this.state // &userName=${searchContent}
     const params = {
       pageSize,
-      curPage: current
+      curPage: current,
     }
     // 车牌号
     if (searchContent) {
-      params.carNum = searchContent
+      params.caNumStr = searchContent
     }
     // 停车场
     if (selected !== 'all') {
@@ -113,13 +113,13 @@ class EventRecord extends Component {
     }
     const url = getUrl(params, `${urlCng.callList}`)
     fetch({
-      url
-    }).then(res => {
+      url,
+    }).then((res) => {
       if (res.code === 1) {
         this.setState({
           data: res.result.data,
           total: res.result.page.totalNum,
-          loading: false
+          loading: false,
         })
       } else {
         message.error(res.msg)
@@ -129,17 +129,17 @@ class EventRecord extends Component {
 
   getParkPos = () => {
     fetch({
-      url: urlCng.parkList
-    }).then(res => {
+      url: urlCng.parkList,
+    }).then((res) => {
       if (res.code === 1) {
         if (res.result && res.result.data) {
           const resData = res.result.data
           resData.unshift({
             id: 'all',
-            name: '全部'
+            name: '全部',
           })
           this.setState({
-            parkList: resData
+            parkList: resData,
           })
         }
       }
@@ -147,10 +147,10 @@ class EventRecord extends Component {
   }
 
   // 分页
-  handlePageChange = pageNumber => {
+  handlePageChange = (pageNumber) => {
     this.setState(
       {
-        current: pageNumber
+        current: pageNumber,
       },
       () => {
         this.getList()
@@ -161,14 +161,14 @@ class EventRecord extends Component {
   // 取消弹框
   handleCancel = () => {
     this.setState({
-      visible: false
+      visible: false,
     })
   }
 
   // 下拉改变
   dropChange = (e, key) => {
     this.setState({
-      [key]: e
+      [key]: e,
     })
   }
 
@@ -188,7 +188,7 @@ class EventRecord extends Component {
       total,
       selected,
       loading,
-      parkList
+      parkList,
     } = this.state
     return (
       <div className="panel">
@@ -197,7 +197,7 @@ class EventRecord extends Component {
             <div>
               <SelectMenu
                 data={parkList}
-                change={e => this.dropChange(e, 'selected')}
+                change={(e) => this.dropChange(e, 'selected')}
                 defaultValue={selected}
               />
               <Button className="filter" onClick={this.filter}>
@@ -207,9 +207,9 @@ class EventRecord extends Component {
             <div className="search">
               <Input
                 className="search-content"
-                placeholder="请输入账户关键词"
+                placeholder="请输入车牌关键词"
                 value={searchContent}
-                onChange={e => this.changeValue(e, 'username')}
+                onChange={(e) => this.changeValue(e, 'username')}
               />
               <Button className="search-btn" onClick={this.filter}>
                 搜索
@@ -227,7 +227,7 @@ class EventRecord extends Component {
               total,
               pageSize,
               current,
-              onChange: this.handlePageChange
+              onChange: this.handlePageChange,
             }}
           />
           <div className="total">

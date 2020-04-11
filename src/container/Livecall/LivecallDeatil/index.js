@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 /* eslint-disable new-cap */
 /* eslint-disable no-alert */
 /* eslint-disable no-restricted-syntax */
@@ -7,8 +8,7 @@ import { hot } from 'react-hot-loader/root'
 import React, { Component } from 'react'
 import '../../../less/normal.less'
 import './style.less'
-import { message } from 'antd'
-import Title from '~/component/Title'
+import { message, Spin } from 'antd'
 import urlCng from '~/config/url'
 import { getStore, setStore } from '~/utils'
 import fetch from '~/utils/fetch'
@@ -24,38 +24,32 @@ class LivecallDeatil extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      data: {}
+      data: {},
+      loading: true,
     }
   }
 
   componentDidMount() {
     const { location } = this.props
+    const callDetailData = location && location.state && location.state.data
     const callDetailId =
-      (location &&
-        location.state &&
-        location.state.data &&
-        location.state.data.id) ||
-      getStore('callDetailId')
+      (callDetailData && callDetailData.id) || getStore('callDetailId')
     setStore('callDetailId', callDetailId)
-    this.countTimer = setInterval(this.countItem, 50)
     if (callDetailId) {
       this.getDetail(callDetailId)
-      this.deviceId = location.state.data.audioDeviceId
-      this.playVideo(962025, 912043, true)
-
-      this.timer = setTimeout(() => {
+      if (callDetailData.status !== 6) {
+        // 未提交状态不需要通话
+        // 未处理不需要语音
+        this.deviceId = location.state.data.audioDeviceId
+        this.playVideo(
+          location.state.data.videoDeviceId,
+          location.state.data.audioDeviceId,
+          true
+        )
         global.dhWeb.startTalk(this.deviceId)
-      }, 3000)
+        this.countTimer = setInterval(this.countItem, 50)
+      }
     }
-    // this.videoView = new mainClass()
-    // const rst = this.videoView.cloudlogin(
-    //   'ezcloud.uniview.com',
-    //   '15755355045',
-    //   'loveyou520'
-    // )
-    // if (rst.code !== 1) {
-    //   message.warning(rst.msg)
-    // }
     try {
       this.videoView = new mainClass()
       const rst = this.videoView.cloudlogin(
@@ -67,20 +61,8 @@ class LivecallDeatil extends Component {
         message.warning(rst.msg)
       }
     } catch (e) {
-      message.error('监控初始化失败');
-      console.error('监控初始化失败异常：'+e);
+      message.error('监控初始化失败')
     }
-    // this.videoView.devicetype = '1'
-    // const loginJsonMap = {
-    //   szIPAddr: '192.168.1.14',
-    //   dwPort: '80',
-    //   szUserName: 'admin',
-    //   szPassword: '123456',
-    //   dwLoginProto: 0
-    // }
-    // const loginJsonstring = JSON.stringify(loginJsonMap)
-    // this.videoView.login(loginJsonstring)
-    // this.videoView.getChannellist()
   }
 
   componentWillUnmount() {
@@ -92,18 +74,15 @@ class LivecallDeatil extends Component {
     allSecond = 0
     second = 0
     this.closeAll()
-    if (this.videoView) {
-      this.videoView.cloudloginout();
-    }
   }
 
   countItem = () => {
     // 计时
     millisecond += 50
-    allSecond += 50
     if (millisecond >= 1000) {
       millisecond = 0
       second += 1
+      allSecond += 1
     }
     if (second >= 60) {
       second = 0
@@ -125,19 +104,19 @@ class LivecallDeatil extends Component {
   playVideo = (videoDeviceId, audioDeviceId, isTalk) => {
     closeAll()
     const html =
-      `${'<div class="videoboxDiv" ondblclick="launchFullscreen(this)">' +
-        '<video id="play_'}${912043}" width="365" onclick="selectedVideo(this)" oncanplay="canplayVideo(this)"></video><span>${$(
+      `${
+        '<div class="videoboxDiv" ondblclick="launchFullscreen(this)">' +
+        '<video id="play_'
+      }${audioDeviceId}" width="365" onclick="selectedVideo(this)" oncanplay="canplayVideo(this)"></video><span>${$(
         `#device_${audioDeviceId}`
       ).text()}</span>` + '</div>'
     $('.videoDiv').append(html)
-    global.dhWeb.playDeviceAudio(912043)
-    $('.selectVideo')
-      .parent()
-      .css('zIndex', '2')
-    const video = document.getElementById(`play_${912043}`)
+    global.dhWeb.playDeviceAudio(audioDeviceId)
+    $('.selectVideo').parent().css('zIndex', '2')
+    const video = document.getElementById(`play_${audioDeviceId}`)
     global.dhWeb.playRT(
       video,
-      912043,
+      audioDeviceId,
       sessionStorage.getItem('loginHandle'),
       isTalk
     )
@@ -149,8 +128,8 @@ class LivecallDeatil extends Component {
       const parentId = $(`#device_${audioDeviceId}`).attr('parentId')
       const groupDevices = $(`li[parentId = ${parentId}]`)
       global.dhWeb.playRT(
-        $('#play_962065')[0],
-        962025,
+        $(`#play_${videoDeviceId}`)[0],
+        videoDeviceId,
         sessionStorage.getItem('loginHandle'),
         false
       )
@@ -169,19 +148,19 @@ class LivecallDeatil extends Component {
 
   dropChange = (e, key) => {
     this.setState({
-      [key]: e
+      [key]: e,
     })
   }
 
-  getDetail = id => {
+  getDetail = (id) => {
     const url = `${urlCng.callDetail}?id=${id}`
     fetch({
-      url
-    }).then(res => {
+      url,
+    }).then((res) => {
       if (res.code === 1) {
         this.setState({
           data: res.result,
-          loading: false
+          loading: false,
         })
       }
     })
@@ -191,9 +170,9 @@ class LivecallDeatil extends Component {
     if (global.dhWeb) {
       this.closeAll()
     }
-    if (this.videoView) {
-      this.videoView.cloudloginout()
-    }
+    // if (this.videoView) {
+    //   this.videoView.cloudloginout()
+    // }
   }
 
   // 更新
@@ -203,12 +182,16 @@ class LivecallDeatil extends Component {
     fetch({
       url: urlCng.callUpdate,
       method: 'POST',
-      data: { id: item.id, status }
-    }).then(res => {
+      data: {
+        id: item.id,
+        status,
+        operatedSum: allSecond,
+      },
+    }).then((res) => {
       if (res.code === 1) {
         message.success('操作成功')
         this.setState({
-          data: res.result
+          data: res.result,
         })
       } else {
         message.error(res.msg)
@@ -218,7 +201,7 @@ class LivecallDeatil extends Component {
 
   changeValue = (e, key) => {
     this.setState({
-      [key]: e.target.value
+      [key]: e.target.value,
     })
   }
 
@@ -242,17 +225,17 @@ class LivecallDeatil extends Component {
   }
 
   render() {
-    const { data } = this.state
+    const { data, loading } = this.state
     return (
       <div className="panel">
         <div id="LiveCallDeatail">
-          <Title title="事件处理" />
-          <div className="wrap-content">
+          {/* <Title title="事件处理" /> */}
+          <div className={`wrap-content ${loading ? 'hide' : 'block'}`}>
             {/* 右边内容 ${!loading ? 'show' : 'hide'} */}
             <div className="left">
               <div className="left-item">
                 <div className="title">
-                  {data.inOut === 2 ? '入场' : '出场'}车道监控
+                  {data.inOut === 2 ? '入场' : '出场'}车辆监控
                 </div>
                 <div
                   className={`ocxStyle ${data.inOut == 2 ? 'block' : 'none'}`}
@@ -262,7 +245,7 @@ class LivecallDeatil extends Component {
               </div>
               <div className="left-item">
                 <div className="title">
-                  {data.inOut === 2 ? '入场' : '出场'}车道监控
+                  {data.inOut === 2 ? '入场' : '出场'}车辆监控
                 </div>
                 <div className="videoDiv" />
               </div>
@@ -297,7 +280,7 @@ class LivecallDeatil extends Component {
                   {data.status === 3 ? (
                     <div
                       className="icon-wrap"
-                      onClick={() => this.updateList(data, 5)}
+                      onClick={() => this.updateList(data, 6)}
                     >
                       <span className="icon guaduan" />
                       <span>挂断</span>
@@ -314,7 +297,7 @@ class LivecallDeatil extends Component {
             />
           </div>
 
-          {/* {loading ? <Spin /> : null} */}
+          {loading ? <Spin /> : null}
         </div>
       </div>
     )

@@ -2,7 +2,12 @@ import React, { Component } from 'react'
 import { Menu, Modal, Popover, message } from 'antd'
 import { Link, withRouter } from 'react-router-dom'
 import fetch from '~/utils/fetch'
-import { removeStore, setStore, getStore, getLocalStore } from '~/utils/index'
+import {
+  removeAllStore,
+  setStore,
+  getStore,
+  getLocalStore,
+} from '~/utils/index'
 import CheckComponent from './CheckComponent'
 import urlCng from '~/config/url'
 import './style.less'
@@ -21,7 +26,7 @@ class NavTop extends Component {
       menuData: [],
       visible: false,
       visiblePopover: false,
-      status: this.user.status
+      status: this.user.status,
     }
     // 1 在线 2 休息
     this.content = (
@@ -39,19 +44,20 @@ class NavTop extends Component {
 
   getTopData = () => {
     fetch({
-      url: urlCng.logData
-    }).then(res => {
+      url: urlCng.logData,
+    }).then((res) => {
       if (res.code === 1) {
         this.setState({
-          indicator: res.result
+          indicator: res.result,
         })
       }
     })
   }
 
-  handleClick = e => {
+  handleClick = (e) => {
+    setStore('key', e.key)
     this.setState({
-      key: e.key
+      key: e.key,
     })
   }
 
@@ -66,14 +72,14 @@ class NavTop extends Component {
 
   confirm = () => {
     this.props.history.push('/')
-    removeStore('token')
+    removeAllStore()
     this.ref.destroy()
     fetch({
       url: urlCng.logout,
-      method: 'POST'
-    }).then(res => {
+      method: 'POST',
+    }).then((res) => {
       if (res.code === 1) {
-        removeStore('token')
+        removeAllStore()
       }
     })
   }
@@ -82,11 +88,11 @@ class NavTop extends Component {
   getMenu = () => {
     fetch({
       url: urlCng.menu,
-      method: 'POST'
-    }).then(res => {
+      method: 'POST',
+    }).then((res) => {
       if (!res.code) {
         this.setState({
-          menuData: (Array.isArray(res) && res) || []
+          menuData: (Array.isArray(res) && res) || [],
         })
       }
     })
@@ -94,36 +100,43 @@ class NavTop extends Component {
 
   check = () => {
     this.setState({
-      visible: true
+      visible: true,
     })
   }
 
   handleCancel = () => {
     this.setState({
-      visible: false
+      visible: false,
     })
   }
 
-  handleVisibleChange = visiblePopover => {
+  handleVisibleChange = (visiblePopover) => {
     this.setState({ visiblePopover })
   }
 
-  changeStatus = status => {
+  changeStatus = (status) => {
     setStore('status', status)
     this.setState({
       visiblePopover: false,
-      status
+      status,
     })
     fetch({
       url: urlCng.changeStatus,
       method: 'POST',
       data: {
-        status
-      }
-    }).then(res => {
+        status,
+      },
+    }).then((res) => {
       if (res.code === 1) {
         message.success('修改成功')
       }
+    })
+  }
+
+  go = () => {
+    this.props.history.push('/call_now')
+    this.setState({
+      key: 'call_now',
     })
   }
 
@@ -134,21 +147,27 @@ class NavTop extends Component {
       menuData,
       visible,
       visiblePopover,
-      status
+      status,
     } = this.state
     const mergeStatus = JSON.parse(getStore('status')) || status
+    console.log(getStore('key'))
+    const mergeKey = getStore('key') || key
     if (!Object.keys(this.user).length) return null
     return (
       <div className="top" id="TopContainer">
-        <img className="logo" src={require('../../images/home/logo.png')} />
+        <img
+          className="logo"
+          src={require('../../images/home/logo.png')}
+          onClick={this.go}
+        />
         <Menu
           onClick={this.handleClick}
-          selectedKeys={[key]}
+          selectedKeys={[mergeKey]}
           onOpenChange={this.openChange}
           mode="horizontal"
           className="menu-tab"
         >
-          {menuData.map(item =>
+          {menuData.map((item) =>
             !item.childes ? (
               <Menu.Item key={item.code.toLowerCase()}>
                 <Link to={`/${item.code.toLowerCase()}`}>{item.name}</Link>
@@ -168,7 +187,7 @@ class NavTop extends Component {
                 }
               >
                 <MenuItemGroup>
-                  {item.childes.map(obj => (
+                  {item.childes.map((obj) => (
                     <Menu.Item key={obj.code.toLowerCase()}>
                       <Link to={`/${obj.code.toLowerCase()}`}>{obj.name}</Link>
                     </Menu.Item>
