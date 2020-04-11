@@ -8,8 +8,7 @@ import { hot } from 'react-hot-loader/root'
 import React, { Component } from 'react'
 import '../../../less/normal.less'
 import './style.less'
-import { message } from 'antd'
-import Title from '~/component/Title'
+import { message, Spin } from 'antd'
 import urlCng from '~/config/url'
 import { getStore, setStore } from '~/utils'
 import fetch from '~/utils/fetch'
@@ -26,6 +25,7 @@ class LivecallDeatil extends Component {
     super(props)
     this.state = {
       data: {},
+      loading: true,
     }
   }
 
@@ -46,6 +46,7 @@ class LivecallDeatil extends Component {
 
       this.timer = setTimeout(() => {
         global.dhWeb.startTalk(this.deviceId)
+        this.setState({ loading: false })
       }, 3000)
     }
     try {
@@ -167,9 +168,9 @@ class LivecallDeatil extends Component {
     if (global.dhWeb) {
       this.closeAll()
     }
-    if (this.videoView) {
-      this.videoView.cloudloginout()
-    }
+    // if (this.videoView) {
+    //   this.videoView.cloudloginout()
+    // }
   }
 
   // 更新
@@ -222,12 +223,12 @@ class LivecallDeatil extends Component {
   }
 
   render() {
-    const { data } = this.state
+    const { data, loading } = this.state
     return (
       <div className="panel">
         <div id="LiveCallDeatail">
-          <Title title="事件处理" />
-          <div className="wrap-content">
+          {/* <Title title="事件处理" /> */}
+          <div className={`wrap-content ${loading ? 'hide' : 'block'}`}>
             {/* 右边内容 ${!loading ? 'show' : 'hide'} */}
             <div className="left">
               <div className="left-item">
@@ -294,7 +295,7 @@ class LivecallDeatil extends Component {
             />
           </div>
 
-          {/* {loading ? <Spin /> : null} */}
+          {loading ? <Spin /> : null}
         </div>
       </div>
     )
