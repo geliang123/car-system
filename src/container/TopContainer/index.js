@@ -2,7 +2,12 @@ import React, { Component } from 'react'
 import { Menu, Modal, Popover, message } from 'antd'
 import { Link, withRouter } from 'react-router-dom'
 import fetch from '~/utils/fetch'
-import { removeStore, setStore, getStore, getLocalStore } from '~/utils/index'
+import {
+  removeAllStore,
+  setStore,
+  getStore,
+  getLocalStore,
+} from '~/utils/index'
 import CheckComponent from './CheckComponent'
 import urlCng from '~/config/url'
 import './style.less'
@@ -50,6 +55,7 @@ class NavTop extends Component {
   }
 
   handleClick = (e) => {
+    setStore('key', e.key)
     this.setState({
       key: e.key,
     })
@@ -66,14 +72,14 @@ class NavTop extends Component {
 
   confirm = () => {
     this.props.history.push('/')
-    removeStore('token')
+    removeAllStore()
     this.ref.destroy()
     fetch({
       url: urlCng.logout,
       method: 'POST',
     }).then((res) => {
       if (res.code === 1) {
-        removeStore('token')
+        removeAllStore()
       }
     })
   }
@@ -144,6 +150,8 @@ class NavTop extends Component {
       status,
     } = this.state
     const mergeStatus = JSON.parse(getStore('status')) || status
+    console.log(getStore('key'))
+    const mergeKey = getStore('key') || key
     if (!Object.keys(this.user).length) return null
     return (
       <div className="top" id="TopContainer">
@@ -154,7 +162,7 @@ class NavTop extends Component {
         />
         <Menu
           onClick={this.handleClick}
-          selectedKeys={[key]}
+          selectedKeys={[mergeKey]}
           onOpenChange={this.openChange}
           mode="horizontal"
           className="menu-tab"

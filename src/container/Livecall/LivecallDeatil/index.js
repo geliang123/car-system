@@ -31,23 +31,24 @@ class LivecallDeatil extends Component {
 
   componentDidMount() {
     const { location } = this.props
+    const callDetailData = location && location.state && location.state.data
     const callDetailId =
-      (location &&
-        location.state &&
-        location.state.data &&
-        location.state.data.id) ||
-      getStore('callDetailId')
+      (callDetailData && callDetailData.id) || getStore('callDetailId')
     setStore('callDetailId', callDetailId)
-    this.countTimer = setInterval(this.countItem, 50)
     if (callDetailId) {
       this.getDetail(callDetailId)
-      this.deviceId = location.state.data.audioDeviceId
-      this.playVideo(location.state.data.videoDeviceId, location.state.data.audioDeviceId, true)
-
-      // this.timer = setTimeout(() => {
+      if (callDetailData.status !== 6) {
+        // 未提交状态不需要通话
+        // 未处理不需要语音
+        this.deviceId = location.state.data.audioDeviceId
+        this.playVideo(
+          location.state.data.videoDeviceId,
+          location.state.data.audioDeviceId,
+          true
+        )
         global.dhWeb.startTalk(this.deviceId)
-        this.setState({ loading: false })
-      // }, 3000)
+        this.countTimer = setInterval(this.countItem, 50)
+      }
     }
     try {
       this.videoView = new mainClass()
@@ -159,6 +160,7 @@ class LivecallDeatil extends Component {
       if (res.code === 1) {
         this.setState({
           data: res.result,
+          loading: false,
         })
       }
     })
