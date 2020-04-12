@@ -25,7 +25,7 @@ class LivecallDeatil extends Component {
     super(props)
     this.state = {
       data: {},
-      loading: true,
+      // loading: true,
     }
   }
 
@@ -73,10 +73,6 @@ class LivecallDeatil extends Component {
     allSecond = 0
     second = 0
     this.closeAll()
-    console.log('销毁页面')
-    if (this.videoView) {
-      this.videoView.cloudloginout()
-    }
   }
 
   countItem = () => {
@@ -163,21 +159,19 @@ class LivecallDeatil extends Component {
       if (res.code === 1) {
         this.setState({
           data: res.result,
-          loading: false,
+          // loading: false,
         })
       }
     })
   }
 
   close = () => {
-    console.log('关闭页面');
-    debugger
     if (global.dhWeb) {
       this.closeAll()
     }
-    if (this.videoView) {
-      this.videoView.cloudloginout()
-    }
+    // if (this.videoView) {
+    //   this.videoView.cloudloginout()
+    // }
   }
 
   // 更新
@@ -230,7 +224,9 @@ class LivecallDeatil extends Component {
   }
 
   render() {
-    const { data, loading } = this.state
+    // loading
+
+    const { data } = this.state
     return (
       <div className="panel">
         <div id="LiveCallDeatail">
@@ -250,8 +246,8 @@ class LivecallDeatil extends Component {
                 <div className="title">
                   {data.inOut === 2 ? '入场' : '出场'}车道监控
                 </div>
-                <div className={`videoDiv ${loading ? 'hide' : 'block'}`} />
-                {loading ? <Spin /> : null}
+                <div className="videoDiv" />
+                {/* {loading ? <Spin /> : null} */}
               </div>
               <div className="bottom-calling">
                 <span className="text">
