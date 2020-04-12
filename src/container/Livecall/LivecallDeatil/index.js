@@ -47,20 +47,27 @@ class LivecallDeatil extends Component {
         )
         global.dhWeb.startTalk(this.deviceId)
         this.countTimer = setInterval(this.countItem, 50)
+
+        // eslint-disable-next-line no-new
+        new Promise(() => {
+          // 做一些异步操作
+          setTimeout(() => {
+            try {
+              this.videoView = new mainClass()
+              const rst = this.videoView.cloudlogin(
+                'ezcloud.uniview.com',
+                '15755355045',
+                'loveyou520'
+              )
+              if (rst.code !== 1) {
+                message.warning(rst.msg)
+              }
+            } catch (e) {
+              message.error('监控初始化失败')
+            }
+          }, 8000)
+        })
       }
-    }
-    try {
-      this.videoView = new mainClass()
-      const rst = this.videoView.cloudlogin(
-        'ezcloud.uniview.com',
-        '15755355045',
-        'loveyou520'
-      )
-      if (rst.code !== 1) {
-        message.warning(rst.msg)
-      }
-    } catch (e) {
-      message.error('监控初始化失败')
     }
   }
 
