@@ -51,7 +51,7 @@ class LivecallDeatil extends Component {
         // eslint-disable-next-line no-new
         new Promise(() => {
           // 做一些异步操作
-          setTimeout(() => {
+          this.videoTimer = setTimeout(() => {
             try {
               this.videoView = new mainClass()
               const rst = this.videoView.cloudlogin(
@@ -74,13 +74,13 @@ class LivecallDeatil extends Component {
   componentWillUnmount() {
     if (this.timer) clearTimeout(this.timer)
     if (this.countTimer) clearInterval(this.countTimer)
+    if (this.videoTimer) clearTimeout(this.videoTimer)
     hour = 0
     minute = 0
     millisecond = 0
     allSecond = 0
     second = 0
     this.closeAll()
-    console.log('销毁页面')
     if (this.videoView) {
       this.videoView.cloudloginout()
     }
@@ -154,6 +154,9 @@ class LivecallDeatil extends Component {
 
   goback = () => {
     this.props.history.goBack()
+    setTimeout(() => {
+      window.location.reload()
+    }, 50)
   }
 
   dropChange = (e, key) => {
