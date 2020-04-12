@@ -35,7 +35,7 @@ class LivecallDeatil extends Component {
     const callDetailId =
       (callDetailData && callDetailData.id) || getStore('callDetailId')
     setStore('callDetailId', callDetailId)
-    if (callDetailId) {
+    if (callDetailData && callDetailId) {
       this.getDetail(callDetailId)
       if (callDetailData.status !== 6) {
         // 未提交状态不需要通话
@@ -229,7 +229,7 @@ class LivecallDeatil extends Component {
       <div className="panel">
         <div id="LiveCallDeatail">
           {/* <Title title="事件处理" /> */}
-          <div className={`wrap-content ${loading ? 'hide' : 'block'}`}>
+          <div className="wrap-content">
             {/* 右边内容 ${!loading ? 'show' : 'hide'} */}
             <div className="left">
               <div className="left-item">
@@ -244,18 +244,13 @@ class LivecallDeatil extends Component {
                 <div className="title">
                   {data.inOut === 2 ? '入场' : '出场'}车道监控
                 </div>
-                <div className="videoDiv" />
+                <div className={`videoDiv ${loading ? 'hide' : 'block'}`} />
+                {loading ? <Spin /> : null}
               </div>
               <div className="bottom-calling">
                 <span className="text">
-                  {data.status === 3 ? (
-                    <span>
-                      通话中:
-                      <span id="timetext" />
-                    </span>
-                  ) : (
-                    '通话结束'
-                  )}
+                  {data.status === 3 ? <span>通话中:</span> : '通话结束'}
+                  <span id="timetext" />
                 </span>
                 <span id="allSecond" style={{ display: 'none' }} />
                 <div className="calling-right">
@@ -293,8 +288,6 @@ class LivecallDeatil extends Component {
               goback={this.goback}
             />
           </div>
-
-          {loading ? <Spin /> : null}
         </div>
       </div>
     )
