@@ -251,7 +251,7 @@ class LivecallDeatil extends Component {
               </div>
               <div className="bottom-calling">
                 <span className="text">
-                  {data.status === 3 ? <span>通话中:</span> : '通话结束'}
+                  {data.status === 3 ? <span>通话中:</span> : '通话结束:'}
                   <span id="timetext" />
                 </span>
                 <span id="allSecond" style={{ display: 'none' }} />
