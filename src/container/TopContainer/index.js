@@ -134,6 +134,7 @@ class NavTop extends Component {
   }
 
   go = () => {
+    setStore('key', 'call_now')
     this.setState({
       key: 'call_now',
     })
