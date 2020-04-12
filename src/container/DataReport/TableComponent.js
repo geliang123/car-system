@@ -14,48 +14,48 @@ class TableComponent extends Component {
         title: 'ID',
         dataIndex: 'id',
         key: 'id',
-        sorter: (a, b) => a.id - b.id
+        // sorter: (a, b) => a.id - b.id,
       },
       {
         title: '坐席名称',
         dataIndex: 'userName',
-        key: 'userName'
+        key: 'userName',
       },
       {
         title: '当前状态',
         dataIndex: 'status',
-        key: 'status'
+        key: 'status',
       },
       {
         title: '总登录时长',
         dataIndex: 'loginCountSeconds',
         key: 'loginCountSeconds',
-        sorter: (a, b) => a.loginCountSeconds - b.loginCountSeconds
+        // sorter: (a, b) => a.loginCountSeconds - b.loginCountSeconds
       },
       {
         title: '总通话时长',
         dataIndex: 'callCountSeconds',
         key: 'callCountSeconds',
-        sorter: (a, b) => a.callCountSeconds - b.callCountSeconds
+        //  sorter: (a, b) => a.callCountSeconds - b.callCountSeconds
       },
       {
         title: '电话呼入数',
         dataIndex: 'callInCount',
         key: 'callInCount',
-        sorter: (a, b) => a.callInCount - b.callInCount
+        // sorter: (a, b) => a.callInCount - b.callInCount
       },
       {
         title: '电话应答数',
         dataIndex: 'callEdCount',
         key: 'callEdCount',
-        sorter: (a, b) => a.callEdCount - b.callEdCount
+        // sorter: (a, b) => a.callEdCount - b.callEdCount
       },
       {
         title: '应答率',
         dataIndex: 'callRate',
         key: 'callRate',
-        sorter: (a, b) => a.callRate - b.callRate
-      }
+        sorter: (a, b) => a.callRate - b.callRate,
+      },
     ]
   }
 
@@ -73,7 +73,7 @@ class TableComponent extends Component {
             total: data.total,
             pageSize: data.pageSize,
             current: data.current,
-            onChange: this.props.handlePageChange
+            onChange: this.props.handlePageChange,
           }}
         />
         <div className="total">
