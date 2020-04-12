@@ -91,7 +91,6 @@ class Livecall extends Component {
     const userInfo = JSON.parse(getLocalStore('userInfo'))
     this.getList() // 列表数据
     if (!global.cloudWebsocket) {
-      // this.audioLoginSuccess = false;
       global.cloudWebsocket = new WebSocket(urlCng.taskDispatch + userInfo.id)
 
       // 连接成功建立的回调方法
@@ -115,14 +114,10 @@ class Livecall extends Component {
       global.cloudWebsocket.onmessage = (message) => {
         console.log(
           `cloudWebsocket---------------------${JSON.stringify(
-            message.data
+            message
           )}----------------------`
         )
-        if(message.data.method == 'task.reject.fail') {
-          message.warning('暂无其他客服在线，请继续处理')
-        } else (
-          this.getList()
-        )
+        this.getList()
       }
       global.dhWeb.onDeviceList = (mess) => {
         this.onDeviceList(mess)
@@ -242,10 +237,9 @@ class Livecall extends Component {
         global.cloudWebsocket.send(
           '{"method":"cloud.notify","params":{"heartlive":"I am here!"}}'
         )
-      }, 15000)
+      }, 10000)
       global.cloudWebsocket.send(JSON.stringify(data))
       this.count = 0
-      // this.audioLoginSuccess=ture
     } else {
       global.dhWeb.logout(params.loginHandle)
       this.count = this.count + 1
@@ -285,7 +279,6 @@ class Livecall extends Component {
   noOperate = (item) => {
     const data = `{"callLogId":${item.id},"params":{},"method":"task.reject"}`
     global.cloudWebsocket.send(data)
-    this.getList()
   }
 
   // 挂断

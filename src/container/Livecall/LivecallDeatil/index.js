@@ -39,7 +39,6 @@ class LivecallDeatil extends Component {
       this.getDetail(callDetailId)
       if (callDetailData.status !== 6) {
         // 未提交状态不需要通话
-        // 未处理不需要语音
         this.deviceId = location.state.data.audioDeviceId
         this.playVideo(
           location.state.data.videoDeviceId,
@@ -237,9 +236,7 @@ class LivecallDeatil extends Component {
                 <div className="title">
                   {data.inOut === 2 ? '入场' : '出场'}车辆监控
                 </div>
-                <div
-                  className={`ocxStyle ${data.inOut == 2 ? 'block' : 'none'}`}
-                >
+                <div className="ocxStyle">
                   <div id="playerContainer" />
                 </div>
               </div>

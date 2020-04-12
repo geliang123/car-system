@@ -51,6 +51,7 @@ class RightComponent extends Component {
     this.strTime = ''
     this.flag = false
     this.selectCarObj = {}
+    this.operateType = ''
   }
 
   componentDidMount() {
@@ -99,7 +100,7 @@ class RightComponent extends Component {
   getProblemList = () => {
     fetch({
       url: urlCng.callProblem,
-    }).then((res) => {
+    }).then(res => {
       if (res.code === 1) {
         const data = []
         for (let i = 0; i < res.result.length; i++) {
@@ -121,7 +122,7 @@ class RightComponent extends Component {
     })
   }
 
-  handleChange = (v) => {
+  handleChange = v => {
     this.setState({
       comments: v.target.value,
     })
@@ -129,8 +130,13 @@ class RightComponent extends Component {
 
   // 提交
   submit = () => {
+    if (!this.operateType) {
+      message.warning('请选择处理方式')
+      return
+    }
     if (!Object.keys(this.selectCarObj).length) {
       message.warning('未检索车牌不能提交')
+      return
     }
     const { comments, questionSelected } = this.state
     const { data } = this.props
@@ -146,6 +152,7 @@ class RightComponent extends Component {
         id: data.id,
         problemId: questionSelected,
         status: 4,
+        operatedType: this.operateType,
         operatedSum: operatedSum && parseInt(operatedSum),
       },
       this.selectCarObj
@@ -155,7 +162,7 @@ class RightComponent extends Component {
         url: urlCng.callUpdate,
         method: 'POST',
         data: params,
-      }).then((res) => {
+      }).then(res => {
         if (res.code === 1) {
           message.success('提交成功')
           this.props.goback()
@@ -177,7 +184,7 @@ class RightComponent extends Component {
   filter = () => {
     fetch({
       url: urlCng.callUpdate,
-    }).then((res) => {
+    }).then(res => {
       if (res.code === 1) {
         message.success('提交成功')
       } else {
@@ -188,11 +195,12 @@ class RightComponent extends Component {
 
   // 入场
   open = () => {
+    this.operateType = 1 // 免费开闸
     if (!this.flag) {
       fetch({
         url: urlCng.open,
         method: 'POST',
-      }).then((res) => {
+      }).then(res => {
         if (res.code === 1) {
           this.flag = true
           message.success('开闸成功')
@@ -203,11 +211,16 @@ class RightComponent extends Component {
     }
   }
 
+  // 现场处理
+  operateCurrent = () => {
+    this.operateType = 3
+  }
+
   // 检索
   search = () => {
     fetch({
       url: urlCng.searchCar,
-    }).then((res) => {
+    }).then(res => {
       if (res.code === 1) {
         this.setState({
           visible: true,
@@ -225,7 +238,7 @@ class RightComponent extends Component {
     })
   }
 
-  selectCarItem = (item) => {
+  selectCarItem = item => {
     this.selectCarObj = item
     this.handleCancel()
   }
@@ -260,7 +273,7 @@ class RightComponent extends Component {
           <SelectMenu
             data={dropData}
             className="select-type"
-            change={(e) => this.dropChange(e, 'type')}
+            change={e => this.dropChange(e, 'type')}
             defaultValue={type}
             style={{ width: '55.5pt', marginRight: '5pt' }}
           />
@@ -269,7 +282,7 @@ class RightComponent extends Component {
               placeholder="请输入车牌关键词"
               className="car-num"
               value={carNumber}
-              onChange={(e) => this.changeValue(e, 'carNumber')}
+              onChange={e => this.changeValue(e, 'carNumber')}
             />
           ) : (
             <LocaleProvider locale={zh_CN}>
@@ -317,7 +330,9 @@ class RightComponent extends Component {
               cancelText="取消"
               style={{ width: '200px' }}
             >
-              <div className="op-btn operate">现场处理</div>
+              <div className="op-btn operate" onClick={this.operateCurrent}>
+                现场处理
+              </div>
             </Popconfirm>
           </div>
         </div>
@@ -329,7 +344,7 @@ class RightComponent extends Component {
               data={probleList}
               style={{ background: '#eee', width: '85%' }}
               className="detailDrop"
-              change={(e) => this.dropChange(e, 'questionSelected')}
+              change={e => this.dropChange(e, 'questionSelected')}
               defaultValue={questionSelected}
             />
           </div>
@@ -337,7 +352,7 @@ class RightComponent extends Component {
             placeholder="请描述问题(4-100)"
             autosize={{ minRows: 3, maxRows: 6 }}
             value={comments}
-            onChange={(v) => this.handleChange(v)}
+            onChange={v => this.handleChange(v)}
             maxLength="100"
             minLength="4"
             style={{

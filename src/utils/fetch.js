@@ -3,7 +3,7 @@ import { message } from 'antd'
 import { getLocalStore } from '~/utils/index'
 // respone拦截器 判断登陆失效
 axios.interceptors.response.use(
-  (response) => {
+  response => {
     /**
      * 下面的注释为通过response自定义code来标示请求状态，当code返回如下情况为权限有问题，登出并返回到登录页
      * 如通过xmlhttprequest 状态码标识 逻辑可写在下面error中
@@ -19,7 +19,7 @@ axios.interceptors.response.use(
       return response
     }
   },
-  (error) => Promise.reject(error)
+  error => Promise.reject(error)
 )
 const fetch = ({ url, params, method = 'GET', data }) => {
   const options = {
@@ -38,8 +38,8 @@ const fetch = ({ url, params, method = 'GET', data }) => {
     }
   }
   return axios(options)
-    .then((res) => res.data)
-    .catch((err) => {
+    .then(res => res.data)
+    .catch(err => {
       console.warn(err)
     })
 }
