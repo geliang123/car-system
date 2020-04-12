@@ -284,6 +284,7 @@ class Livecall extends Component {
     }
     const data = `{"callLogId":${item.id},"params":{},"method":"task.reject"}`
     global.cloudWebsocket.send(data)
+    this.getList()
   }
 
   // 挂断
