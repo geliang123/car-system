@@ -80,6 +80,10 @@ class LivecallDeatil extends Component {
     allSecond = 0
     second = 0
     this.closeAll()
+    console.log('销毁页面')
+    if (this.videoView) {
+      this.videoView.cloudloginout()
+    }
   }
 
   countItem = () => {
