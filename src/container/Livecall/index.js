@@ -91,7 +91,7 @@ class Livecall extends Component {
     const userInfo = JSON.parse(getLocalStore('userInfo'))
     this.getList() // 列表数据
     if (!global.cloudWebsocket) {
-      // this.audioLoginSuccess = false;
+      this.audioLoginSuccess=false
       global.cloudWebsocket = new WebSocket(urlCng.taskDispatch + userInfo.id)
 
       // 连接成功建立的回调方法
@@ -112,13 +112,14 @@ class Livecall extends Component {
         })
         this.getList() // 列表数据
       }
-      global.cloudWebsocket.onmessage = (message) => {
+      global.cloudWebsocket.onmessage = (mess) => {
         console.log(
           `cloudWebsocket---------------------${JSON.stringify(
-            message.data
+            mess.data
           )}----------------------`
         )
-        if(message.data.method == 'task.reject.fail') {
+        const msg = JSON.parse(mess.data)
+        if(msg.method == 'task.reject.fail') {
           message.warning('暂无其他客服在线，请继续处理')
         } else (
           this.getList()
@@ -245,7 +246,7 @@ class Livecall extends Component {
       }, 15000)
       global.cloudWebsocket.send(JSON.stringify(data))
       this.count = 0
-      // this.audioLoginSuccess=ture
+      this.audioLoginSuccess = true
     } else {
       global.dhWeb.logout(params.loginHandle)
       this.count = this.count + 1
@@ -283,6 +284,9 @@ class Livecall extends Component {
 
   // 暂不处理
   noOperate = (item) => {
+    if(!this.audioLoginSuccess) {
+      message.warning('正在连接语音设备，请稍后')
+    } 
     const data = `{"callLogId":${item.id},"params":{},"method":"task.reject"}`
     global.cloudWebsocket.send(data)
     this.getList()
@@ -290,6 +294,9 @@ class Livecall extends Component {
 
   // 挂断
   hangUp = (item, status) => {
+    if(!this.audioLoginSuccess) {
+      message.warning('正在连接语音设备，请稍后')
+    } 
     this.updateList(item, status)
     this.closeAll(item.audioDeviceId)
   }
@@ -305,6 +312,11 @@ class Livecall extends Component {
 
   // 接听
   online = (item, status) => {
+
+    if(!this.audioLoginSuccess) {
+      message.warning('正在连接语音设备，请稍后')
+    } 
+  
     const { data } = this.state
     this.flagOnline = false
     data.map((obj) => {
