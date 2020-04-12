@@ -54,11 +54,11 @@ class LivecallDeatil extends Component {
           this.videoTimer = setTimeout(() => {
             try {
               this.videoView = new mainClass()
-              const rst = this.videoView.cloudlogin(
-                'ezcloud.uniview.com',
-                '15755355045',
-                'loveyou520'
-              )
+              // const rst = this.videoView.cloudlogin(
+              //   'ezcloud.uniview.com',
+              //   '15755355045',
+              //   'loveyou520'
+              // )
               if (rst.code !== 1) {
                 message.warning(rst.msg)
               }
