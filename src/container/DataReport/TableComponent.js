@@ -27,13 +27,13 @@ class TableComponent extends Component {
         key: 'status',
       },
       {
-        title: '总登录时长',
+        title: '总登录时长(小时)',
         dataIndex: 'loginCountSeconds',
         key: 'loginCountSeconds',
         // sorter: (a, b) => a.loginCountSeconds - b.loginCountSeconds
       },
       {
-        title: '总通话时长',
+        title: '总通话时长(小时)',
         dataIndex: 'callCountSeconds',
         key: 'callCountSeconds',
         //  sorter: (a, b) => a.callCountSeconds - b.callCountSeconds

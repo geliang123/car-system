@@ -134,10 +134,10 @@ class NavTop extends Component {
   }
 
   go = () => {
-    this.props.history.push('/call_now')
     this.setState({
       key: 'call_now',
     })
+    this.props.history.push('/call_now')
   }
 
   render() {
@@ -150,7 +150,6 @@ class NavTop extends Component {
       status,
     } = this.state
     const mergeStatus = JSON.parse(getStore('status')) || status
-    console.log(getStore('key'))
     const mergeKey = getStore('key') || key
     if (!Object.keys(this.user).length) return null
     return (
