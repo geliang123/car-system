@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable guard-for-in */
 import React, { Component } from 'react'
 import ReactEcharts from 'echarts-for-react'
 import { hot } from 'react-hot-loader/root'
