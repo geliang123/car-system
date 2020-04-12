@@ -17,7 +17,8 @@ class Livecall extends Component {
     super(props)
     this.state = {
       data: [],
-      searchContent: '',
+      userName: '',
+      realName: '',
       current: 1, // 当前页
       total: 0,
       visible: false,
@@ -82,9 +83,15 @@ class Livecall extends Component {
     this.getList()
   }
 
-  changeValue = e => {
+  changeUserName = e => {
     this.setState({
-      searchContent: e.target.value
+      userName: e.target.value
+    })
+  }
+
+  changeRealName = e => {
+    this.setState({
+      realName: e.target.value
     })
   }
 
@@ -97,10 +104,13 @@ class Livecall extends Component {
   }
 
   getList = () => {
-    const { current, searchContent } = this.state // &userName=${searchContent}
+    const { current, userName, realName } = this.state // &userName=${searchContent}
     let url = `${urlCng.accountList}?pageSize=${pageSize}&curPage=${current}`
-    if (searchContent) {
-      url += `&userName=${searchContent}`
+    if (userName) {
+      url += `&userName=${userName}`
+    }
+    if (realName) {
+      url += `&realName=${realName}`
     }
     fetch({
       url
@@ -223,7 +233,7 @@ class Livecall extends Component {
   }
 
   render() {
-    const { data, searchContent, current, total, visible, loading } = this.state
+    const { data, userName, realName, current, total, visible, loading } = this.state
     return (
       <div className="panel">
         <div id="Account">
@@ -235,8 +245,14 @@ class Livecall extends Component {
               <Input
                 className="search-content"
                 placeholder="请输入账户关键词"
-                value={searchContent}
-                onChange={e => this.changeValue(e, 'username')}
+                value={userName}
+                onChange={e => this.changeUserName(e, 'username')}
+              />
+              <Input
+                className="search-content"
+                placeholder="请输入姓名关键词"
+                value={realName}
+                onChange={e => this.changeRealName(e, 'realname')}
               />
               <Button className="search-btn" onClick={this.search}>
                 搜索
