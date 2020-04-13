@@ -250,7 +250,7 @@ class LivecallDeatil extends Component {
             <div className="left">
               <div className="left-item">
                 <div className="title">
-                  {data.inOut === 2 ? '入场' : '出场'}车道监控
+                  {data.inOut === 2 ? '入场' : '出场'}车辆监控
                 </div>
                 <div className="ocxStyle">
                   <div id="playerContainer" />
