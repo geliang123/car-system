@@ -48,25 +48,26 @@ class LivecallDeatil extends Component {
         global.dhWeb.startTalk(this.deviceId)
         this.countTimer = setInterval(this.countItem, 50)
 
+        try {
+          this.videoView = new mainClass()
+          const rst = this.videoView.fasterLogin(
+            '302h5k6810.qicp.vip',
+            '23319',
+            'admin',
+            '123456'
+          )
+          if (rst.code !== 1) {
+            message.warning(rst.msg)
+          }
+        } catch (e) {
+          message.error('监控初始化失败')
+        }
         // eslint-disable-next-line no-new
-        new Promise(() => {
-          // 做一些异步操作
-          this.videoTimer = setTimeout(() => {
-            try {
-              this.videoView = new mainClass()
-              // const rst = this.videoView.cloudlogin(
-              //   'ezcloud.uniview.com',
-              //   '15755355045',
-              //   'loveyou520'
-              // )
-              if (rst.code !== 1) {
-                message.warning(rst.msg)
-              }
-            } catch (e) {
-              message.error('监控初始化失败')
-            }
-          }, 8000)
-        })
+        // new Promise(() => {
+        //   // 做一些异步操作
+        //   this.videoTimer = setTimeout(() => {
+        //   }, 8000)
+        // })
       }
     }
   }
@@ -82,7 +83,10 @@ class LivecallDeatil extends Component {
     second = 0
     this.closeAll()
     if (this.videoView) {
-      this.videoView.cloudloginout()
+      const rst = this.videoView.fasterlogout()
+      if (rst.code !== 1) {
+        message.warning(rst.msg)
+      }
     }
   }
 
