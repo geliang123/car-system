@@ -23,7 +23,7 @@ class Add extends Component {
     eventObject.accountEvent.remove(this.save)
   }
 
-  save = ref => {
+  save = (ref) => {
     this.props.form.validateFields((err, values) => {
       const { op, data } = this.props
       const params =
@@ -33,8 +33,8 @@ class Add extends Component {
         fetch({
           url: urlCng.accountAdd,
           method: 'POST',
-          data: params
-        }).then(res => {
+          data: params,
+        }).then((res) => {
           if (res.code === 1) {
             this.props.updateData()
             message.success('操作成功')
@@ -49,7 +49,7 @@ class Add extends Component {
   render() {
     const formItemLayout = {
       labelCol: { span: 6 },
-      wrapperCol: { span: 14 }
+      wrapperCol: { span: 14 },
     }
     const { getFieldDecorator } = this.props.form
     let { data } = this.props
@@ -59,7 +59,7 @@ class Add extends Component {
         <Form onSubmit={this.handleSubmit}>
           <FormItem {...formItemLayout} label="账号角色">
             {getFieldDecorator('roleId', {
-              initialValue: data.roleId || accountArr[0].id
+              initialValue: data.roleId || accountArr[0].id,
             })(
               <Select>
                 {accountArr.map((item, i) => (
@@ -72,7 +72,7 @@ class Add extends Component {
           </FormItem>
           <FormItem {...formItemLayout} label="用  户  名">
             {getFieldDecorator('userName', {
-              initialValue: data.userName
+              initialValue: data.userName,
             })(<Input placeholder="请输入用户名" allowClear />)}
           </FormItem>
           <FormItem {...formItemLayout} label="密码">
@@ -81,18 +81,24 @@ class Add extends Component {
               rules: [
                 {
                   min: 4,
-                  message: '密码不能少于4个字符'
+                  message: '密码不能少于4个字符',
                 },
                 {
                   max: 18,
-                  message: '密码不能大于18个字符'
-                }
-              ]
+                  message: '密码不能大于18个字符',
+                },
+              ],
             })(<Input type="password" placeholder="请输入密码" allowClear />)}
           </FormItem>
           <FormItem {...formItemLayout} label="姓名">
             {getFieldDecorator('realName', {
-              initialValue: data.realName
+              initialValue: data.realName,
+              rules: [
+                {
+                  required: true,
+                  message: '必填',
+                },
+              ],
             })(<Input placeholder="请输入姓名" allowClear />)}
           </FormItem>
           <FormItem {...formItemLayout} label="手机">
@@ -100,21 +106,19 @@ class Add extends Component {
               initialValue: data.tel,
               rules: [
                 {
+                  required: true,
+                  message: '必填',
+                },
+                {
                   pattern: /^1[34578]\d{9}$/,
-                  message: '格式不正确'
-                }
-              ]
+                  message: '格式不正确',
+                },
+              ],
             })(<Input placeholder="请输入手机号" allowClear />)}
           </FormItem>
           <FormItem {...formItemLayout} label="邮箱">
             {getFieldDecorator('email', {
               initialValue: data.email,
-              rules: [
-                {
-                  required: true,
-                  message: '必填'
-                }
-              ]
             })(<Input placeholder="请输入邮箱" allowClear />)}
           </FormItem>
         </Form>

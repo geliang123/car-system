@@ -3,7 +3,7 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-undef */
 /* eslint-disable array-callback-return */
-import React, { Component } from 'react'
+import React, { Component, isValidElement } from 'react'
 import { Table, message } from 'antd'
 import { hot } from 'react-hot-loader/root'
 import { withRouter } from 'react-router-dom'
@@ -90,6 +90,9 @@ class Livecall extends Component {
   componentDidMount() {
     const userInfo = JSON.parse(getLocalStore('userInfo'))
     this.getList() // 列表数据
+    this.timerGetList = window.setInterval(() => {
+      this.getList() // 列表数据
+    }, 10000)
     if (!global.cloudWebsocket) {
       this.audioLoginSuccess = false
       global.cloudWebsocket = new WebSocket(urlCng.taskDispatch + userInfo.id)
@@ -152,6 +155,7 @@ class Livecall extends Component {
         }
       }
     }
+
     // 停车场下拉
     //  this.getParkPos()
   }
@@ -162,6 +166,9 @@ class Livecall extends Component {
     }
     if (this.timerSendMessage) {
       window.clearInterval(this.timerSendMessage)
+    }
+    if (this.timerGetList) {
+      window.clearInterval(this.timerGetList)
     }
     this.count = 0
   }
@@ -307,20 +314,19 @@ class Livecall extends Component {
 
   // 接听
   online = (item, status) => {
-    if (!this.audioLoginSuccess) {
-      message.warning('正在连接语音设备，请稍后')
-    }
-
     const { data } = this.state
     this.flagOnline = false
-    data.map((obj) => {
-      if (obj.status === 3) {
-        this.flagOnline = true
-      }
-    })
+    // data.map(obj => {
+    //   if (obj.status === 3 || obj.status === 6) {
+    //     this.flagOnline = true
+    //   }
+    // })
     if (this.flagOnline) {
-      message.warning('有通话中的状态不能接听')
+      message.warning('有通话中或者未提交状态不能接听')
       return
+    }
+    if (!this.audioLoginSuccess) {
+      message.warning('正在连接语音设备，请稍后')
     }
     this.updateList(item, status)
     this.answer(item)
@@ -338,7 +344,6 @@ class Livecall extends Component {
     }).then((res) => {
       if (res.code === 1) {
         this.getList()
-        message.success('操作成功')
       } else {
         message.error(res.msg)
       }
@@ -444,29 +449,7 @@ class Livecall extends Component {
     return (
       <div className="panel">
         <div id="liveCall">
-          {/* <div className="search-wrap">
-            <div>
-              <SelectMenu
-                data={parkList}
-                change={e => this.dropChange(e, 'selected')}
-                defaultValue={selected}
-              />
-              <Button className="filter" onClick={this.filter}>
-                筛选
-              </Button>
-            </div>
-            <div className="search">
-              <Input
-                className="search-content"
-                placeholder="请输入车牌号关键词"
-                value={searchContent}
-                onChange={e => this.changeValue(e, 'username')}
-              />
-              <Button className="search-btn" onClick={this.filter}>
-                搜索
-              </Button>
-            </div>
-          </div> */}
+          <div className="search-wrap" />
           {/* 表格数据 */}
           <Table
             dataSource={data}

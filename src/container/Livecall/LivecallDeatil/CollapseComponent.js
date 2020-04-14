@@ -23,7 +23,7 @@ class CarNumber extends Component {
     })
   }
 
-  renderHeader = item => {
+  renderHeader = (item) => {
     const { type } = this.props
     if (!item) return <span />
     return (
@@ -45,7 +45,7 @@ class CarNumber extends Component {
   }
 
   // 已确认车辆
-  submit = item => {
+  submit = (item) => {
     // 更新的车牌 this[`textInput${item.id}`].state.value
     // fetch({
     //   url: urlCng.updateCarNum,
@@ -68,13 +68,13 @@ class CarNumber extends Component {
       parkName: item.parking_name,
       payAmount: item.paid_amount,
       carImgUrlIn: item.picture_url_in,
-      carImgUrlOut: item.picture_url_out
+      carImgUrlOut: item.picture_url_out,
     }
 
     this.props.selectCarItem && this.props.selectCarItem(updataItem)
   }
 
-  getContent = item => {
+  getContent = (item) => {
     const { edit } = this.state
     return (
       <div className="detail-content">
@@ -141,7 +141,7 @@ class CarNumber extends Component {
     const { type, str } = this.props
     const { data } = this.state
     return (
-      <div className="panel">
+      <div className="panel dialog-panel">
         {type === 'car' ? (
           <div className="info">车牌关键字：{str}</div>
         ) : (
