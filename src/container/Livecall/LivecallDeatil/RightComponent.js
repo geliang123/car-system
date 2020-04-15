@@ -55,29 +55,41 @@ class RightComponent extends Component {
   }
 
   componentDidMount() {
-    const { data } = this.props
-    const m1 = moment(data.createTimeStr)
-    const m2 = moment()
-    this.duration = m2.diff(m1, 'seconds')
     this.getProblemList()
     this.updateSystemTime()
+    this.dataObject = this.props.data
+    this.updateDuration()
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.data.id !== this.props.id) {
-      const m1 = moment(nextProps.data.createTimeStr)
-      const m2 = moment()
-      this.duration = m2.diff(m1, 'seconds')
-      this.setState({
-        carNumber: nextProps.data.carNum,
-        questionSelected: nextProps.data.problemId,
-      })
-      this.updateSystemTime()
-    }
+    this.dataObject = nextProps.data
+    this.updateDuration()
+    this.setState({
+      carNumber: nextProps.data.carNum,
+      questionSelected: nextProps.data.problemId,
+    })
+    this.updateSystemTime()
   }
 
   componentWillUnmount() {
     if (this.updateTimer) clearTimeout(this.updateTimer)
+    if (this.interValDuration) clearTimeout(this.interValDuration)
+  }
+
+  updateDuration = () => {
+    console.log(this.dataObject)
+    if (Object.keys(this.dataObject).length) {
+      if (this.interValDuration) clearTimeout(this.interValDuration)
+      const p = document.getElementById('duration')
+      if (p) {
+        const m1 = moment(this.dataObject.createTimeStr)
+        const m2 = moment()
+        const duration = m2.diff(m1, 'seconds')
+        p.innerText = `${duration}s`
+        p.style.color = getColor(duration)
+        this.interValDuration = window.setTimeout(this.updateDuration, 1000)
+      }
+    }
   }
 
   updateSystemTime = () => {
@@ -307,11 +319,9 @@ class RightComponent extends Component {
         </div>
         {/* 操作按钮 */}
         <div className="wrap-info">
-          <div className="info-item">
+          <div className="info-item" style={{ minWidth: '140px' }}>
             <p className="text">等待时长</p>
-            <p className="duration" style={{ color: getColor(this.duration) }}>
-              {this.duration}s
-            </p>
+            <p className="duration" id="duration" />
           </div>
           <div className="info-item">
             <Popconfirm

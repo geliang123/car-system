@@ -9,16 +9,12 @@ import React, { Component } from 'react'
 import '../../../less/normal.less'
 import './style.less'
 import { message } from 'antd'
+import moment from 'moment'
 import urlCng from '~/config/url'
 import { getStore, setStore } from '~/utils'
 import fetch from '~/utils/fetch'
 import RightComponent from './RightComponent'
 
-let hour = 0
-let minute = 0
-let second = 0 // 时 分 秒
-let millisecond = 0 // 毫秒
-let allSecond = 0
 @hot
 class LivecallDeatil extends Component {
   constructor(props) {
@@ -27,6 +23,11 @@ class LivecallDeatil extends Component {
       data: {},
       // loading: true,
     }
+    this.hour = 0
+    this.minute = 0
+    this.second = 0 // 时 分 秒
+    this.millisecond = 0 // 毫秒
+    this.allSecond = 0
   }
 
   componentDidMount() {
@@ -46,7 +47,6 @@ class LivecallDeatil extends Component {
           true
         )
         global.dhWeb.startTalk(this.deviceId)
-        this.countTimer = setInterval(this.countItem, 50)
 
         try {
           this.videoView = new mainClass()
@@ -76,11 +76,11 @@ class LivecallDeatil extends Component {
     if (this.timer) clearTimeout(this.timer)
     if (this.countTimer) clearInterval(this.countTimer)
     if (this.videoTimer) clearTimeout(this.videoTimer)
-    hour = 0
-    minute = 0
-    millisecond = 0
-    allSecond = 0
-    second = 0
+    this.hour = 0
+    this.minute = 0
+    this.second = 0 // 时 分 秒
+    this.millisecond = 0 // 毫秒
+    this.allSecond = 0
     this.closeAll()
     if (this.videoView) {
       const rst = this.videoView.fasterlogout()
@@ -92,26 +92,26 @@ class LivecallDeatil extends Component {
 
   countItem = () => {
     // 计时
-    millisecond += 50
-    if (millisecond >= 1000) {
-      millisecond = 0
-      second += 1
-      allSecond += 1
+    this.millisecond += 50
+    if (this.millisecond >= 1000) {
+      this.millisecond = 0
+      this.second += 1
+      this.allSecond += 1
     }
-    if (second >= 60) {
-      second = 0
-      minute += 1
+    if (this.second >= 60) {
+      this.second = 0
+      this.minute += 1
     }
 
-    if (minute >= 60) {
-      minute = 0
-      hour += 1
+    if (this.minute >= 60) {
+      this.minute = 0
+      this.hour += 1
     }
     if (document.getElementById('timetext')) {
       document.getElementById(
         'timetext'
-      ).innerHTML = `${hour}时${minute}分${second}秒`
-      document.getElementById('allSecond').innerHTML = allSecond
+      ).innerHTML = `${this.hour}时${this.minute}分${this.second}秒`
+      document.getElementById('allSecond').innerHTML = this.allSecond
     }
   }
 
@@ -174,10 +174,35 @@ class LivecallDeatil extends Component {
       url,
     }).then((res) => {
       if (res.code === 1) {
-        this.setState({
-          data: res.result,
-          // loading: false,
-        })
+        this.setState(
+          {
+            data: res.result,
+          },
+          () => {
+            if (res.result.status === 3) {
+              // 初始化 通话时间
+              const m1 = moment(res.result.modifyTimeStr)
+              const m2 = moment()
+              this.second = m2.diff(m1, 'seconds')
+              this.hour = m2.diff(m1, 'hour')
+              this.minute = m2.diff(m1, 'minute')
+              this.allSecond = m2.diff(m1, 'seconds')
+              // 计时器 通话中时间计时
+              this.countTimer = setInterval(this.countItem, 50)
+            }
+            if (res.result.status === 6) {
+              const x = res.result.operatedSum
+              const tempTime = moment.duration(parseInt(x * 1000))
+              if (document.getElementById('timetext')) {
+                document.getElementById(
+                  'timetext'
+                ).innerHTML = `${tempTime.hours()}时${tempTime.minutes()}分${tempTime.seconds()}秒`
+                document.getElementById('allSecond').innerHTML =
+                  res.result.operatedSum
+              }
+            }
+          }
+        )
       }
     })
   }
@@ -198,7 +223,7 @@ class LivecallDeatil extends Component {
       data: {
         id: item.id,
         status,
-        operatedSum: allSecond,
+        operatedSum: this.allSecond,
       },
     }).then((res) => {
       if (res.code === 1) {
@@ -233,7 +258,6 @@ class LivecallDeatil extends Component {
 
   render() {
     // loading
-
     const { data } = this.state
     return (
       <div className="panel">

@@ -316,11 +316,11 @@ class Livecall extends Component {
   online = (item, status) => {
     const { data } = this.state
     this.flagOnline = false
-    // data.map(obj => {
-    //   if (obj.status === 3 || obj.status === 6) {
-    //     this.flagOnline = true
-    //   }
-    // })
+    data.map((obj) => {
+      if (obj.status === 3 || obj.status === 6) {
+        this.flagOnline = true
+      }
+    })
     if (this.flagOnline) {
       message.warning('有通话中或者未提交状态不能接听')
       return
