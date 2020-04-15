@@ -64,7 +64,7 @@ class RightComponent extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.data.carNum !== this.props.carNum) {
+    if (nextProps.data.id !== this.props.id) {
       const m1 = moment(nextProps.data.createTimeStr)
       const m2 = moment()
       this.duration = m2.diff(m1, 'seconds')
@@ -288,8 +288,8 @@ class RightComponent extends Component {
             <LocaleProvider locale={zh_CN}>
               <RangePicker
                 allowClear
-                showTime={{ format: 'HH:mm' }}
-                format="YYYY/MM/DD HH:mm"
+                showTime={{ format: 'HH' }}
+                format="YYYY/MM/DD HH"
                 onChange={this.onChangeDate}
                 style={{ width: '310px' }}
                 placeholder={['开始时间', '结束时间']}
@@ -320,7 +320,9 @@ class RightComponent extends Component {
               okText="确定"
               cancelText="取消"
             >
-              <div className="op-btn in">入场开闸</div>
+              <div className="op-btn in">
+                {data.inOut === 2 ? '入场' : '出场'}开闸
+              </div>
             </Popconfirm>
           </div>
           <div className="info-item">

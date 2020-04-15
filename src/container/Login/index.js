@@ -14,15 +14,21 @@ import md5 from 'md5'
 class Login extends Component {
   state = {
     username: '',
-    password: ''
+    password: '',
   }
 
   componentDidMount() {}
 
   changeValue = (e, key) => {
     this.setState({
-      [key]: e.target.value
+      [key]: e.target.value,
     })
+  }
+
+  onkeydown = (e) => {
+    if (e.keyCode === 13) {
+      this.login()
+    }
   }
 
   login = () => {
@@ -40,9 +46,9 @@ class Login extends Component {
       method: 'POST',
       data: {
         username,
-        password // : md5(password)
-      }
-    }).then(res => {
+        password, // : md5(password)
+      },
+    }).then((res) => {
       if (res.code === 1) {
         setLocalStore('token', res.result.token)
         setLocalStore('userInfo', res.result.user)
@@ -51,6 +57,10 @@ class Login extends Component {
         message.error(res.msg)
       }
     })
+  }
+
+  componentDidUpdate() {
+    document.addEventListener('keydown', this.onkeydown)
   }
 
   render() {
@@ -63,7 +73,7 @@ class Login extends Component {
             className="username"
             placeholder="账号"
             value={username}
-            onChange={e => this.changeValue(e, 'username')}
+            onChange={(e) => this.changeValue(e, 'username')}
             prefix={<Icon type="user" style={{ color: '#333333' }} />}
           />
 
@@ -71,7 +81,7 @@ class Login extends Component {
             className="password"
             placeholder="密码"
             value={password}
-            onChange={e => this.changeValue(e, 'password')}
+            onChange={(e) => this.changeValue(e, 'password')}
             prefix={<Icon type="lock" style={{ color: '#333333' }} />}
             type="password"
           />

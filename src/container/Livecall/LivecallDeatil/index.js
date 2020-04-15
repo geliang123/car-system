@@ -8,7 +8,7 @@ import { hot } from 'react-hot-loader/root'
 import React, { Component } from 'react'
 import '../../../less/normal.less'
 import './style.less'
-import { message, Spin } from 'antd'
+import { message } from 'antd'
 import urlCng from '~/config/url'
 import { getStore, setStore } from '~/utils'
 import fetch from '~/utils/fetch'
@@ -139,8 +139,7 @@ class LivecallDeatil extends Component {
       $('#talk').addClass('talking')
       $('.talking').css('background', '#aaa')
       // 播放联动
-      const parentId = $(`#device_${audioDeviceId}`).attr('parentId')
-      const groupDevices = $(`li[parentId = ${parentId}]`)
+
       global.dhWeb.playRT(
         $(`#play_${videoDeviceId}`)[0],
         videoDeviceId,
@@ -187,9 +186,6 @@ class LivecallDeatil extends Component {
     if (global.dhWeb) {
       this.closeAll()
     }
-    // if (this.videoView) {
-    //   this.videoView.cloudloginout()
-    // }
   }
 
   // 更新
@@ -222,17 +218,11 @@ class LivecallDeatil extends Component {
     })
   }
 
-  getShow = () => {
-    const { data } = this.state
-    if (!data.carImgUrl) {
-      return <div className="car-img videoDiv" />
-    }
-    return (
-      <div className="no-img">
-        <img src={require('../../../images/home/no-img.png')} />
-      </div>
-    )
-  }
+  getShow = () => (
+    <div className="no-img">
+      <img src={require('../../../images/home/no-img.png')} />
+    </div>
+  )
 
   muted = () => {}
 
@@ -266,6 +256,20 @@ class LivecallDeatil extends Component {
                 </div>
                 <div className="videoDiv" />
                 {/* {loading ? <Spin /> : null} */}
+              </div>
+              <div className="left-item">
+                <div className="title">
+                  {/* {data.inOut !== 2 ? '入场' : '出场'}车辆监控 */}
+                  监控3
+                </div>
+                {this.getShow()}
+              </div>
+              <div className="left-item">
+                <div className="title">
+                  {/* {data.inOut !== 2 ? '入场' : '出场'}车辆监控 */}
+                  监控4
+                </div>
+                {this.getShow()}
               </div>
               <div className="bottom-calling">
                 <span className="text">
