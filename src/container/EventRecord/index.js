@@ -103,13 +103,14 @@ class EventRecord extends Component {
       pageSize,
       curPage: current
     }
+
     // 车牌号
     if (searchContent) {
-      params.caNumStr = searchContent
+      params.carNumStr = searchContent
     }
     // 停车场
     if (selected !== 'all') {
-      params.parkId = selected
+      params.parkName = selected
     }
     const url = getUrl(params, `${urlCng.callList}`)
     fetch({
