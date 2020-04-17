@@ -86,6 +86,8 @@ class ChartComponent extends Component {
       {
         type: 'value',
         name: data.unit,
+        min: 0,
+        minInterval: 1,
         axisLine: {
           show: false,
         },
