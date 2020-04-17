@@ -168,9 +168,13 @@ class EventRecord extends Component {
 
   // 下拉改变
   dropChange = (e, key) => {
-    this.setState({
-      [key]: e
-    })
+    this.state.parkList.map(item=>{
+      if (item.id===e) {
+        this.setState({
+          [key]: item.name
+        })
+      }
+    });
   }
 
   // 筛选
