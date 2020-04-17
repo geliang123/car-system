@@ -14,6 +14,7 @@ import urlCng from '~/config/url'
 import { getStore, setStore } from '~/utils'
 import fetch from '~/utils/fetch'
 import RightComponent from './RightComponent'
+import eventObject from '~/config/eventSignal'
 
 @hot
 class LivecallDeatil extends Component {
@@ -215,6 +216,7 @@ class LivecallDeatil extends Component {
 
   // 更新
   updateList = (item, status) => {
+    const { data } = this.state
     if (this.countTimer) clearInterval(this.countTimer)
     this.close()
     fetch({
@@ -228,8 +230,11 @@ class LivecallDeatil extends Component {
     }).then((res) => {
       if (res.code === 1) {
         message.success('操作成功')
+        if (status === 6) {
+          eventObject.clearSetInternal.dispatch()
+        }
         this.setState({
-          data: res.result,
+          data: Object.assign({}, data, { status }),
         })
       } else {
         message.error(res.msg)

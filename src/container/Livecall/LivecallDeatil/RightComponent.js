@@ -19,7 +19,7 @@ import urlCng from '~/config/url'
 import fetch from '~/utils/fetch'
 import { getColor } from '~/utils'
 import CollapseComponent from './CollapseComponent'
-
+import eventObject from '~/config/eventSignal'
 import 'moment/locale/zh-cn'
 
 const { RangePicker } = DatePicker
@@ -59,36 +59,48 @@ class RightComponent extends Component {
     this.updateSystemTime()
     this.dataObject = this.props.data
     this.updateDuration()
+
+    eventObject.clearSetInternal.add(this.clearDuration)
   }
 
   componentWillReceiveProps(nextProps) {
     this.dataObject = nextProps.data
     this.updateDuration()
-    this.setState({
-      carNumber: nextProps.data.carNum,
-      questionSelected: nextProps.data.problemId,
-    })
-    this.updateSystemTime()
   }
 
   componentWillUnmount() {
     if (this.updateTimer) clearTimeout(this.updateTimer)
-    if (this.interValDuration) clearTimeout(this.interValDuration)
+    this.clearDuration()
+    eventObject.clearSetInternal.remove(this.clearDuration)
+  }
+
+  // 移除右边时间定时器
+  clearDuration = () => {
+    if (this.interValDuration) clearInterval(this.interValDuration)
   }
 
   updateDuration = () => {
-    console.log(this.dataObject)
-    if (Object.keys(this.dataObject).length) {
-      if (this.interValDuration) clearTimeout(this.interValDuration)
-      const p = document.getElementById('duration')
-      if (p) {
-        const m1 = moment(this.dataObject.createTimeStr)
-        const m2 = moment()
-        const duration = m2.diff(m1, 'seconds')
-        p.innerText = `${duration}s`
-        p.style.color = getColor(duration)
-        this.interValDuration = window.setTimeout(this.updateDuration, 1000)
-      }
+    if (!Object.keys(this.dataObject).length) {
+      return
+    }
+    if (this.dataObject.status === 3) {
+      this.interValDuration = setInterval(() => {
+        this.renderDuration()
+      }, 1000)
+    } else {
+      this.renderDuration()
+      this.clearDuration()
+    }
+  }
+
+  renderDuration = () => {
+    const p = document.getElementById('duration')
+    if (p) {
+      const m1 = moment(this.dataObject.createTimeStr)
+      const m2 = moment()
+      const duration = m2.diff(m1, 'seconds')
+      p.innerText = `${duration}s`
+      p.style.color = getColor(duration)
     }
   }
 
