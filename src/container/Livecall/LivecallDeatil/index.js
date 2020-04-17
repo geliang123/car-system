@@ -283,15 +283,13 @@ class LivecallDeatil extends Component {
               </div>
               <div className="left-item">
                 <div className="title">
-                  {/* {data.inOut !== 2 ? '入场' : '出场'}车辆监控 */}
-                  监控3
+                  {data.inOut !== 2 ? '入场' : '出场'}车辆监控
                 </div>
                 {this.getShow()}
               </div>
               <div className="left-item">
                 <div className="title">
-                  {/* {data.inOut !== 2 ? '入场' : '出场'}车辆监控 */}
-                  监控4
+                  {data.inOut !== 2 ? '入场' : '出场'}车辆监控
                 </div>
                 {this.getShow()}
               </div>
