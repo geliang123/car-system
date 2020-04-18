@@ -286,9 +286,9 @@ class Livecall extends Component {
 
   // 暂不处理
   noOperate = (item) => {
-    if (!this.audioLoginSuccess) {
-      message.warning('正在连接语音设备，请稍后')
-    }
+    // if (!this.audioLoginSuccess) {
+    //   message.warning('正在连接语音设备，请稍后')
+    // }
     const data = `{"callLogId":${item.id},"params":{},"method":"task.reject"}`
     global.cloudWebsocket.send(data)
     this.getList()
@@ -296,9 +296,9 @@ class Livecall extends Component {
 
   // 挂断
   hangUp = (item, status) => {
-    if (!this.audioLoginSuccess) {
-      message.warning('正在连接语音设备，请稍后')
-    }
+    // if (!this.audioLoginSuccess) {
+    //   message.warning('正在连接语音设备，请稍后')
+    // }
     this.updateList(item, status)
     this.closeAll(item.audioDeviceId)
   }
