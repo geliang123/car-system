@@ -17,9 +17,10 @@ import zh_CN from 'antd/lib/locale-provider/zh_CN'
 import SelectMenu from '~/component/SelectMenu'
 import urlCng from '~/config/url'
 import fetch from '~/utils/fetch'
-import { getColor } from '~/utils'
+import { getColor, getUrl } from '~/utils'
 import CollapseComponent from './CollapseComponent'
 import eventObject from '~/config/eventSignal'
+
 import 'moment/locale/zh-cn'
 
 const { RangePicker } = DatePicker
@@ -242,8 +243,17 @@ class RightComponent extends Component {
 
   // 检索
   search = () => {
+    const { carNumber } = this.state
+    const params = {
+      plate_number: carNumber,
+      probably_start_time: this.startDate,
+      probably_end_time: this.endDate,
+
+    }
+    const url = getUrl(params, `${urlCng.searchCar}`)
+
     fetch({
-      url: urlCng.searchCar,
+      url,
     }).then(res => {
       if (res.code === 1) {
         this.setState({
@@ -272,7 +282,10 @@ class RightComponent extends Component {
 
   // 时间改变
   onChangeDate = (dates, dateStrings) => {
-    this.str = `${dateStrings[0]}-${dateStrings[1]}`
+    this.str = `${dateStrings[0]}:00 至 ${dateStrings[1]}:00`
+    this.startDate = dateStrings[0]
+    this.endDate = dateStrings[1]
+    console.log(dateStrings[0], dateStrings[1])
   }
 
   render() {
@@ -315,7 +328,7 @@ class RightComponent extends Component {
               <RangePicker
                 allowClear
                 showTime={{ format: 'HH' }}
-                format="YYYY/MM/DD HH"
+                format="YYYY-MM-DD HH"
                 onChange={this.onChangeDate}
                 style={{ width: '310px' }}
                 placeholder={['开始时间', '结束时间']}

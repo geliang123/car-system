@@ -37,8 +37,6 @@ class LivecallDeatil extends Component {
     const callDetailId =
       (callDetailData && callDetailData.id) || getStore('callDetailId')
     setStore('callDetailId', callDetailId)
-
-    debugger
     if (callDetailData && callDetailId) {
       this.getDetail(callDetailId)
       if (callDetailData.status !== 6) {
@@ -171,11 +169,11 @@ class LivecallDeatil extends Component {
     })
   }
 
-  getDetail = (id) => {
+  getDetail = id => {
     const url = `${urlCng.callDetail}?id=${id}`
     fetch({
       url,
-    }).then((res) => {
+    }).then(res => {
       if (res.code === 1) {
         this.setState(
           {
@@ -229,7 +227,7 @@ class LivecallDeatil extends Component {
         status,
         operatedSum: this.allSecond,
       },
-    }).then((res) => {
+    }).then(res => {
       if (res.code === 1) {
         message.success('操作成功')
         if (status === 6) {

@@ -213,10 +213,10 @@ class ChartComponent extends Component {
               <LocaleProvider locale={zh_CN}>
                   <RangePicker
                     allowClear
-                    format="YYYY/MM/DD"
+                    format="YYYY-MM-DD"
                     onChange={this.onChangeDate}
                     style={{ width: '310px' }}
-                    placeholder={['开始时间', '结束时间']}
+                    placeholder={['选择起始时间', '选择结束时间']}
                   />
               </LocaleProvider> : null
            }

@@ -98,10 +98,10 @@ class Livecall extends Component {
       global.cloudWebsocket = new WebSocket(urlCng.taskDispatch + userInfo.id)
 
       // 连接成功建立的回调方法
-      global.cloudWebsocket.onopen = (event) => {
+      global.cloudWebsocket.onopen = event => {
         fetch({
           url: urlCng.callSoundAccount,
-        }).then((res) => {
+        }).then(res => {
           if (res.code === 1) {
             sessionStorage.setItem('serverAddr', res.result.url)
             this.loginResult = res.result
@@ -115,7 +115,7 @@ class Livecall extends Component {
         })
         this.getList() // 列表数据
       }
-      global.cloudWebsocket.onmessage = (mess) => {
+      global.cloudWebsocket.onmessage = mess => {
         const msg = JSON.parse(mess.data)
         if (msg.method == 'task.reject.fail') {
           message.warning('暂无其他客服在线，请继续处理')
@@ -123,17 +123,17 @@ class Livecall extends Component {
           this.getList()
         }
       }
-      global.dhWeb.onDeviceList = (mess) => {
+      global.dhWeb.onDeviceList = mess => {
         this.onDeviceList(mess)
       }
 
       // 语音设备登录
-      global.dhWeb.onLogin = (mess) => {
+      global.dhWeb.onLogin = mess => {
         this.onLogin(mess)
       }
 
       // 语音消息通知
-      global.dhWeb.onNotify = (mess) => {
+      global.dhWeb.onNotify = mess => {
         console.log(
           `onNotify-----------------------${JSON.stringify(
             mess
@@ -141,15 +141,15 @@ class Livecall extends Component {
         )
         this.onNotify(mess)
       }
-      global.dhWeb.onParseMsgError = (mess) => {
+      global.dhWeb.onParseMsgError = mess => {
         if (mess.error.indexOf('alarmServer offline') != -1) {
           alert('报警服务器不在线')
         }
       }
-      global.dhWeb.onAlarmServerClosed = (mess) => {
+      global.dhWeb.onAlarmServerClosed = mess => {
         $('#logout').click()
       }
-      global.dhWeb.onPlayRT = (data) => {
+      global.dhWeb.onPlayRT = data => {
         if (data.error != 'success') {
           $('#closeAll').click()
         }
@@ -173,7 +173,7 @@ class Livecall extends Component {
     this.count = 0
   }
 
-  onDeviceList = (data) => {
+  onDeviceList = data => {
     const deviceList = data.params.list
     let className
     for (const i in deviceList) {
@@ -194,7 +194,7 @@ class Livecall extends Component {
     }
   }
 
-  renderOp = (record) => {
+  renderOp = record => {
     if (record.status === 6) {
       return (
         <div>
@@ -232,12 +232,12 @@ class Livecall extends Component {
     )
   }
 
-  onNotify = (data) => {
+  onNotify = data => {
     const params = data.params
     params.createTime = global.cloudWebsocket.send(JSON.stringify(data))
   }
 
-  onLogin = (data) => {
+  onLogin = data => {
     const params = data.params
     if (data.error == 'success') {
       sessionStorage.setItem('loginHandle', params.loginHandle)
@@ -285,7 +285,7 @@ class Livecall extends Component {
   // }
 
   // 暂不处理
-  noOperate = (item) => {
+  noOperate = item => {
     // if (!this.audioLoginSuccess) {
     //   message.warning('正在连接语音设备，请稍后')
     // }
@@ -304,7 +304,7 @@ class Livecall extends Component {
     this.closeAll(item.audioDeviceId)
   }
 
-  closeAll = (audioDeviceId) => {
+  closeAll = audioDeviceId => {
     if (global.dhWeb) {
       global.dhWeb.directCloseRT(
         audioDeviceId,
@@ -317,7 +317,7 @@ class Livecall extends Component {
   online = (item, status) => {
     const { data } = this.state
     this.flagOnline = false
-    data.map((obj) => {
+    data.map(obj => {
       if (obj.status === 3 || obj.status === 6) {
         this.flagOnline = true
       }
@@ -343,7 +343,7 @@ class Livecall extends Component {
       url: urlCng.callUpdate,
       method: 'POST',
       data: { id: item.id, status, waitCountTime },
-    }).then((res) => {
+    }).then(res => {
       if (res.code === 1) {
         this.getList()
       } else {
@@ -377,7 +377,7 @@ class Livecall extends Component {
   }
 
   // 进入详情
-  answer = (item) => {
+  answer = item => {
     if (!this.audioLoginSuccess) {
       message.warning('正在和语音设备建立连接，请稍后')
       return
@@ -403,7 +403,7 @@ class Livecall extends Component {
 
     fetch({
       url,
-    }).then((res) => {
+    }).then(res => {
       if (res.code === 1) {
         this.setState({
           data: res.result.data,
@@ -417,7 +417,7 @@ class Livecall extends Component {
   }
 
   // 分页
-  handlePageChange = (pageNumber) => {
+  handlePageChange = pageNumber => {
     this.setState(
       {
         current: pageNumber,
@@ -436,7 +436,7 @@ class Livecall extends Component {
   }
 
   // 搜索框改变
-  changeValue = (e) => {
+  changeValue = e => {
     this.setState({
       searchContent: e.target.value,
     })
