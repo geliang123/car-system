@@ -6,15 +6,15 @@ export const getDropType = [
   },
   {
     id: 'answer',
-    name: '今日接听量'
+    name: '接听量'
   },
   {
     id: 'reject',
-    name: '今日放弃数'
+    name: '放弃数'
   },
   {
     id: 'inFeed',
-    name: '今日进线量'
+    name: '进线量'
   }
 ]
 
