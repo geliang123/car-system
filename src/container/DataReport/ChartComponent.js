@@ -1,44 +1,36 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable guard-for-in */
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import ReactEcharts from 'echarts-for-react'
 import { hot } from 'react-hot-loader/root'
+import { message, DatePicker, LocaleProvider } from 'antd'
+import zh_CN from 'antd/lib/locale-provider/zh_CN'
+import moment from 'moment'
+import SelectMenu from '~/component/SelectMenu'
+import fetch from '~/utils/fetch'
+import urlCng from '~/config/url'
+import { getDropType, dropDataTime } from './dropData'
+import 'moment/locale/zh-cn'
+import { getUrl } from '~/utils/index'
 
-const defaultData = {
-  infeed: {
-    data: [1, 2, 3, 4, 5, 7],
-    xAxis: ['1:00', '2:00', '3:00', '4:00', '5:00'],
-    displayName: '今日进线量',
-    unit: '人数',
-  },
-  answer: {
-    data: [1, 2, 3, 4, 5, 7],
-    xAxis: ['0:00', '2:00', '3:00', '4:00', '5:00'],
-    displayName: '接听量',
-    unit: '人数',
-  },
-  consultion: {
-    data: [1, 2, 3, 4, 5, 7],
-    xAxis: ['6:00', '2:00', '3:00', '4:00', '5:00'],
-    displayName: '已咨询人数',
-    unit: '人数',
-  },
-  queueNumber: {
-    data: [1, 2, 3, 4, 5, 7],
-    xAxis: ['1:00', '2:00', '3:00', '4:00', '5:00'],
-    displayName: '当前排队人数',
-    unit: '人数',
-  },
-  giveupNumber: {
-    data: [1, 2, 3, 4, 5, 7],
-    xAxis: ['1:00', '2:00', '3:00', '4:00', '5:00'],
-    displayName: '今日放弃量',
-    unit: '人数',
-  },
-}
+const { RangePicker } = DatePicker
 @hot
 class ChartComponent extends Component {
-  formatOption = (data) => ({
+  constructor(props) {
+    super(props)
+    this.state = {
+      type: 'wait', // 下拉
+      dateType: 'today',
+      chartData: {},
+      isDefault: false
+    }
+  }
+
+  componentDidMount() {
+    this.getChartData()
+  }
+
+  formatOption = data => ({
     title: {
       text: '', // data.displayName,
       textStyle: {
@@ -126,7 +118,23 @@ class ChartComponent extends Component {
     ],
   })
 
-  getArr = (data) => {
+ // 下拉改变
+ dropChange = (e, key) => {
+   this.setState({
+     [key]: e
+   })
+   if (e === 'default') {
+     this.setState({
+       isDefault: true
+     })
+   } else {
+     this.setState({
+       isDefault: false
+     })
+   }
+ }
+
+  getArr = data => {
     const arr = []
     for (const key in data) {
       arr.push(data[key])
@@ -134,31 +142,88 @@ class ChartComponent extends Component {
     return arr
   }
 
+  // 获取图表数据
+  getChartData = () => {
+    const params = {}
+    const url = getUrl(params, `${urlCng.todayData}`)
+    fetch({
+      url
+    }).then(res => {
+      if (res.code === 1) {
+        this.setState({
+          chartData: res.result
+        })
+      } else {
+        message.error(res.msg)
+      }
+    })
+  }
+
+  onChangeDate = (dates, dateStrings) => {
+    this.str = `${dateStrings[0]}-${dateStrings[1]}`
+
+    const day = moment(dateStrings[1]).diff(moment(dateStrings[0]), 'day')
+    if (day + 1 > 30) {
+      message.warning('最多只能选择30天')
+    } else {
+      this.getChartData()
+    }
+  }
+
   render() {
-    const { data, allData } = this.props
-    if (!Object.keys(allData).length || !data || !Object.keys(data).length) {
+    const { chartData, type, dateType, isDefault } = this.state
+    const data = chartData[type]
+    if (!chartData || !data || !Object.keys(data).length || !data || !Object.keys(data).length) {
       return null
     }
     const option = this.formatOption(data)
-    const dataAll = this.getArr(allData)
+    const dataAll = this.getArr(chartData)
     return (
-      <div className="chart-content">
-        <ReactEcharts
-          option={option}
-          notMerge
-          style={{ width: '100%', height: '366pt' }}
-          className="chart-style"
-        />
-
-        <div className="chart-info">
-          {dataAll.map((item, index) => (
-            <div className="info-item" key={index}>
-              <div>{item.displayName}</div>
-              <div>{item.xaxisSum}</div>
-            </div>
-          ))}
+      <Fragment>
+        <div className="wrap-top">
+          <SelectMenu
+            data={getDropType}
+            change={e => this.dropChange(e, 'type')}
+            defaultValue={type}
+            style={{ margin: '0 30pt', width: '200px' }}
+          />
+           <SelectMenu
+             data={dropDataTime}
+             change={e => this.dropChange(e, 'dateType')}
+             defaultValue={dateType}
+             style={{ marginRight: '30pt', width: '200px' }}
+           />
+           {
+             isDefault ?
+              <LocaleProvider locale={zh_CN}>
+                  <RangePicker
+                    allowClear
+                    format="YYYY/MM/DD"
+                    onChange={this.onChangeDate}
+                    style={{ width: '310px' }}
+                    placeholder={['开始时间', '结束时间']}
+                  />
+              </LocaleProvider> : null
+           }
         </div>
-      </div>
+        <div className="chart-content">
+          <ReactEcharts
+            option={option}
+            notMerge
+            style={{ width: '100%', height: '366pt' }}
+            className="chart-style"
+          />
+
+          <div className="chart-info">
+            {dataAll.map((item, index) => (
+              <div className="info-item" key={index}>
+                <div>{item.displayName}</div>
+                <div>{item.xaxisSum}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Fragment>
     )
   }
 }

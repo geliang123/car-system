@@ -124,7 +124,7 @@ class RightComponent extends Component {
   getProblemList = () => {
     fetch({
       url: urlCng.callProblem,
-    }).then((res) => {
+    }).then(res => {
       if (res.code === 1) {
         const data = []
         for (let i = 0; i < res.result.length; i++) {
@@ -146,7 +146,7 @@ class RightComponent extends Component {
     })
   }
 
-  handleChange = (v) => {
+  handleChange = v => {
     this.setState({
       comments: v.target.value,
     })
@@ -186,7 +186,7 @@ class RightComponent extends Component {
         url: urlCng.callUpdate,
         method: 'POST',
         data: params,
-      }).then((res) => {
+      }).then(res => {
         if (res.code === 1) {
           message.success('提交成功')
           this.props.goback()
@@ -208,7 +208,7 @@ class RightComponent extends Component {
   filter = () => {
     fetch({
       url: urlCng.callUpdate,
-    }).then((res) => {
+    }).then(res => {
       if (res.code === 1) {
         message.success('提交成功')
       } else {
@@ -224,7 +224,7 @@ class RightComponent extends Component {
       fetch({
         url: urlCng.open,
         method: 'POST',
-      }).then((res) => {
+      }).then(res => {
         if (res.code === 1) {
           this.flag = true
           message.success('开闸成功')
@@ -244,7 +244,7 @@ class RightComponent extends Component {
   search = () => {
     fetch({
       url: urlCng.searchCar,
-    }).then((res) => {
+    }).then(res => {
       if (res.code === 1) {
         this.setState({
           visible: true,
@@ -262,8 +262,11 @@ class RightComponent extends Component {
     })
   }
 
-  selectCarItem = (item) => {
+  selectCarItem = item => {
     this.selectCarObj = item
+    const objDom = document.getElementById('modifyCarNumber')
+    objDom.innerText = `车牌号:  ${this.selectCarObj.carNum}`
+    objDom.style.display = 'block'
     this.handleCancel()
   }
 
@@ -293,20 +296,19 @@ class RightComponent extends Component {
           <span id="nowTime" style={{ marginRight: '13.5pt' }} />
         </div>
         <div className="wrap-info car">
-          <div className="label">车牌号:</div>
           <SelectMenu
             data={dropData}
             className="select-type"
-            change={(e) => this.dropChange(e, 'type')}
+            change={e => this.dropChange(e, 'type')}
             defaultValue={type}
-            style={{ width: '55.5pt', marginRight: '5pt' }}
+            style={{ width: '100pt', marginRight: '5pt' }}
           />
           {type === 'car' ? (
             <Input
               placeholder="请输入车牌关键词"
               className="car-num"
               value={carNumber}
-              onChange={(e) => this.changeValue(e, 'carNumber')}
+              onChange={e => this.changeValue(e, 'carNumber')}
             />
           ) : (
             <LocaleProvider locale={zh_CN}>
@@ -321,6 +323,7 @@ class RightComponent extends Component {
             </LocaleProvider>
           )}
         </div>
+        <div className="wrap-info" id="modifyCarNumber" style={{ marginTop: '20pt' }} />
         <div
           className="wrap-info"
           style={{ marginTop: '10px', justifyContent: 'flex-end' }}
@@ -368,7 +371,7 @@ class RightComponent extends Component {
               data={probleList}
               style={{ background: '#eee', width: '85%' }}
               className="detailDrop"
-              change={(e) => this.dropChange(e, 'questionSelected')}
+              change={e => this.dropChange(e, 'questionSelected')}
               defaultValue={questionSelected}
             />
           </div>
@@ -376,7 +379,7 @@ class RightComponent extends Component {
             placeholder="请描述问题(4-100)"
             autosize={{ minRows: 3, maxRows: 6 }}
             value={comments}
-            onChange={(v) => this.handleChange(v)}
+            onChange={v => this.handleChange(v)}
             maxLength="100"
             minLength="4"
             style={{
