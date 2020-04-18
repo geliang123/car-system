@@ -52,8 +52,8 @@ class LivecallDeatil extends Component {
         try {
           this.videoView = new mainClass()
           const rst = this.videoView.fasterLogin(
-            '302h5k6810.qicp.vip',
-            '23319',
+            location.state.data.equipmentIp,
+            location.state.data.equipmentPort,
             'admin',
             '123456'
           )

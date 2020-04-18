@@ -296,9 +296,10 @@ class Livecall extends Component {
 
   // 挂断
   hangUp = (item, status) => {
-    // if (!this.audioLoginSuccess) {
-    //   message.warning('正在连接语音设备，请稍后')
-    // }
+    if (!this.audioLoginSuccess) {
+      message.warning('正在和语音设备建立连接，请稍后')
+      return
+    }
     this.updateList(item, status)
     this.closeAll(item.audioDeviceId)
   }
@@ -326,7 +327,8 @@ class Livecall extends Component {
       return
     }
     if (!this.audioLoginSuccess) {
-      message.warning('正在连接语音设备，请稍后')
+      message.warning('正在和语音设备建立连接，请稍后')
+      return
     }
     this.updateList(item, status)
     this.answer(item)
@@ -376,6 +378,10 @@ class Livecall extends Component {
 
   // 进入详情
   answer = (item) => {
+    if (!this.audioLoginSuccess) {
+      message.warning('正在和语音设备建立连接，请稍后')
+      return
+    }
     this.props.history.push('/livedetail', { data: item })
   }
 
