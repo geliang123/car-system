@@ -20,7 +20,7 @@ class ChartComponent extends Component {
     super(props)
     this.state = {
       type: 'wait', // 下拉
-      dateType: 'today',
+      dateType: 1,
       chartData: {},
       isDefault: false
     }
@@ -123,14 +123,18 @@ class ChartComponent extends Component {
    this.setState({
      [key]: e
    })
-   if (e === 'default') {
-     this.setState({
-       isDefault: true
-     })
-   } else {
-     this.setState({
-       isDefault: false
-     })
+   if (key === 'dateType') {
+     if (e === 0) {
+       this.setState({
+         isDefault: true
+       })
+     } else {
+       this.setState({
+         isDefault: false
+       }, () => {
+         this.getChartData()
+       })
+     }
    }
  }
 
@@ -144,7 +148,18 @@ class ChartComponent extends Component {
 
   // 获取图表数据
   getChartData = () => {
-    const params = {}
+    let params = {}
+    const { dateType } = this.state
+    if (dateType === 0) {
+      params = {
+        startDate: this.startDate,
+        endDate: this.endDate
+      }
+    } else {
+      params = {
+        timeType: dateType
+      }
+    }
     const url = getUrl(params, `${urlCng.todayData}`)
     fetch({
       url
@@ -160,8 +175,8 @@ class ChartComponent extends Component {
   }
 
   onChangeDate = (dates, dateStrings) => {
-    this.str = `${dateStrings[0]}-${dateStrings[1]}`
-
+    this.startDate = dateStrings[0]
+    this.endDate = dateStrings[1]
     const day = moment(dateStrings[1]).diff(moment(dateStrings[0]), 'day')
     if (day + 1 > 30) {
       message.warning('最多只能选择30天')

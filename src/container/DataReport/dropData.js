@@ -19,18 +19,18 @@ export const getDropType = [
 ]
 
 export const dropDataTime = [{
-  id: 'today',
+  id: 1,
   name: '今天'
 }, {
-  id: 'yesterday',
+  id: 2,
   name: '昨天'
 }, {
-  id: 'week',
+  id: 3,
   name: '本周'
 }, {
-  id: 'month',
+  id: 4,
   name: '本月'
 }, {
-  id: 'default',
+  id: 0,
   name: '自定义'
 }]
