@@ -37,6 +37,8 @@ class LivecallDeatil extends Component {
     const callDetailId =
       (callDetailData && callDetailData.id) || getStore('callDetailId')
     setStore('callDetailId', callDetailId)
+
+    debugger
     if (callDetailData && callDetailId) {
       this.getDetail(callDetailId)
       if (callDetailData.status !== 6) {
