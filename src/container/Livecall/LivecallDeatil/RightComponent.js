@@ -43,7 +43,7 @@ class RightComponent extends Component {
     this.state = {
       questionSelected: props.data && props.data.problemId,
       comments: '',
-      carNumber: props.data && props.data.carNum,
+      carNumber: (props.data && props.data.carNum) || '',
       probleList: [],
       type: 'car',
       visible: false,
@@ -246,8 +246,8 @@ class RightComponent extends Component {
     const { carNumber } = this.state
     const params = {
       plate_number: carNumber,
-      probably_start_time: this.startDate,
-      probably_end_time: this.endDate,
+      probably_start_time: this.startDate || '',
+      probably_end_time: this.endDate || '',
 
     }
     const url = getUrl(params, `${urlCng.searchCar}`)
@@ -285,7 +285,6 @@ class RightComponent extends Component {
     this.str = `${dateStrings[0]}:00 至 ${dateStrings[1]}:00`
     this.startDate = dateStrings[0]
     this.endDate = dateStrings[1]
-    console.log(dateStrings[0], dateStrings[1])
   }
 
   render() {
