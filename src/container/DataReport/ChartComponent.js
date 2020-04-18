@@ -153,7 +153,8 @@ class ChartComponent extends Component {
     if (dateType === 0) {
       params = {
         startDate: this.startDate,
-        endDate: this.endDate
+        endDate: this.endDate,
+        timeType: dateType
       }
     } else {
       params = {
