@@ -100,7 +100,11 @@ class RightComponent extends Component {
       const m1 = moment(this.dataObject.createTimeStr)
       const m2 = moment()
       const duration = m2.diff(m1, 'seconds')
-      p.innerText = `${duration}s`
+      if (duration < 0) {
+        p.innerText = '0s'
+      } else {
+        p.innerText = `${duration}s`
+      }
       p.style.color = getColor(duration)
     }
   }
@@ -115,11 +119,12 @@ class RightComponent extends Component {
       let day = time.getDate()
       let hour = time.getHours()
       let minutes = time.getMinutes()
-      const seconds = time.getSeconds()
+      let seconds = time.getSeconds()
       if (month < 10) month = `0${month}`
       if (day < 10) day = `0${day}`
       if (minutes < 10) minutes = `0${minutes}`
-      if (hour < 10) hour = `0${minutes}`
+      if (hour < 10) hour = `0${hour}`
+      if (seconds < 10) seconds = `0${seconds}`
       const str = `${year}-${month}-${day} ${hour}:${minutes}:${seconds}`
       p.innerText = str
       this.updateTimer = window.setTimeout(this.updateSystemTime, 1000)

@@ -2,7 +2,7 @@
 export const getDropType = [
   {
     id: 'wait',
-    name: '当前排队人数'
+    name: '排队人数'
   },
   {
     id: 'answer',

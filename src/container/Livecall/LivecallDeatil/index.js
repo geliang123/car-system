@@ -195,11 +195,18 @@ class LivecallDeatil extends Component {
               const x = res.result.operatedSum
               const tempTime = moment.duration(parseInt(x * 1000))
               if (document.getElementById('timetext')) {
-                document.getElementById(
-                  'timetext'
-                ).innerHTML = `${tempTime.hours()}时${tempTime.minutes()}分${tempTime.seconds()}秒`
-                document.getElementById('allSecond').innerHTML =
-                  res.result.operatedSum
+                if (this.allSecond < 0) {
+                  document.getElementById(
+                    'timetext'
+                  ).innerHTML = '0秒'
+                  document.getElementById('allSecond').innerHTML = 0
+                } else {
+                  document.getElementById(
+                    'timetext'
+                  ).innerHTML = `${tempTime.hours()}时${tempTime.minutes()}分${tempTime.seconds()}秒`
+                  document.getElementById('allSecond').innerHTML =
+                    res.result.operatedSum
+                }
               }
             }
           }

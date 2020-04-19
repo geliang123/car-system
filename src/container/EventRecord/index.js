@@ -48,8 +48,8 @@ class EventRecord extends Component {
       },
       {
         title: '出场时间',
-        dataIndex: 'modifyTimeStr',
-        key: 'modifyTimeStr'
+        dataIndex: 'outTimeStr',
+        key: 'outTimeStr'
       },
       {
         title: '支付费用',
