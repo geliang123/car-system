@@ -63,7 +63,7 @@ class Detail extends Component {
               </div>
               <div className="row-content">
                 <span>出场时间：</span>
-                <span>{this.getStr(data.modifyTimeStr)}</span>
+                <span>{this.getStr(data.outTimeStr)}</span>
               </div>
               <div className="row-content">
                 <span>入场时间：</span>
