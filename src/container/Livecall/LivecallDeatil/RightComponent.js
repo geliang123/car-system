@@ -424,6 +424,7 @@ class RightComponent extends Component {
           <CollapseComponent
             type={type}
             data={deatilData}
+            selectData={data}
             keyword={carNumber}
             str={type === 'car' ? this.strCarInput : this.strDate}
             selectCarItem={this.selectCarItem}

@@ -61,13 +61,13 @@ class CarNumber extends Component {
     // })
     // 1、入场，提交的时候，inTime 传当前时间；
     // 、出场，提交的时候，outTime 传当前时间，intime 传列表的start_time；
-    const { data } = this.state
+    const { selectData } = this.props
     const updataItem = {
       carNum:
         this.refs[`textInput${item.parking_id}`] &&
         this.refs[`textInput${item.parking_id}`].state.value,
-      inTime: data.inOut === 1 ? item.start_time : moment().format('YYYY-MM-DD HH:mm:ss'),
-      outTime: data.inOut === 1 ? moment().format('YYYY-MM-DD HH:mm:ss') : '',
+      inTime: selectData.inOut === 1 ? item.start_time_str : moment().format('YYYY-MM-DD HH:mm:ss'),
+      outTime: selectData.inOut === 1 ? moment().format('YYYY-MM-DD HH:mm:ss') : '',
       parkId: item.parking_id,
       parkName: item.parking_name,
       payAmount: item.paid_amount,
