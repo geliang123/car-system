@@ -21,7 +21,7 @@ const urlCng = {
   callProblem: `${url}/callLog/callProblemType`,
   callWaitList: `${url}/callLog/waitList`,
   callSoundAccount: `${url}/acquire/sound/account`,
-
+  eventList: `${url}/equipment/list`,
   // 数据报表
   serviceData: `${url}/data/serviceData`,
   todayData: `${url}/data/todayData`,

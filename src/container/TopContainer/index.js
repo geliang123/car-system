@@ -45,7 +45,7 @@ class NavTop extends Component {
   getTopData = () => {
     fetch({
       url: urlCng.logData,
-    }).then((res) => {
+    }).then(res => {
       if (res.code === 1) {
         this.setState({
           indicator: res.result,
@@ -54,7 +54,7 @@ class NavTop extends Component {
     })
   }
 
-  handleClick = (e) => {
+  handleClick = e => {
     setStore('key', e.key)
     this.setState({
       key: e.key,
@@ -77,7 +77,7 @@ class NavTop extends Component {
     fetch({
       url: urlCng.logout,
       method: 'POST',
-    }).then((res) => {
+    }).then(res => {
       if (res.code === 1) {
         removeAllStore()
       }
@@ -89,7 +89,7 @@ class NavTop extends Component {
     fetch({
       url: urlCng.menu,
       method: 'POST',
-    }).then((res) => {
+    }).then(res => {
       if (!res.code) {
         this.setState({
           menuData: (Array.isArray(res) && res) || [],
@@ -110,11 +110,11 @@ class NavTop extends Component {
     })
   }
 
-  handleVisibleChange = (visiblePopover) => {
+  handleVisibleChange = visiblePopover => {
     this.setState({ visiblePopover })
   }
 
-  changeStatus = (status) => {
+  changeStatus = status => {
     setStore('status', status)
     this.setState({
       visiblePopover: false,
@@ -126,7 +126,7 @@ class NavTop extends Component {
       data: {
         status,
       },
-    }).then((res) => {
+    }).then(res => {
       if (res.code === 1) {
         message.success('修改成功')
       }
@@ -139,6 +139,14 @@ class NavTop extends Component {
       key: 'call_now',
     })
     this.props.history.push('/call_now')
+  }
+
+  goEvent=() => {
+    setStore('key', 'event')
+    this.setState({
+      key: 'event',
+    })
+    this.props.history.push('./event')
   }
 
   render() {
@@ -167,12 +175,11 @@ class NavTop extends Component {
           mode="horizontal"
           className="menu-tab"
         >
-          {menuData.map((item) =>
-            !item.childes ? (
+          {menuData.map(item => (!item.childes ? (
               <Menu.Item key={item.code.toLowerCase()}>
                 <Link to={`/${item.code.toLowerCase()}`}>{item.name}</Link>
               </Menu.Item>
-            ) : (
+          ) : (
               <SubMenu
                 key={item.code.toLowerCase()}
                 title={
@@ -187,26 +194,25 @@ class NavTop extends Component {
                 }
               >
                 <MenuItemGroup>
-                  {item.childes.map((obj) => (
+                  {item.childes.map(obj => (
                     <Menu.Item key={obj.code.toLowerCase()}>
                       <Link to={`/${obj.code.toLowerCase()}`}>{obj.name}</Link>
                     </Menu.Item>
                   ))}
                 </MenuItemGroup>
               </SubMenu>
-            )
-          )}
+          )))}
         </Menu>
         <div className="indicator">
           <div className="indi-item">
             <p>总事件</p>
             <p className="value">{indicator.sumCalls}</p>
           </div>
-          <div className="indi-item">
+          <div className="indi-item" onClick={this.go}>
             <p>待处理</p>
             <p className="value todo">{indicator.waitCalls}</p>
           </div>
-          <div className="indi-item">
+          <div className="indi-item" onClick={this.goEvent}>
             <p>已处理</p>
             <p className="value">{indicator.edCalls}</p>
           </div>

@@ -3,7 +3,7 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-undef */
 /* eslint-disable array-callback-return */
-import React, { Component, isValidElement } from 'react'
+import React, { Component } from 'react'
 import { Table, message } from 'antd'
 import { hot } from 'react-hot-loader/root'
 import { withRouter } from 'react-router-dom'
@@ -215,9 +215,9 @@ class Livecall extends Component {
             接听
           </span>
         )}
-        <span className="hang-up" onClick={() => this.hangUp(record, 5)}>
-          挂断
-        </span>
+        {
+          record.status !== 3 ? <span className="hang-up" onClick={() => this.hangUp(record, 5)}>挂断</span> : null
+        }
         {record.status != 3 ? (
           <span className="not-operate" onClick={() => this.noOperate(record)}>
             暂不处理

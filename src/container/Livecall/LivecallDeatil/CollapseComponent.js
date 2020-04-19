@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 import '../../../less/normal.less'
 import './panle.less'
 import { Collapse, Button, Input } from 'antd'
+import moment from 'moment'
 
 const { Panel } = Collapse
 
@@ -23,7 +24,7 @@ class CarNumber extends Component {
     })
   }
 
-  renderHeader = (item) => {
+  renderHeader = item => {
     const { type } = this.props
     if (!item) return <span />
     return (
@@ -45,7 +46,7 @@ class CarNumber extends Component {
   }
 
   // 已确认车辆
-  submit = (item) => {
+  submit = item => {
     // 更新的车牌 this[`textInput${item.id}`].state.value
     // fetch({
     //   url: urlCng.updateCarNum,
@@ -58,12 +59,15 @@ class CarNumber extends Component {
     //     message.error('更新失败')
     //   }
     // })
+    // 1、入场，提交的时候，inTime 传当前时间；
+    // 、出场，提交的时候，outTime 传当前时间，intime 传列表的start_time；
+    const { data } = this.state
     const updataItem = {
       carNum:
         this.refs[`textInput${item.parking_id}`] &&
         this.refs[`textInput${item.parking_id}`].state.value,
-      inTime: item.start_time,
-      outTime: item.start_end,
+      inTime: data.inOut === 1 ? item.start_time : moment().format('YYYY-MM-DD HH'),
+      outTime: data.inOut === 1 ? moment().format('YYYY-MM-DD HH') : '',
       parkId: item.parking_id,
       parkName: item.parking_name,
       payAmount: item.paid_amount,
@@ -74,7 +78,7 @@ class CarNumber extends Component {
     this.props.selectCarItem && this.props.selectCarItem(updataItem)
   }
 
-  getContent = (item) => {
+  getContent = item => {
     const { edit } = this.state
     return (
       <div className="detail-content">

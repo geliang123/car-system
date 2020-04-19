@@ -200,7 +200,7 @@ class RightComponent extends Component {
   }
 
   changeValue = (e, key) => {
-    this.str = e.target.value
+    this.strCarInput = e.target.value
     this.setState({
       [key]: e.target.value,
     })
@@ -282,7 +282,7 @@ class RightComponent extends Component {
 
   // 时间改变
   onChangeDate = (dates, dateStrings) => {
-    this.str = `${dateStrings[0]}:00 至 ${dateStrings[1]}:00`
+    this.strDate = `${dateStrings[0]}:00 至 ${dateStrings[1]}:00`
     this.startDate = dateStrings[0]
     this.endDate = dateStrings[1]
   }
@@ -425,7 +425,7 @@ class RightComponent extends Component {
             type={type}
             data={deatilData}
             keyword={carNumber}
-            str={this.str}
+            str={type === 'car' ? this.strCarInput : this.strDate}
             selectCarItem={this.selectCarItem}
           />
         </Modal>

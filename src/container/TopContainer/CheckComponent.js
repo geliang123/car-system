@@ -19,32 +19,18 @@ class CheckComponent extends Component {
   }
 
   repeat = () => {
-    const data = [
-      this.countNumber(
-        'browser',
-        {
-          time: 1000,
-          num: 100,
-          regulator: 50
-        },
-        true
-      ),
-      // 检测浏览器
-      this.countNumber(
-        'browser',
-        {
-          time: 1000,
-          num: 100,
-          regulator: 50
-        },
-        true
-      ),
-      this.checkoutVoice('voice1'),
-      this.checkoutVoice('voice2')
-    ]
-    for (let i = 0; i < 4; i++) {
-      setTimeout(() => {})
-    }
+    // 检测浏览器
+    this.countNumber(
+      'browser',
+      {
+        time: 1000,
+        num: 100,
+        regulator: 50
+      },
+      true
+    )
+    this.checkoutVoice('voice1')
+    this.checkoutVoice('voice2')
 
     // 检测ip
     this.countNumber(

@@ -26,11 +26,11 @@ class Detail extends Component {
     }
   }
 
-  getDetail = (id) => {
+  getDetail = id => {
     const url = `${urlCng.callDetail}?id=${id}`
     fetch({
       url,
-    }).then((res) => {
+    }).then(res => {
       if (res.code === 1) {
         this.setState({
           data: res.result,
@@ -39,7 +39,7 @@ class Detail extends Component {
     })
   }
 
-  getStr = (str) => {
+  getStr = str => {
     if (!str) return '--'
     return str
   }
@@ -63,7 +63,7 @@ class Detail extends Component {
               </div>
               <div className="row-content">
                 <span>出场时间：</span>
-                <span>{this.getStr(data.outTimeStr)}</span>
+                <span>{this.getStr(data.modifyTimeStr)}</span>
               </div>
               <div className="row-content">
                 <span>入场时间：</span>

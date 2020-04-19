@@ -33,7 +33,7 @@ class TableComponent extends Component {
         // sorter: (a, b) => a.loginCountSeconds - b.loginCountSeconds
       },
       {
-        title: '总通话时长(小时)',
+        title: '总通话时长(分钟)',
         dataIndex: 'callCountSeconds',
         key: 'callCountSeconds',
         //  sorter: (a, b) => a.callCountSeconds - b.callCountSeconds

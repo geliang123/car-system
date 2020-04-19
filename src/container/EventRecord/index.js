@@ -22,7 +22,7 @@ class EventRecord extends Component {
       visible: false,
       total: 0,
       loading: true,
-      selected: 'all',
+      selected: '全部',
       parkList: []
     }
     this.headers = [
@@ -48,8 +48,8 @@ class EventRecord extends Component {
       },
       {
         title: '出场时间',
-        dataIndex: 'outTimeStr',
-        key: 'outTimeStr'
+        dataIndex: 'modifyTimeStr',
+        key: 'modifyTimeStr'
       },
       {
         title: '支付费用',
@@ -109,10 +109,10 @@ class EventRecord extends Component {
       params.carNumStr = searchContent
     }
     // 停车场
-    if (selected !== 'all') {
+    if (selected !== '全部') {
       params.parkName = selected
     }
-    const url = getUrl(params, `${urlCng.callList}`)
+    const url = getUrl(params, `${urlCng.eventList}`)
     fetch({
       url
     }).then(res => {
@@ -168,13 +168,13 @@ class EventRecord extends Component {
 
   // 下拉改变
   dropChange = (e, key) => {
-    this.state.parkList.map(item=>{
-      if (item.id===e) {
+    this.state.parkList.map(item => {
+      if (item.id === e) {
         this.setState({
           [key]: item.name
         })
       }
-    });
+    })
   }
 
   // 筛选
