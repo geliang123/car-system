@@ -112,8 +112,8 @@ class ChartComponent extends Component {
         name: data.displayName,
         symbol: 'none',
         data: data.xaxis,
-        type: 'line',
-        color: '#397BEC',
+        type: 'bar',
+        color: '#FF9640 ',
       },
     ],
   })

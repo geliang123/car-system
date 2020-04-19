@@ -4,7 +4,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable array-callback-return */
 import React, { Component } from 'react'
-import { Table, message } from 'antd'
+import { Table, message, Spin } from 'antd'
 import { hot } from 'react-hot-loader/root'
 import { withRouter } from 'react-router-dom'
 import '../../less/normal.less'
@@ -30,7 +30,7 @@ class Livecall extends Component {
       current: 1, // 当前页
       selected: 'all',
       total: 0,
-      loading: false,
+      loading: true,
       // parkList: [], // 停车场位置
     }
     this.count = 0
@@ -462,19 +462,22 @@ class Livecall extends Component {
         <div id="liveCall">
           <div className="search-wrap" />
           {/* 表格数据 */}
-          <Table
-            dataSource={data}
-            columns={this.headers}
-            rowKey={(record, index) => index}
-            loading={loading}
-            locale={{ emptyText: '暂无数据' }}
-            pagination={{
-              total,
-              pageSize,
-              current,
-              onChange: this.handlePageChange,
-            }}
-          />
+          {
+            !loading ?
+              <Table
+                dataSource={data}
+                columns={this.headers}
+                rowKey={(record, index) => index}
+                loading={loading}
+                locale={{ emptyText: '暂无数据' }}
+                pagination={{
+                  total,
+                  pageSize,
+                  current,
+                  onChange: this.handlePageChange,
+                }}
+              /> : <Spin />
+          }
           <div className="total">
             共{total}条记录 <span className="page-num">每页{pageSize}条</span>
           </div>
