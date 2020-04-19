@@ -66,7 +66,7 @@ class CarNumber extends Component {
       carNum:
         this.refs[`textInput${item.parking_id}`] &&
         this.refs[`textInput${item.parking_id}`].state.value,
-      inTime: data.inOut === 1 ? item.start_time : moment().format('YYYY-MM-DD HH'),
+      inTime: data.inOut === 1 ? item.start_time : moment().format('YYYY-MM-DD HH:mm:ss'),
       outTime: data.inOut === 1 ? moment().format('YYYY-MM-DD HH') : '',
       parkId: item.parking_id,
       parkName: item.parking_name,

@@ -115,11 +115,6 @@ class NavTop extends Component {
   }
 
   changeStatus = status => {
-    setStore('status', status)
-    this.setState({
-      visiblePopover: false,
-      status,
-    })
     fetch({
       url: urlCng.changeStatus,
       method: 'POST',
@@ -129,6 +124,13 @@ class NavTop extends Component {
     }).then(res => {
       if (res.code === 1) {
         message.success('修改成功')
+        setStore('status', status)
+        this.setState({
+          visiblePopover: false,
+          status,
+        })
+      } else {
+        message.warning(res.msg)
       }
     })
   }
