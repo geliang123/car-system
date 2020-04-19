@@ -247,12 +247,14 @@ class Livecall extends Component {
                 placeholder="请输入账户关键词"
                 value={userName}
                 onChange={e => this.changeUserName(e, 'username')}
+                style={{ width: '200pt' }}
               />
               <Input
                 className="search-content"
                 placeholder="请输入姓名关键词"
                 value={realName}
                 onChange={e => this.changeRealName(e, 'realname')}
+                style={{ width: '200pt' }}
               />
               <Button className="search-btn" onClick={this.search}>
                 搜索
