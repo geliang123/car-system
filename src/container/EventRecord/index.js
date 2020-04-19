@@ -112,7 +112,7 @@ class EventRecord extends Component {
     if (selected !== '全部') {
       params.parkName = selected
     }
-    const url = getUrl(params, `${urlCng.eventList}`)
+    const url = getUrl(params, `${urlCng.callList}`)
     fetch({
       url
     }).then(res => {
