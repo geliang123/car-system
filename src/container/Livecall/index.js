@@ -297,6 +297,7 @@ class Livecall extends Component {
   // 挂断
   hangUp = (item, status) => {
     if (!this.audioLoginSuccess) {
+      window.location.reload()
       message.warning('正在和语音设备建立连接，请稍后')
       return
     }
@@ -326,8 +327,10 @@ class Livecall extends Component {
       message.warning('有通话中或者未提交状态不能接听')
       return
     }
-    if (!this.audioLoginSuccess) {
+    if (!global.cloudWebsocket) {
+      window.location.reload()
       message.warning('正在和语音设备建立连接，请稍后')
+
       return
     }
     this.updateList(item, status)
@@ -379,6 +382,7 @@ class Livecall extends Component {
   // 进入详情
   answer = item => {
     if (!this.audioLoginSuccess) {
+      window.location.reload()
       message.warning('正在和语音设备建立连接，请稍后')
       return
     }
