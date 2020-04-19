@@ -89,7 +89,7 @@ class Livecall extends Component {
 
   componentDidMount() {
     const userInfo = JSON.parse(getLocalStore('userInfo'))
-    this.getList() // 列表数据
+    // this.getList() // 列表数据
     this.timerGetList = window.setInterval(() => {
       this.getList() // 列表数据
     }, 10000)
@@ -113,7 +113,6 @@ class Livecall extends Component {
             )
           }
         })
-        this.getList() // 列表数据
       }
       global.cloudWebsocket.onmessage = mess => {
         const msg = JSON.parse(mess.data)
@@ -249,10 +248,12 @@ class Livecall extends Component {
       global.cloudWebsocket.send(JSON.stringify(data))
       this.count = 0
       this.audioLoginSuccess = true
+      this.getList() // 列表数据
     } else {
       global.dhWeb.logout(params.loginHandle)
       this.count = this.count + 1
-      message.warning('语音设备服务器已断开，请刷新页面重试')
+      message.warning('连接语音设备服务器失败，请刷新页面重试')
+      window.location.reload()
       // if (this.loginResult && this.count <= 3) {
       //   global.dhWeb.login(
       //     this.loginResult.username,
@@ -327,7 +328,7 @@ class Livecall extends Component {
       message.warning('有通话中或者未提交状态不能接听')
       return
     }
-    if (!global.cloudWebsocket) {
+    if (!global.cloudWebsocket && obj.status != 6) {
       window.location.reload()
       message.warning('正在和语音设备建立连接，请稍后')
 

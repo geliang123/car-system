@@ -59,6 +59,9 @@ class NavTop extends Component {
     this.setState({
       key: e.key,
     })
+    if(e.key === 'call_now'){
+      window.location.reload()
+    }
   }
 
   logout = () => {
@@ -141,6 +144,7 @@ class NavTop extends Component {
       key: 'call_now',
     })
     this.props.history.push('/call_now')
+    window.location.reload()
   }
 
   goEvent=() => {
