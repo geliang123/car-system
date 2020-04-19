@@ -111,11 +111,15 @@ class RightComponent extends Component {
     if (p) {
       const time = new Date()
       const year = time.getFullYear()
-      const month = time.getMonth() + 1
-      const day = time.getDate()
-      const hour = time.getHours()
-      const minutes = time.getMinutes()
+      let month = time.getMonth() + 1
+      let day = time.getDate()
+      let hour = time.getHours()
+      let minutes = time.getMinutes()
       const seconds = time.getSeconds()
+      if (month < 10) month = `0${month}`
+      if (day < 10) day = `0${day}`
+      if (minutes < 10) minutes = `0${minutes}`
+      if (hour < 10) hour = `0${minutes}`
       const str = `${year}-${month}-${day} ${hour}:${minutes}:${seconds}`
       p.innerText = str
       this.updateTimer = window.setTimeout(this.updateSystemTime, 1000)
@@ -191,9 +195,9 @@ class RightComponent extends Component {
         if (res.code === 1) {
           message.success('提交成功')
           this.props.goback()
-          setTimeout(()=>{
-           window.location.reload()
-          },50)
+          setTimeout(() => {
+            window.location.reload()
+          }, 50)
           this.props.close()
         } else {
           message.success('提交失败')
