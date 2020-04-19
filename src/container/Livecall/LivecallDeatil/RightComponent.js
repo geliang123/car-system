@@ -193,7 +193,7 @@ class RightComponent extends Component {
           this.props.goback()
           setTimeout(()=>{
            window.location.reload()
-         },50)
+          },50)
           this.props.close()
         } else {
           message.success('提交失败')
