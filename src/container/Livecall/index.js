@@ -478,9 +478,12 @@ class Livecall extends Component {
                 }}
               /> : <Spin />
           }
-          <div className="total">
-            共{total}条记录 <span className="page-num">每页{pageSize}条</span>
-          </div>
+         {
+           !loading ?
+              <div className="total">
+              共{total}条记录 <span className="page-num">每页{pageSize}条</span>
+              </div> : null
+         }
         </div>
       </div>
     )

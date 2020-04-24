@@ -59,7 +59,7 @@ class NavTop extends Component {
     this.setState({
       key: e.key,
     })
-    if(e.key === 'call_now'){
+    if (e.key === 'call_now') {
       window.location.reload()
     }
   }
@@ -211,7 +211,7 @@ class NavTop extends Component {
         </Menu>
         <div className="indicator">
           <div className="indi-item">
-            <p>总事件</p>
+            <p>总呼叫</p>
             <p className="value">{indicator.sumCalls}</p>
           </div>
           <div className="indi-item" onClick={this.go}>
@@ -223,7 +223,7 @@ class NavTop extends Component {
             <p className="value">{indicator.edCalls}</p>
           </div>
           <div className="indi-item">
-            <p>在线云客服</p>
+            <p>在线云坐席</p>
             <p className="value">{indicator.onLines}</p>
           </div>
         </div>
@@ -255,12 +255,12 @@ class NavTop extends Component {
             </div>
           </Popover>
 
-          <div className="settings" />
+          {/* <div className="settings" /> */}
           <div className="jiance" onClick={this.check} />
         </div>
         {/* 弹框 */}
         <Modal
-          title="客服端检测"
+          title="客户端检测"
           visible={visible}
           className="watch-image-dialog"
           okText="确认"

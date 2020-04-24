@@ -1,21 +1,21 @@
 // eslint-disable-next-line import/prefer-default-export
 export const getDropType = [
   {
-    id: 'wait',
-    name: '排队人数'
-  },
-  {
     id: 'answer',
     name: '接听量'
   },
   {
     id: 'reject',
-    name: '放弃数'
+    name: '挂断量'
   },
   {
     id: 'inFeed',
     name: '进线量'
-  }
+  },
+  {
+    id: 'wait',
+    name: '排队人数'
+  },
 ]
 
 export const dropDataTime = [{

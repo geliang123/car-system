@@ -145,22 +145,22 @@ class CheckComponent extends Component {
               src={require('../../images/home/check-bg.png')}
               className="check-bg"
             />
-            <div className="check-text">设备检测</div>
+            <div className="check-text">客户端检测</div>
             <Button className="check-btn" onClick={this.check}>
-              检测
+              开始检测
             </Button>
           </Fragment>
         ) : (
           <div className="check-detail">
-            <div className="check-title">客服端</div>
+            <div className="check-title">客户端</div>
             <div className="check-box">
+              <div className="check-item">
+                <span>网络状态</span>
+                <span className="status" id="ip" />
+              </div>
               <div className="check-item">
                 <span>浏览器</span>
                 <span className="status" id="browser" />
-              </div>
-              <div className="check-item">
-                <span>网 络</span>
-                <span className="status" id="ip" />
               </div>
               <div className="check-item">
                 <span>麦克风</span>

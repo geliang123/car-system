@@ -19,7 +19,7 @@ class ChartComponent extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      type: 'wait', // 下拉
+      type: 'answer', // 下拉
       dateType: 1,
       chartData: {},
       isDefault: false
