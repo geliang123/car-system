@@ -10,7 +10,7 @@
 
 `npm install`
 
-# 运行(开发模式)
+# 运行(开发模式) 哈哈哈·
 
 `npm run start || npm run dev`
 
