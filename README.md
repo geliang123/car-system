@@ -10,9 +10,9 @@
 
 `npm install`
 
-# 运行(开发模式)
+# 运行(开发模式) 哈哈哈 测试
 
-`npm run start || npm run dev`  
+`npm run start || npm run dev`
 
 `env==development react-hot-loader热更新`
 
@@ -20,7 +20,7 @@
 
 `npm run build:dev` 查看打包大小
 
-`npm run build:prod` 
+`npm run build:prod`
 
 `env==production 打包在dist 目录下`
 
@@ -34,8 +34,8 @@
 
 # 别名
 
-* ~代表./src
-* @代表./src/component
+- ~代表./src
+- @代表./src/component
 
 # 热更新
 
