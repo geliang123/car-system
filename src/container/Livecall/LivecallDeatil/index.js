@@ -109,10 +109,17 @@ class LivecallDeatil extends Component {
       this.hour += 1
     }
     if (document.getElementById('timetext')) {
-      document.getElementById(
-        'timetext'
-      ).innerHTML = `${this.hour}时${this.minute}分${this.second}秒`
-      document.getElementById('allSecond').innerHTML = this.allSecond
+      if (this.allSecond < 0) {
+        document.getElementById(
+          'timetext'
+        ).innerHTML = '0秒'
+        document.getElementById('allSecond').innerHTML = 0
+      } else {
+        document.getElementById(
+          'timetext'
+        ).innerHTML = `${this.hour}时${this.minute}分${this.second}秒`
+        document.getElementById('allSecond').innerHTML = this.allSecond
+      }
     }
   }
 

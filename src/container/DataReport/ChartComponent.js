@@ -114,6 +114,7 @@ class ChartComponent extends Component {
         data: data.xaxis,
         type: 'bar',
         color: '#FF9640 ',
+        barMaxWidth: 30
       },
     ],
   })
