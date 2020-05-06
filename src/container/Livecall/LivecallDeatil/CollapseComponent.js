@@ -3,8 +3,10 @@ import { hot } from 'react-hot-loader/root'
 import React, { Component } from 'react'
 import '../../../less/normal.less'
 import './panle.less'
-import { Collapse, Button, Input } from 'antd'
+import { Collapse, Button, Input, message } from 'antd'
 import moment from 'moment'
+import urlCng from '~/config/url'
+import fetch from '~/utils/fetch'
 
 const { Panel } = Collapse
 
@@ -48,17 +50,6 @@ class CarNumber extends Component {
   // 已确认车辆
   submit = item => {
     // 更新的车牌 this[`textInput${item.id}`].state.value
-    // fetch({
-    //   url: urlCng.updateCarNum,
-    //   method: 'POST',
-    // }).then(res => {
-    //   if (res.code === 1) {
-    //     message.success('更新成功')
-    //     this.props.onCancel && this.props.onCancel()
-    //   } else {
-    //     message.error('更新失败')
-    //   }
-    // })
     // 1、入场，提交的时候，inTime 传当前时间；
     // 、出场，提交的时候，outTime 传当前时间，intime 传列表的start_time；
     const { selectData } = this.props
@@ -74,8 +65,22 @@ class CarNumber extends Component {
       carImgUrlIn: item.picture_url_in,
       carImgUrlOut: item.picture_url_out,
     }
-
-    this.props.selectCarItem && this.props.selectCarItem(updataItem)
+    if (item.parking_id) {
+      fetch({
+        url: urlCng.updateCarNum,
+        method: 'POST',
+        data: {
+          parking_id: item.parking_id,
+          plate_number: updataItem.carNum
+        }
+      }).then(res => {
+        if (res.code === 1) {
+          this.props.selectCarItem && this.props.selectCarItem(updataItem)
+        } else {
+          message.error('更新车牌失败')
+        }
+      })
+    }
   }
 
   getContent = item => {

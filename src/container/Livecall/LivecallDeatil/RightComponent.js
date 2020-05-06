@@ -233,10 +233,17 @@ class RightComponent extends Component {
   // 入场
   open = () => {
     this.operateType = 1 // 免费开闸
-    if (!this.flag) {
+    const { data } = this.props
+    if (!this.flag && data.parkId) {
       fetch({
         url: urlCng.open,
         method: 'POST',
+        data: {
+          parking_id: data.parkId,
+          plate_number: this.selectCarObj.carNum,
+          parking_lot_id: '',
+          lane_id: ''
+        },
       }).then(res => {
         if (res.code === 1) {
           this.flag = true
