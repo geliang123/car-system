@@ -15,6 +15,7 @@ import { getStore, setStore } from '~/utils'
 import fetch from '~/utils/fetch'
 import RightComponent from './RightComponent'
 import eventObject from '~/config/eventSignal'
+import VideoComponent from './VideoComponent'
 
 @hot
 class LivecallDeatil extends Component {
@@ -29,6 +30,10 @@ class LivecallDeatil extends Component {
     this.second = 0 // 时 分 秒
     this.millisecond = 0 // 毫秒
     this.allSecond = 0
+
+    // video 设备
+    this.equipmentIp = ''
+    this.equipmentPort = ''
   }
 
   componentDidMount() {
@@ -48,21 +53,22 @@ class LivecallDeatil extends Component {
           true
         )
         global.dhWeb.startTalk(this.deviceId)
-
-        try {
-          this.videoView = new mainClass()
-          const rst = this.videoView.fasterLogin(
-            location.state.data.equipmentIp,
-            location.state.data.equipmentPort,
-            'admin',
-            '123456'
-          )
-          if (rst.code !== 1) {
-            message.warning(rst.msg)
-          }
-        } catch (e) {
-          message.error('监控初始化失败')
-        }
+        this.equipmentIp = location.state.data.equipmentIp
+        this.equipmentPort = location.state.data.equipmentPort
+        // try {
+        //   this.videoView = new mainClass()
+        //   const rst = this.videoView.fasterLogin(
+        //     location.state.data.equipmentIp,
+        //     location.state.data.equipmentPort,
+        //     'admin',
+        //     '123456'
+        //   )
+        //   if (rst.code !== 1) {
+        //     message.warning(rst.msg)
+        //   }
+        // } catch (e) {
+        //   message.error('监控初始化失败')
+        // }
         // eslint-disable-next-line no-new
         // new Promise(() => {
         //   // 做一些异步操作
@@ -278,6 +284,10 @@ class LivecallDeatil extends Component {
   render() {
     // loading
     const { data } = this.state
+    const equipData = {
+      equipmentIp: this.equipmentIp,
+      equipmentPort: this.equipmentPort
+    }
     return (
       <div className="panel">
         <div id="LiveCallDeatail">
@@ -289,9 +299,7 @@ class LivecallDeatil extends Component {
                 <div className="title">
                   {data.inOut === 2 ? '入场' : '出场'}车辆监控
                 </div>
-                <div className="ocxStyle">
-                  <div id="playerContainer" />
-                </div>
+                <VideoComponent data={equipData} />
               </div>
               <div className="left-item">
                 <div className="title">
