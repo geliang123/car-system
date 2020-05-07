@@ -1,4 +1,4 @@
-# 运用技术栈 测试远端推送是否成功 52次
+# 运用技术栈 测试远端推送是否成功 1次
 
 `react v16.8 + webpack v4.x+ react-router-dom v5.0.0 + babel v7 + antd`
 
