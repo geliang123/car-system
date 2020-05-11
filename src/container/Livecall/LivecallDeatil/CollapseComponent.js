@@ -65,6 +65,7 @@ class CarNumber extends Component {
       carImgUrlIn: item.picture_url_in,
       carImgUrlOut: item.picture_url_out,
     }
+    console.log(item)
     if (item.parking_id) {
       fetch({
         url: urlCng.updateCarNum,

@@ -234,22 +234,20 @@ class RightComponent extends Component {
   open = () => {
     this.operateType = 1 // 免费开闸
     const { data } = this.props
-    if (!this.flag && data.parkId) {
+    if (!this.flag && data.id) {
       fetch({
         url: urlCng.open,
         method: 'POST',
         data: {
-          parking_id: data.parkId,
-          plate_number: this.selectCarObj.carNum,
-          parking_lot_id: '',
-          lane_id: ''
+          parking_lot_id: data.remoteParkId,
+          lane_id: data.remoteGateId
         },
       }).then(res => {
         if (res.code === 1) {
           this.flag = true
           message.success('开闸成功')
         } else {
-          message.success('开失败成功')
+          message.success('开闸失败')
         }
       })
     }
@@ -262,12 +260,20 @@ class RightComponent extends Component {
 
   // 检索
   search = () => {
-    const { carNumber } = this.state
-    const params = {
-      plate_number: carNumber,
-      probably_start_time: this.startDate || '',
-      probably_end_time: this.endDate || '',
-
+    const { carNumber, type } = this.state
+    const { data } = this.props
+    let params = {}
+    if (type === 'car') {
+      params = {
+        plate_number: carNumber,
+        parking_lot_id: data.remoteParkId
+      }
+    } else {
+      params = {
+        probably_start_time: this.startDate || '',
+        probably_end_time: this.endDate || '',
+        parking_lot_id: data.remoteParkId
+      }
     }
     const url = getUrl(params, `${urlCng.searchCar}`)
 
