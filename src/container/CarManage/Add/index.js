@@ -173,6 +173,19 @@ class Add extends Component {
                 </Select>
               )}
             </FormItem>
+            <FormItem {...formItemLayout} label="设备位置">
+              {getFieldDecorator('inOutType', {
+                initialValue: data.inOutType
+              })(
+                <Select>
+                  {equipLocationList.map((item, i) => (
+                    <Option value={item.id} key={i}>
+                      {item.name}
+                    </Option>
+                  ))}
+                </Select>
+              )}
+            </FormItem>
           </div>
           <div>
             <FormItem {...formItemLayout} label="远程停车场ID">
@@ -195,18 +208,15 @@ class Add extends Component {
                 initialValue: data.equipmentPort
               })(<Input placeholder="请输入端口号" allowClear />)}
             </FormItem>
-            <FormItem {...formItemLayout} label="设备位置">
-              {getFieldDecorator('inOutType', {
-                initialValue: data.inOutType
-              })(
-                <Select>
-                  {equipLocationList.map((item, i) => (
-                    <Option value={item.id} key={i}>
-                      {item.name}
-                    </Option>
-                  ))}
-                </Select>
-              )}
+            <FormItem {...formItemLayout} label="设备账号">
+              {getFieldDecorator('equipmentUsername', {
+                initialValue: data.equipmentUsername
+              })(<Input placeholder="请输入设备账号" allowClear />)}
+            </FormItem>
+            <FormItem {...formItemLayout} label="设备密码">
+              {getFieldDecorator('equipmentPassword', {
+                initialValue: data.equipmentPassword
+              })(<Input placeholder="请输入设备密码" allowClear />)}
             </FormItem>
             <FormItem {...formItemLayout} label="备注">
               {getFieldDecorator('remark', {
