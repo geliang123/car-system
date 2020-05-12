@@ -34,6 +34,8 @@ class LivecallDeatil extends Component {
     // video 设备
     this.equipmentIp = ''
     this.equipmentPort = ''
+    this.equipmentUsername = ''
+    this.equipmentPassword = ''
   }
 
   componentDidMount() {
@@ -55,6 +57,9 @@ class LivecallDeatil extends Component {
         global.dhWeb.startTalk(this.deviceId)
         this.equipmentIp = location.state.data.equipmentIp
         this.equipmentPort = location.state.data.equipmentPort
+        this.equipmentUsername = location.state.data.equipmentUsername
+        this.equipmentPassword = location.state.data.equipmentPassword
+        // message.warning(this.equipmentIp+';'+this.equipmentPort+";"+this.equipmentUsername+";"+this.equipmentPassword)
         // try {
         //   this.videoView = new mainClass()
         //   const rst = this.videoView.fasterLogin(
@@ -286,8 +291,12 @@ class LivecallDeatil extends Component {
     const { data } = this.state
     const equipData = {
       equipmentIp: this.equipmentIp,
-      equipmentPort: this.equipmentPort
+      equipmentPort: this.equipmentPort,
+      equipmentUsername: this.equipmentUsername,
+      equipmentPassword: this.equipmentPassword
     }
+    // message.warning('parent:'+equipData.equipmentIp+';'+equipData.equipmentPort+";"+equipData.equipmentUsername+";"+equipData.equipmentPassword)
+
     return (
       <div className="panel">
         <div id="LiveCallDeatail">
@@ -299,7 +308,7 @@ class LivecallDeatil extends Component {
                 <div className="title">
                   {data.inOut === 2 ? '入场' : '出场'}车辆监控
                 </div>
-                <VideoComponent data={equipData} />
+                <VideoComponent equipData={equipData} />
               </div>
               <div className="left-item">
                 <div className="title">

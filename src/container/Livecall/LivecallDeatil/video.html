@@ -40,17 +40,40 @@
   <script src="//47.106.164.38/plugins/video/common/video.js"></script>
   <script>
     $(function(){
-      var videoView = new mainClass();
-      var rst = videoView.fasterLogin(
-        '3120344lf7.wicp.vip',
-        '44992',
-        'admin',
-        '123456'
-      );
-      if (rst.code !== 1) {
-        console.log(rst.msg)
+      var url = window.parent.frames['unviewFrame'].location.href;
+      if (url) {
+        console.log("iframe url:"+url);
+        var ip = getQueryVariable(url, "ip");
+        var port = getQueryVariable(url, "port");
+        var username = getQueryVariable(url, "username");
+        var password = getQueryVariable(url, "password");
+        console.log("ip:"+ip+";port:"+port+";username:"+username+";password:"+password);
+        if (ip && port && username && password) {
+          var videoView = new mainClass();
+          var rst = videoView.fasterLogin(ip, port, username, password);
+          if (rst.code !== 1) {
+            console.log(rst.msg)
+          }
+        } else {
+          console.log("从url获取参数错误");
+        }
+      } else {
+        console.log("获取iframe url错误");
       }
     });
+
+    function getQueryVariable(url, variable) {
+      if (url) {
+        var vars = url.split("&");
+        for (var i=0;i<vars.length;i++) {
+          var pair = vars[i].split("=");
+          if(pair[0] == variable){
+            return pair[1];
+          }
+        }
+      }
+      return(false);
+    }
   </script>
 </body>
 
