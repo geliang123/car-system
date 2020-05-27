@@ -234,7 +234,7 @@ class RightComponent extends Component {
   open = () => {
     this.operateType = 1 // 免费开闸
     const { data } = this.props
-    if (!this.flag && data.id) {
+    if (data.id) {
       fetch({
         url: urlCng.open,
         method: 'POST',
