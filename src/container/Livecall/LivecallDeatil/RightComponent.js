@@ -286,7 +286,7 @@ class RightComponent extends Component {
           deatilData: res.result,
         })
       } else {
-        message.success('检索失败')
+        message.success(res.msg)
       }
     })
   }
