@@ -442,7 +442,7 @@ class RightComponent extends Component {
           okText="确认"
           cancelText=""
           onCancel={this.handleCancel}
-          width={908}
+          width="90%"
           destroyOnClose
           confirmLoading={false}
         >

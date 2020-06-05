@@ -30,31 +30,31 @@ class TableComponent extends Component {
         title: '总登录时长(小时)',
         dataIndex: 'loginCountSeconds',
         key: 'loginCountSeconds',
-        // sorter: (a, b) => a.loginCountSeconds - b.loginCountSeconds
+        sorter: (a, b) => a.loginCountSecondsInt - b.loginCountSecondsInt
       },
       {
         title: '总通话时长(分钟)',
         dataIndex: 'callCountSeconds',
         key: 'callCountSeconds',
-        //  sorter: (a, b) => a.callCountSeconds - b.callCountSeconds
+        sorter: (a, b) => a.callCountSecondsInt - b.callCountSecondsInt
       },
       {
         title: '电话呼入数',
         dataIndex: 'callInCount',
         key: 'callInCount',
-        // sorter: (a, b) => a.callInCount - b.callInCount
+        sorter: (a, b) => a.callInCount - b.callInCount
       },
       {
         title: '电话应答数',
         dataIndex: 'callEdCount',
         key: 'callEdCount',
-        // sorter: (a, b) => a.callEdCount - b.callEdCount
+        sorter: (a, b) => a.callEdCount - b.callEdCount
       },
       {
         title: '应答率',
         dataIndex: 'callRate',
         key: 'callRate',
-        sorter: (a, b) => a.callRate - b.callRate,
+        sorter: (a, b) => a.callRateInt - b.callRateInt,
       },
     ]
   }

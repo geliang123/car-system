@@ -25,6 +25,8 @@ const urlCng = {
   // 数据报表
   serviceData: `${url}/data/serviceData`,
   todayData: `${url}/data/todayData`,
+  serviceDataReport: `${url}/data/serviceDataReport`,
+  exportData: `${url}/data/exportServiceData`,
   // status
   changeStatus: `${url}/sysUser/changeStatus`,
   // 打开

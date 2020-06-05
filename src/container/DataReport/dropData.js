@@ -34,3 +34,24 @@ export const dropDataTime = [{
   id: 0,
   name: '自定义'
 }]
+export const dropAll = [{
+  id: 'all',
+  name: '全部'
+}]
+
+export const dropChartFilter = [{
+  id: 'login',
+  name: '总登陆时长'
+}, {
+  id: 'callTime',
+  name: '总通话时长'
+}, {
+  id: 'callIn',
+  name: '电话呼入数'
+}, {
+  id: 'callEd',
+  name: '电话应答数'
+}, {
+  id: 'rate',
+  name: '应答率'
+}]

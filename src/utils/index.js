@@ -102,4 +102,5 @@ export const removeStore = name => {
  */
 export const removeAllStore = () => {
   window.sessionStorage.clear()
+  window.localStorage.clear()
 }

@@ -1,16 +1,14 @@
 import React, { Component } from 'react'
 import { hot } from 'react-hot-loader/root'
 import { withRouter } from 'react-router-dom'
-import { message } from 'antd'
-import TableComponent from './TableComponent'
+import { Button } from 'antd'
+import TotalData from './TotalData'
 import ChartComponent from './ChartComponent'
-import '../../less/normal.less'
-import './style.less'
 import fetch from '~/utils/fetch'
 import urlCng from '~/config/url'
-import { getUrl } from '~/utils/index'
+import '../../less/normal.less'
+import './style.less'
 
-const pageSize = 10
 @hot
 @withRouter
 class DataReport extends Component {
@@ -18,15 +16,7 @@ class DataReport extends Component {
     super(props)
     this.state = {
       active: 'chart',
-      tableData: [],
-      total: 0, // 总数
-      current: 1, // 当前页数
-
     }
-  }
-
-  componentDidMount() {
-    this.getTableData()
   }
 
   changeTab = key => {
@@ -35,50 +25,19 @@ class DataReport extends Component {
     })
   }
 
-  // 获取表格数据
-  getTableData = () => {
-    const { current } = this.state // &userName=${searchContent}
-    const params = {
-      pageSize,
-      curPage: current
-    }
-    const url = getUrl(params, `${urlCng.serviceData}`)
-
+  export=() => {
+    // const params = {
+    //   startDate: this.startDate,
+    //   endDate: this.endDate,
+    // }
+    // const url = getUrl(params, `${urlCng.exportData}`)
     fetch({
-      url
-    }).then(res => {
-      if (res.code === 1) {
-        this.setState({
-          tableData: res.result.data,
-          total: res.result.page.totalNum
-        })
-      } else {
-        message.error(res.msg)
-      }
+      url: urlCng.exportData
     })
   }
 
-
-  // 分页
-  handlePageChange = pageNumber => {
-    this.setState(
-      {
-        current: pageNumber
-      },
-      () => {
-        this.getTableData()
-      }
-    )
-  }
-
   render() {
-    const { active, tableData, total, current } = this.state
-    const dataTable = {
-      tableData,
-      total,
-      pageSize,
-      current
-    }
+    const { active } = this.state
     return (
       <div className="panel">
         <div id="dataReport">
@@ -97,13 +56,13 @@ class DataReport extends Component {
                 坐席统计数据
               </div>
             </div>
+            <Button className="btn-export" onClick={this.export}>导出日/月/年数据</Button>
           </div>
           {/* 表格数据 */}
           {active === 'table' ? (
-            <TableComponent
-              data={dataTable}
-              handlePageChange={this.handlePageChange}
-            />
+            <div>
+              <TotalData />
+            </div>
           ) : (
             <ChartComponent />
           )}
