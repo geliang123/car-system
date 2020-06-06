@@ -18,7 +18,7 @@ import TableComponent from './TableComponent'
 import './totalData.less'
 
 const { RangePicker } = DatePicker
-const pageSize = 10
+const pageSize = 15
 @hot
 class TotalData extends Component {
   constructor(props) {
@@ -177,6 +177,24 @@ getChartData = () => {
     }
   }
 
+  export= () => {
+    const { dateType } = this.state // &userName=${searchContent}
+    let params = {}
+    if (dateType === 0) {
+      params = {
+        startDate: this.startDate,
+        endDate: this.endDate,
+        timeType: dateType,
+      }
+    } else {
+      params = {
+        timeType: dateType
+      }
+    }
+    const url = getUrl(params, `${urlCng.exportData}`)
+    window.open(url)
+  }
+
   render() {
     const { tableData, total, current, type, dateType, isDefault, isChart, chartData, dropData } = this.state
     const dataTable = {
@@ -215,6 +233,9 @@ getChartData = () => {
            {
              isChart ? <Button className="btn-change" onClick={() => this.change(false)}>表格统计</Button>
                : <Button className="btn-change" onClick={() => this.change(true)}>图形统计</Button>
+           }
+           {
+             isChart ? null : <Button className="btn-export" onClick={this.export}>导出</Button>
            }
         </div>
         <div className="chart-content">

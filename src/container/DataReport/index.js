@@ -1,11 +1,8 @@
 import React, { Component } from 'react'
 import { hot } from 'react-hot-loader/root'
 import { withRouter } from 'react-router-dom'
-import { Button } from 'antd'
 import TotalData from './TotalData'
 import ChartComponent from './ChartComponent'
-import fetch from '~/utils/fetch'
-import urlCng from '~/config/url'
 import '../../less/normal.less'
 import './style.less'
 
@@ -22,17 +19,6 @@ class DataReport extends Component {
   changeTab = key => {
     this.setState({
       active: key
-    })
-  }
-
-  export=() => {
-    // const params = {
-    //   startDate: this.startDate,
-    //   endDate: this.endDate,
-    // }
-    // const url = getUrl(params, `${urlCng.exportData}`)
-    fetch({
-      url: urlCng.exportData
     })
   }
 
@@ -56,7 +42,6 @@ class DataReport extends Component {
                 坐席统计数据
               </div>
             </div>
-            <Button className="btn-export" onClick={this.export}>导出日/月/年数据</Button>
           </div>
           {/* 表格数据 */}
           {active === 'table' ? (
