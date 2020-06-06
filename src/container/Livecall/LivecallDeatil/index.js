@@ -55,25 +55,25 @@ class LivecallDeatil extends Component {
           true
         )
         global.dhWeb.startTalk(this.deviceId)
-        this.equipmentIp = location.state.data.equipmentIp
-        this.equipmentPort = location.state.data.equipmentPort
-        this.equipmentUsername = location.state.data.equipmentUsername
-        this.equipmentPassword = location.state.data.equipmentPassword
+        // this.equipmentIp = location.state.data.equipmentIp
+        // this.equipmentPort = location.state.data.equipmentPort
+        // this.equipmentUsername = location.state.data.equipmentUsername
+        // this.equipmentPassword = location.state.data.equipmentPassword
         // message.warning(this.equipmentIp+';'+this.equipmentPort+";"+this.equipmentUsername+";"+this.equipmentPassword)
-        // try {
-        //   this.videoView = new mainClass()
-        //   const rst = this.videoView.fasterLogin(
-        //     location.state.data.equipmentIp,
-        //     location.state.data.equipmentPort,
-        //     'admin',
-        //     '123456'
-        //   )
-        //   if (rst.code !== 1) {
-        //     message.warning(rst.msg)
-        //   }
-        // } catch (e) {
-        //   message.error('监控初始化失败')
-        // }
+        try {
+          this.videoView = new mainClass()
+          const rst = this.videoView.fasterLogin(
+            location.state.data.equipmentIp,
+            location.state.data.equipmentPort,
+            'admin',
+            '123456'
+          )
+          if (rst.code !== 1) {
+            message.warning(rst.msg)
+          }
+        } catch (e) {
+          message.error('监控初始化失败')
+        }
         // eslint-disable-next-line no-new
         // new Promise(() => {
         //   // 做一些异步操作
@@ -289,12 +289,12 @@ class LivecallDeatil extends Component {
   render() {
     // loading
     const { data } = this.state
-    const equipData = {
-      equipmentIp: this.equipmentIp,
-      equipmentPort: this.equipmentPort,
-      equipmentUsername: this.equipmentUsername,
-      equipmentPassword: this.equipmentPassword
-    }
+    // const equipData = {
+    //   equipmentIp: this.equipmentIp,
+    //   equipmentPort: this.equipmentPort,
+    //   equipmentUsername: this.equipmentUsername,
+    //   equipmentPassword: this.equipmentPassword
+    // }
     // message.warning('parent:'+equipData.equipmentIp+';'+equipData.equipmentPort+";"+equipData.equipmentUsername+";"+equipData.equipmentPassword)
 
     return (
@@ -308,7 +308,9 @@ class LivecallDeatil extends Component {
                 <div className="title">
                   {data.inOut === 2 ? '入场' : '出场'}车辆监控
                 </div>
-                <VideoComponent equipData={equipData} />
+                <div className="ocxStyle">
+                  <div id="playerContainer"/>
+                </div>
               </div>
               <div className="left-item">
                 <div className="title">
