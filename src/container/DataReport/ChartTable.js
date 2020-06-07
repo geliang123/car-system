@@ -44,8 +44,6 @@ class ChartTable extends Component {
       {
         type: 'category',
         data: data.hours,
-        interval: 0,
-        rotate: 40,
         axisLine: {
           show: false,
         },
@@ -57,6 +55,7 @@ class ChartTable extends Component {
           fontFamily:
             ' "PingFang SC","微软雅黑","Microsoft YaHei", "Source Sans Pro", Arial',
           fontSize: 14,
+          interval: 0,
         },
       },
     ],
