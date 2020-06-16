@@ -13,15 +13,15 @@ class ChartTable extends Component {
       },
       top: 'auto',
     },
-    dataZoom: [{
-      type: 'slider',
-      show: true,
-      xAxisIndex: [0],
-      left: '9%',
-      bottom: -5,
-      start: 0,
-      end: 90 // 初始化滚动条
-    }],
+    // dataZoom: [{
+    //   type: 'slider',
+    //   show: false,
+    //   xAxisIndex: [0],
+    //   left: '9%',
+    //   bottom: -5,
+    //   start: 0,
+    //   end: 90 // 初始化滚动条
+    // }],
     grid: {
       left: 100,
       right: 40,
