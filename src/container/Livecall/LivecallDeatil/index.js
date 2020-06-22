@@ -140,7 +140,7 @@ class LivecallDeatil extends Component {
       `${
         '<div class="videoboxDiv" ondblclick="launchFullscreen(this)">' +
         '<video id="play_'
-      }${audioDeviceId}"  onclick="selectedVideo(this)" oncanplay="canplayVideo(this)"></video><span>${$(
+      }${audioDeviceId}" width="365" onclick="selectedVideo(this)" oncanplay="canplayVideo(this)"></video><span>${$(
         `#device_${audioDeviceId}`
       ).text()}</span>` + '</div>'
     $('.videoDiv').append(html)
