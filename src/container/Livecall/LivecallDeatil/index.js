@@ -140,7 +140,7 @@ class LivecallDeatil extends Component {
       `${
         '<div class="videoboxDiv" ondblclick="launchFullscreen(this)">' +
         '<video id="play_'
-      }${audioDeviceId}" width="365" onclick="selectedVideo(this)" oncanplay="canplayVideo(this)"></video><span>${$(
+      }${audioDeviceId}" width="100%" onclick="selectedVideo(this)" oncanplay="canplayVideo(this)"></video><span>${$(
         `#device_${audioDeviceId}`
       ).text()}</span>` + '</div>'
     $('.videoDiv').append(html)
@@ -295,6 +295,10 @@ class LivecallDeatil extends Component {
     }
   }
 
+  unAudioviewFull = () => {
+    launchFullscreen($(".videoboxDiv"))
+  }
+
   render() {
     // loading
     const { data } = this.state
@@ -325,7 +329,7 @@ class LivecallDeatil extends Component {
               <div className="left-item">
                 <div className="title">
                   {data.inOut === 2 ? '入场' : '出场'}车道监控
-                  <img class="full" src={require('../../../images/home/full.png')} />
+                  <img class="full" onClick={() => this.unAudioviewFull()} src={require('../../../images/home/full.png')} />
                 </div>
                 <div className="videoDiv" />
                 {/* {loading ? <Spin /> : null} */}
