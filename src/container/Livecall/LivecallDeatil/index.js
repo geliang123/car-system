@@ -286,6 +286,15 @@ class LivecallDeatil extends Component {
     this.updateList(data, status)
   }
 
+  unviewFull = () => {
+    if (this.videoView) {
+      const rst = this.videoView.full()
+      if (rst.code !== 1) {
+        message.warning(rst.msg)
+      }
+    }
+  }
+
   render() {
     // loading
     const { data } = this.state
@@ -307,6 +316,7 @@ class LivecallDeatil extends Component {
               <div className="left-item">
                 <div className="title">
                   {data.inOut === 2 ? '入场' : '出场'}车辆监控
+                  <img class="full" onClick={() => this.unviewFull()} src={require('../../../images/home/full.png')} />
                 </div>
                 <div className="ocxStyle">
                   <div id="playerContainer"/>
@@ -315,6 +325,7 @@ class LivecallDeatil extends Component {
               <div className="left-item">
                 <div className="title">
                   {data.inOut === 2 ? '入场' : '出场'}车道监控
+                  <img class="full" src={require('../../../images/home/full.png')} />
                 </div>
                 <div className="videoDiv" />
                 {/* {loading ? <Spin /> : null} */}
@@ -322,12 +333,14 @@ class LivecallDeatil extends Component {
               <div className="left-item">
                 <div className="title">
                   {data.inOut !== 2 ? '入场' : '出场'}车辆监控
+                  <img class="full" src={require('../../../images/home/full.png')} />
                 </div>
                 {this.getShow()}
               </div>
               <div className="left-item">
                 <div className="title">
                   {data.inOut !== 2 ? '入场' : '出场'}车辆监控
+                  <img class="full" src={require('../../../images/home/full.png')} />
                 </div>
                 {this.getShow()}
               </div>
